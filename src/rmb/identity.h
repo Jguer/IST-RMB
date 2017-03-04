@@ -10,3 +10,4 @@
 #include "utils.h"
 
 char *show_servers(char *server_ip, u_short server_port);
+list *parse_servers(char *id_serv_info);

@@ -16,11 +16,11 @@ char *show_servers(char *server_ip, u_short server_port) {
     struct hostent *host_ptr = NULL;
     struct sockaddr_in server_addr;
     socklen_t addr_len;
+    char *return_string;
     char *response = (char *)malloc(RESPONSE_SIZE);
     if (response == NULL) {
         memory_error("failed to allocate error buffer");
     }
-    char *return_string;
 
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd==-1)
@@ -84,5 +84,43 @@ char *show_servers(char *server_ip, u_short server_port) {
     close(fd);
     free(response);
     return return_string; //Dirty Pointer
+}
+
+/*
+    Parses the information given by the id server
+    Info comes in structured like:
+        name;ip;upt;tpt\n
+    Info comes out in a linked list with struct item like:
+        char    *name;
+        char    *ip_addr;
+        u_short udp_port;
+        u_short tpc_port;
+
+    Returns pointer to the head of the list.
+    Returns NULL on failure.
+*/
+list *parse_servers(char *id_serv_info){
+    char *separated_info;
+    server parsed_server;
+    list *msgserv_list = create_list();
+
+
+    separated_info = strtok(id_serv_info, "\n"); //Gets the first info, stoping at newline
+
+    while ( separated_info != NULL ){ //Proceeds getting info and treating
+        int sscanf_state = 0;
+        sscanf_state = sscanf(separated_info, "%s;%s;%hu;%hu",parsed_server.name, parsed_server.ip_addr, 
+            &(parsed_server.udp_port), &(parsed_server.tpc_port));//Separates info and saves it in struct
+
+        if(0 == sscanf_state || EOF == sscanf_state){
+             fprintf(stdout, KRED "error processing id server data, data is invalid or corrupt");
+             return NULL;
+        }
+
+        push_item_to_list(msgserv_list, &parsed_server); //Pushes to list
+        separated_info = strtok(NULL, "\n");//Gets new info
+    }
+
+    return msgserv_list;
 }
 
