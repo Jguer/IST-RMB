@@ -55,6 +55,7 @@ int main(int argc, char *argv[]) {
         if (strcmp("show_servers", op) == 0) {
             response = show_servers(server_ip, server_port);
             puts(response);
+            free(response);
         } else if (strcmp("exit", op) == 0) {
             return EXIT_SUCCESS;
         } else if (strcmp("publish", op) == 0) {
