@@ -17,8 +17,9 @@
 #define RESPONSE_SIZE 512
 
 typedef void *item;
-typedef struct _node node;
 typedef struct _stack list;
+typedef struct _stack stack;
+typedef struct _node node;
 
 /* LIST */
 list *create_list();

@@ -1,5 +1,10 @@
 #include "utils.h"
 
+struct _stack {
+    size_t size;
+    node *head;
+};
+
 struct _node {
     item this;
     node *next;
@@ -10,8 +15,7 @@ void memory_error(char *msg)
     fprintf(stderr, KRED"Error during memory reserve attempt.\n"KNRM);
     fprintf(stderr, KRED"Msg: %s\n",msg);
     fprintf(stderr, KRED"Exit Program due to unmanaged error.\n"KNRM);
-
-    exit(1);
+    exit(EXIT_FAILURE);
 }
 
 /* LIST */

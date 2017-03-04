@@ -17,6 +17,9 @@ char *show_servers(char *server_ip, u_short server_port) {
     struct sockaddr_in server_addr;
     socklen_t addr_len;
     char *response = (char *)malloc(RESPONSE_SIZE);
+    if (response == NULL) {
+        memory_error("failed to allocate error buffer");
+    }
     char *return_string;
 
     fd = socket(AF_INET, SOCK_DGRAM, 0);

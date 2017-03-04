@@ -10,10 +10,10 @@ UTILS = $(UTILS_DIR)/utils.h
 all: client server
 
 client: $(wildcard src/rmb/*.c)
-	$(CC) $(CFLAGS) -I$(UTILS_DIR) $(wildcard src/rmb/*.c) -o bin/$(CLIENT)
+	$(CC) $(CFLAGS) -I$(UTILS_DIR) $(wildcard wildcard src/utils/*.c) $(wildcard src/rmb/*.c) -o bin/$(CLIENT)
 
 server: $(wildcard src/msgserv/*.c)
-	$(CC) $(CFLAGS) $(wildcard src/msgserv/*.c) -o bin/$(SERVER)
+	$(CC) $(CFLAGS) -I$(UTILS_DIR) $(wildcard wildcard src/utils/*.c) $(wildcard src/msgserv/*.c) -o bin/$(SERVER)
 
 clean:
 	rm $(wildcard bin/*)
