@@ -7,7 +7,7 @@ typedef struct _server {
     char    *ip_addr;
     u_short udp_port;
     u_short tpc_port;
-}server;
+} server;
 
 char *show_servers(char *server_ip, u_short server_port) {
     int i = 0;
@@ -71,7 +71,7 @@ char *show_servers(char *server_ip, u_short server_port) {
             fprintf(stderr, KYEL "unable to receive\n" KNRM);
             i++;
         } else {
-            return_string = (char *)malloc( (n+1) * sizeof(char));
+            return_string = (char *)malloc((n+1) * sizeof(char));
             strcpy(return_string, response);
             break;
         }
@@ -109,7 +109,7 @@ list *parse_servers(char *id_serv_info){
 
     while ( separated_info != NULL ){ //Proceeds getting info and treating
         int sscanf_state = 0;
-        sscanf_state = sscanf(separated_info, "%s;%s;%hu;%hu",parsed_server.name, parsed_server.ip_addr, 
+        sscanf_state = sscanf(separated_info, "%s;%s;%hu;%hu",parsed_server.name, parsed_server.ip_addr,
             &(parsed_server.udp_port), &(parsed_server.tpc_port));//Separates info and saves it in struct
 
         if(0 == sscanf_state || EOF == sscanf_state){
@@ -122,5 +122,43 @@ list *parse_servers(char *id_serv_info){
     }
 
     return msgserv_list;
+}
+/* Server Functions */
+
+char *get_name(server *this) {
+    return this->name;
+}
+
+char *get_ip_address(server *this) {
+    return this->ip_addr;
+}
+
+u_short get_udp_port(server *this) {
+    return this->udp_port;
+}
+
+u_short get_tpc_port(server *this) {
+    return this->tpc_port;
+}
+
+void print_server(item got_item) {
+    server *this = (server *)got_item;
+
+    fprintf(stdout,
+            KBLU "Server name:" RESET " %s "
+            KBLU "Server IP:" RESET " %s "
+            KBLU "UDP Port:" RESET " %hu "
+            KBLU "TPC Port:" RESET " %hu ",
+            this->name, this->ip_addr, this->udp_port, this->tpc_port);
+    return;
+}
+
+void free_server(item got_item) {
+    server *this = (server *)got_item;
+
+    free(this->name);
+    free(this->ip_addr);
+    free(this);
+    return;
 }
 
