@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <string.h>
+#include <time.h>
+
 #include "utils.h"
 #include "identity.h"
 
@@ -18,6 +20,7 @@ int main(int argc, char *argv[]) {
     char server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
     u_short server_port = 59000;
 
+    srand(time(NULL));
     // Treat options
     while ((oc = getopt(argc, argv, "i:p:")) != -1) { //Command-line args parsing, 'i' and 'p' args required for both
         switch (oc) {

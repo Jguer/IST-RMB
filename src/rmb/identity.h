@@ -1,3 +1,6 @@
+#ifndef IDENTITYH
+#define IDENTITYH
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,6 +13,7 @@
 #include "utils.h"
 
 typedef struct _server server;
+
 char *show_servers(char *server_ip, u_short server_port);
 list *parse_servers(char *id_serv_info);
 
@@ -22,3 +26,4 @@ u_short get_tpc_port(server *this);
 void free_server(item got_item);
 void print_server(item got_item);
 
+#endif

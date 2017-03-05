@@ -124,7 +124,6 @@ list *parse_servers(char *id_serv_info){
     return msgserv_list;
 }
 /* Server Functions */
-
 char *get_name(server *this) {
     return this->name;
 }
