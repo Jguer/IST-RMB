@@ -45,7 +45,11 @@ int main(int argc, char *argv[]) {
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
 
-    msgservers_lst = fetch_servers(server_ip, server_port);  
+    msgservers_lst = fetch_servers(server_ip, server_port);
+    if ( NULL == get_head(msgservers_lst) ){
+        printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+        return EXIT_FAILURE;
+    }
 
     // Interactive loop
     while (1) {
@@ -67,6 +71,8 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
         }
     }
+
+    free_list(msgservers_lst, free_server());
     return EXIT_SUCCESS;
 }
 
