@@ -3,7 +3,6 @@ CFLAGS = -Wall -Wextra -g --pedantic
 CLIENT = rmb
 SERVER = msgserv
 UTILS_DIR = src/utils
-UTILS = $(UTILS_DIR)/utils.h
 
 .PHONY: default all clean
 

@@ -1,4 +1,4 @@
-#include "identity.h"
+#include "server.h"
 
 #define REQUEST "GET_SERVERS"
 

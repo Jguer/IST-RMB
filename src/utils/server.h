@@ -1,5 +1,5 @@
-#ifndef IDENTITYH
-#define IDENTITYH
+#ifndef SERVERH
+#define SERVERH
 
 #include <stdlib.h>
 #include <stdio.h>

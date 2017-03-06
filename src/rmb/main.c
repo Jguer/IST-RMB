@@ -6,7 +6,7 @@
 #include <time.h>
 
 #include "utils.h"
-#include "identity.h"
+#include "server.h"
 
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s [-i siip] [-p sipt]\n", name);
