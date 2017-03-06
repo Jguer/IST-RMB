@@ -15,6 +15,6 @@
 #include "utils.h"
 #include "server.h"
 
-void publish(list *server_list, char *msg);
+int publish(server *sel_server, char *msg);
 #endif
 

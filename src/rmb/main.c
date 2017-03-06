@@ -47,28 +47,33 @@ int main(int argc, char *argv[]) {
 
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
-
-    msgservers_lst = fetch_servers(server_ip, server_port);
-    if ( NULL == get_head(msgservers_lst) ){
-        printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
-        return EXIT_FAILURE;
-    }
+    server *sel_server;
+    int err = 1;
 
     // Interactive loop
     while (1) {
-        memset( op, '\0', sizeof(char)*STRING_SIZE ); //Fill strings with string terminator (\0)
-        memset( input_buffer, '\0', sizeof(char)*STRING_SIZE-1 );
+        if err != 0 {
+            msgservers_lst = fetch_servers(server_ip, server_port);
+            sel_server = select_server(msgservers_lst);
+            if (sel_server == NULL) {
+                return(EXIT_FAILURE);
+            }
+        }
 
-        fprintf(stdout, KGRN "Prompt > " KNRM);
-        scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
+        if (err == 0) {
+            memset( op, '\0', sizeof(char)*STRING_SIZE ); //Fill strings with string terminator (\0)
+            memset( input_buffer, '\0', sizeof(char)*STRING_SIZE-1 );
 
+            fprintf(stdout, KGRN "Prompt > " KNRM);
+            scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
+        }
         //User options input: show_servers, exit, publish message, show_latest_messages n;
-
         if (strcmp("show_servers", op) == 0) {
             print_list(msgservers_lst, print_server);
         } else if (strcmp("exit", op) == 0) {
             return EXIT_SUCCESS;
         } else if (strcmp("publish", op) == 0) {
+            err = publish(sel_server, input_buffer);
         } else if (strcmp("show_latest_messages", op) == 0) {
         } else {
             fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
