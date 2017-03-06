@@ -2,13 +2,14 @@
 
 #define PUBLISH "PUBLISH "
 server *select_server(list *server_list) {
-    int r = rand() % get_list_size(server_list);
-    int i = 0;
     node *head = get_head(server_list);
-    if ( NULL == head){
+    if (NULL == head) {
         printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
         return NULL;
     }
+
+    int r = rand() % get_list_size(server_list);
+    int i = 0;
 
     for (i = 0; i < r; i ++) {
         head = get_next_node(head);

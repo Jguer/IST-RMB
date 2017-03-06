@@ -7,6 +7,7 @@
 
 #include "utils.h"
 #include "server.h"
+#include "message.h"
 
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s [-i siip] [-p sipt]\n", name);
@@ -52,12 +53,13 @@ int main(int argc, char *argv[]) {
 
     // Interactive loop
     while (1) {
-        if err != 0 {
+        if (err != 0) {
             msgservers_lst = fetch_servers(server_ip, server_port);
             sel_server = select_server(msgservers_lst);
             if (sel_server == NULL) {
                 return(EXIT_FAILURE);
             }
+            err = 0;
         }
 
         if (err == 0) {
@@ -73,6 +75,9 @@ int main(int argc, char *argv[]) {
         } else if (strcmp("exit", op) == 0) {
             return EXIT_SUCCESS;
         } else if (strcmp("publish", op) == 0) {
+            if (strlen(input_buffer) == 0) {
+                continue;
+            }
             err = publish(sel_server, input_buffer);
         } else if (strcmp("show_latest_messages", op) == 0) {
         } else {

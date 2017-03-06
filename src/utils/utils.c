@@ -83,7 +83,7 @@ void print_list(list *got_list, void (*print_item)(item)) {
         printf("] -> \n");
     }
 
-    printf("-> [ " KBLU "NULL" RESET " ]");
+    printf("-> [ " KBLU "NULL" RESET " ]\n");
 
 }
 

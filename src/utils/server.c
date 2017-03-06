@@ -9,7 +9,7 @@ typedef struct _server {
     u_short tcp_port;
 } server;
 
-char *show_servers(char *server_ip, u_short server_port) {
+char *get_servers(char *server_ip, u_short server_port) {
     int i = 0;
     int fd = 0;
     ssize_t n = 0;
@@ -119,7 +119,7 @@ list *parse_servers(char *id_serv_info){
 
         if ( 3 >= sscanf_state || EOF == sscanf_state ){
              fprintf(stdout, KRED "error processing id server data, data is invalid or corrupt" KNRM);
-             return NULL;
+             return msgserv_list;
         }
 
         push_item_to_list( msgserv_list, new_server(step_mem_name ,
@@ -136,16 +136,12 @@ list *fetch_servers(char *server_ip, u_short server_port){
 	char *response;
 	list *msgserv_lst;
 
-	response = show_servers(server_ip, server_port); //Show server will return NULL on disconnection
+	response = get_servers(server_ip, server_port); //Show server will return NULL on disconnection
     if (NULL != response){
         msgserv_lst = parse_servers(response);
-        free(response);
-    }
-    if (NULL == msgserv_lst){
-        printf( KRED "error, cannot reach identity server. now closing\n" KNRM);
-        return NULL;
     }
 
+    free(response);
    	return msgserv_lst;
 }
 
@@ -200,7 +196,7 @@ void print_server(item got_item) {
             KYEL "Server name:" RESET " %s "
             KYEL "Server IP:" RESET " %s "
             KYEL "UDP Port:" RESET " %hu "
-            KYEL "TCP Port:" RESET " %hu \n",
+            KYEL "TCP Port:" RESET " %hu ",
             this->name, this->ip_addr, this->udp_port, this->tcp_port);
     return;
 }

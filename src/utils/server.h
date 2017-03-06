@@ -14,7 +14,6 @@
 
 typedef struct _server server;
 
-char *show_servers(char *server_ip, u_short server_port);
 list *parse_servers(char *id_serv_info);
 list *fetch_servers(char *server_ip, u_short server_port);
 
