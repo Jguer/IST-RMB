@@ -86,6 +86,8 @@ int main(){
         return EXIT_FAILURE;
     }
 
+    addrlen = sizeof(commaddr);
+
     while(1){
     	//Clear the set
     	FD_ZERO(&rfds);
