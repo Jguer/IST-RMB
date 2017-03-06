@@ -22,7 +22,7 @@ int main(){
     int read_size; //size of the read string
     int activity; 
     struct hostent *hostptr;
-    struct sockaddr_in serveraddr, commaddr;
+    struct sockaddr_in tcpaddr, commaddr;
     struct in_addr *host_addr;
     int clientlen;
     int addrlen;
@@ -34,6 +34,7 @@ int main(){
     	struct sockaddr_in info;
      	
     } child_socket[MAX_SOCKETS];
+
 
     void (*old_handler)(int);   //interrupt handler
 
@@ -60,15 +61,15 @@ int main(){
 		return EXIT_FAILURE;
 	}
 
-    memset((void*)&serveraddr, (int)'\0',
-            sizeof(serveraddr));
+    memset((void*)&tcpaddr, (int)'\0',
+            sizeof(tcpaddr));
 
-    serveraddr.sin_family = AF_INET;
-    serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serveraddr.sin_port = htons((u_short)PORT);
+    tcpaddr.sin_family = AF_INET;
+    tcpaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    tcpaddr.sin_port = htons((u_short)PORT);
 
-    if ( 0 != bind(master_fd, (struct sockaddr*)&serveraddr,
-            sizeof(serveraddr)) ){ //Bind socket to the PORT defined
+    if ( 0 != bind(master_fd, (struct sockaddr*)&tcpaddr,
+            sizeof(tcpaddr)) ){ //Bind socket to the PORT defined
  
         printf("error bind failed");
         return EXIT_FAILURE;
@@ -92,8 +93,10 @@ int main(){
     	//Clear the set
     	FD_ZERO(&rfds);
 
-    	//Add master_fd to the socket set
+    	//Add master_fd and stdio to the socket set
     	FD_SET(master_fd, &rfds);
+    	FD_SET(0, &rfds); 
+
     	max_fd = master_fd; //The master is the first socket
 
     	//Add child sockets to the socket set
@@ -156,7 +159,24 @@ int main(){
 
         	fd = child_socket[n].fd;
 
-        	if ( FD_ISSET(fd , &rfds) ){
+        	if ( FD_ISSET(0, &rfds) ){ //Stdio input
+
+        		read_size = read( fd, buffer, SIZE_BUFFER);
+        		if ( 0 == read_size )
+        		{
+        			printf("error reading from stdio\n");
+        			return EXIT_FAILURE;
+        		}
+
+        		buffer[read_size-1] = '\0'; //switches \n to \0
+
+        		//User options input: exit;
+			    if (strcmp("exit", buffer) == 0) {
+			       	return EXIT_FAILURE;
+			    }
+        	}
+        	
+        	if ( FD_ISSET(fd , &rfds) && fd!=0 ){
 
         		read_size = read( fd, buffer, SIZE_BUFFER );
 
