@@ -7,17 +7,21 @@ typedef struct _server {
     char    *ip_addr;
     u_short udp_port;
     u_short tcp_port;
+    bool    connected;
 } server;
 
 char *get_servers(char *server_ip, u_short server_port) {
-    int i = 0;
-    int fd = 0;
+    int i     = 0;
+    int fd    = 0;
     ssize_t n = 0;
+
     struct hostent *host_ptr = NULL;
     struct sockaddr_in server_addr;
     socklen_t addr_len;
-    char *return_string;
+
+    char *return_string = NULL;
     char *response = (char *)malloc(RESPONSE_SIZE);
+
     if (response == NULL) {
         memory_error("failed to allocate error buffer");
     }
@@ -38,10 +42,10 @@ char *get_servers(char *server_ip, u_short server_port) {
     memset((void*)&server_addr, (int)'\0',
             sizeof(server_addr));
 
-    server_addr.sin_family = AF_INET;
+    server_addr.sin_family      = AF_INET;
     server_addr.sin_addr.s_addr = ((struct in_addr *) (host_ptr->h_addr_list[0]))->s_addr;
-    server_addr.sin_port = htons(server_port);
-    addr_len = sizeof(server_addr);
+    server_addr.sin_port        = htons(server_port);
+    addr_len                    = sizeof(server_addr);
 
     /* printf("Connected to: [%s:%hu]\n",inet_ntoa(serveraddr.sin_addr),ntohs(serveraddr.sin_port)); */
 
@@ -167,8 +171,9 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
    		return NULL;
    	}
 
-   	pserver_to_node->udp_port = udp_port;
-   	pserver_to_node->tcp_port = tcp_port;
+    pserver_to_node->connected = false;
+   	pserver_to_node->udp_port  = udp_port;
+   	pserver_to_node->tcp_port  = tcp_port;
 
    	return pserver_to_node;
 }
@@ -189,6 +194,10 @@ u_short get_tcp_port(server *this) {
     return this->tcp_port;
 }
 
+bool get_connected(server *this) {
+    return this->connected;
+}
+
 void print_server(item got_item) {
     server *this = (server *)got_item;
 
@@ -196,8 +205,9 @@ void print_server(item got_item) {
             KYEL "Server name:" RESET " %s "
             KYEL "Server IP:" RESET " %s "
             KYEL "UDP Port:" RESET " %hu "
-            KYEL "TCP Port:" RESET " %hu ",
-            this->name, this->ip_addr, this->udp_port, this->tcp_port);
+            KYEL "TCP Port:" RESET " %hu "
+            KYEL "Connected:" RESET " %d ",
+            this->name, this->ip_addr, this->udp_port, this->tcp_port, this->connected);
     return;
 }
 

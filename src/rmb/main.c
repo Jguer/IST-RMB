@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
     int oc;
     char server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
     u_short server_port = 59000;
-    list *msgservers_lst;
 
     srand(time(NULL));
     // Treat options
@@ -48,7 +47,10 @@ int main(int argc, char *argv[]) {
 
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
-    server *sel_server;
+    
+    server *sel_server   = NULL;
+    list *msgservers_lst = NULL;
+
     int err = 1;
 
     // Interactive loop
@@ -67,7 +69,8 @@ int main(int argc, char *argv[]) {
             memset( input_buffer, '\0', sizeof(char)*STRING_SIZE-1 );
 
             fprintf(stdout, KGRN "Prompt > " KNRM);
-            scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
+            scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer); 
+            // Grab word, then throw away space and finally grab until \n
         }
         //User options input: show_servers, exit, publish message, show_latest_messages n;
         if (strcmp("show_servers", op) == 0) {

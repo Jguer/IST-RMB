@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "server.h"
 #include "utils.h"
 
 void usage(char* name) {
@@ -84,21 +85,28 @@ int main(int argc, char *argv[]) {
 
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
+    int err = 1;
+    list *msgservers_lst = NULL;
 
     // Interactive loop
     while (1) {
+        if (err != 0) {
+            msgservers_lst = fetch_servers(id_server_ip, id_server_port);
+            err = 0;
+        }
         memset( op, '\0', sizeof(char)*STRING_SIZE ); //Fill strings with string terminator (\0)
         memset( input_buffer, '\0', sizeof(char)*STRING_SIZE-1 );
 
         fprintf(stdout, KGRN "Prompt > " KNRM);
-        scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
+        scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer);
+        // Grab word, then throw away space and finally grab until \n
 
         //User options input: show_servers, exit, publish message, show_latest_messages n;
-
         if (strcmp("join", op) == 0) {
         } else if (strcmp("exit", op) == 0) {
             return EXIT_SUCCESS;
         } else if (strcmp("show_servers", op) == 0) {
+            print_list(msgservers_lst, print_server);
         } else if (strcmp("show_messages", op) == 0) {
         } else {
             fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
