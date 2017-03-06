@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <signal.h>
 #define PORT 9000
+#define WAIT_STACK 10
 extern int errno;
 
 int main(){
@@ -52,7 +53,7 @@ int main(){
     bind(fd, (struct sockaddr*)&serveraddr,
             sizeof(serveraddr));
 
-    if ( -1 == listen(fd, 5) ) return EXIT_FAILURE; 
+    if ( -1 == listen(fd, WAIT_STACK) ) return EXIT_FAILURE; 
 
     if ( (old_handler=signal(SIGPIPE,SIG_IGN))==SIG_ERR ) {
         printf("error protecting from SIGPIPE\n");    
