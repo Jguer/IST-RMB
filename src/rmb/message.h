@@ -13,7 +13,7 @@
 #include <stdbool.h>
 
 #include "utils.h"
-#include "identity.h"
+#include "server.h"
 
 void publish(list *server_list, char *msg);
 #endif
