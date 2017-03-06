@@ -10,19 +10,37 @@
 #include <arpa/inet.h>
 #include <signal.h>
 #define PORT 9000
+#define MAX_PENDING 5
+#define MAX_SOCKETS 30
+#define SIZE_BUFFER 1024
+#define SIZE_MESSAGE 1024
 extern int errno;
 
 int main(){
-    int fd, newfd;
-    int n,nw;
+    int fd, master_fd, max_fd, new_fd; //File descriptors
+    int n; //For cycles counter
+    int read_size; //size of the read string
+    int activity; 
     struct hostent *hostptr;
-    struct sockaddr_in serveraddr, clientaddr;
-    struct in_addr *host_addr; 
+    struct sockaddr_in serveraddr, commaddr;
+    struct in_addr *host_addr;
     int clientlen;
     int addrlen;
-    char *ptr, buffer[128];
+    char *ptr, buffer[SIZE_BUFFER], message[SIZE_MESSAGE];
+    fd_set rfds; //File descriptor set, read list
+    struct fd_handler{
+
+    	int fd;
+    	struct sockaddr_in info;
+     	
+    } child_socket[MAX_SOCKETS];
+
     void (*old_handler)(int);   //interrupt handler
 
+
+    for ( n=0; n<MAX_SOCKETS; n++ ) { //Make sure of the initialization
+    	child_socket[n].fd = 0;
+    }
 
     if(gethostname(buffer,128)==-1)
     	printf("error getting hostname: %s\n",strerror(errno));
@@ -35,11 +53,11 @@ int main(){
     host_addr = (struct in_addr*)hostptr->h_addr_list[0];
     printf("Host address: %s\n",inet_ntoa(*host_addr));
 
-    fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd==-1)
+    master_fd = socket(AF_INET, SOCK_STREAM, 0);  //Create master socket
+    if (master_fd==-1)
 	{
 		printf("error creating socket\n");
-		exit(EXIT_FAILURE);
+		return EXIT_FAILURE;
 	}
 
     memset((void*)&serveraddr, (int)'\0',
@@ -49,57 +67,122 @@ int main(){
     serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serveraddr.sin_port = htons((u_short)PORT);
 
-    bind(fd, (struct sockaddr*)&serveraddr,
-            sizeof(serveraddr));
-
-    if ( -1 == listen(fd, 5) ) return EXIT_FAILURE; 
-
-    if ( (old_handler=signal(SIGPIPE,SIG_IGN))==SIG_ERR ) {
-        printf("error protecting from SIGPIPE\n");    
+    if ( 0 != bind(master_fd, (struct sockaddr*)&serveraddr,
+            sizeof(serveraddr)) ){ //Bind socket to the PORT defined
+ 
+        printf("error bind failed");
         return EXIT_FAILURE;
     }
 
 
-    while(1){
-        addrlen=sizeof(clientaddr);
-        if ( (newfd=accept(fd,(struct sockaddr*)&clientaddr,&addrlen))==-1 ) {
-            printf("error accepting connection\n");    
-            return EXIT_FAILURE;
-        }
-
-        hostptr=gethostbyaddr(&clientaddr.sin_addr,sizeof(clientaddr.sin_addr),AF_INET);
-        if(hostptr==NULL)
-            printf("Connected to [%s:%hu]\n",inet_ntoa(clientaddr.sin_addr),ntohs(clientaddr.sin_port));
-        else
-            printf("Connected to [%s:%hu]\n",hostptr->h_name,ntohs(clientaddr.sin_port));
-
-
-        while ( (n=read(newfd,buffer,128))!=0 ) {
-            
-            if(n==-1){
-                printf("error receiving info\n");    
-                return EXIT_FAILURE;
-            }
-
-            ptr=&buffer[0];
-
-            write(STDOUT_FILENO, "echo: ", 6);
-            write(STDOUT_FILENO, buffer, n);
-            buffer[n]='\0';
-
-            while(n>0){
-                if ( (nw=write(newfd,ptr,n)) <= 0 ){
-                    printf("error sending info\n");    
-                    return EXIT_FAILURE;
-                }
-                
-                n-=nw; ptr+=nw;
-            }
-        }
-        close(newfd);
+    if ( -1 == listen(master_fd, MAX_PENDING) ){ //Specify MAX_PENDING connections to master socket
+    	printf("error on setting listen\n");
+    	return EXIT_FAILURE;
     }
 
-    close(fd);
+    if ( (old_handler=signal(SIGPIPE,SIG_IGN))==SIG_ERR ) {
+        
+        printf("error protecting from SIGPIPE\n");    
+        return EXIT_FAILURE;
+    }
+
+    while(1){
+    	//Clear the set
+    	FD_ZERO(&rfds);
+
+    	//Add master_fd to the socket set
+    	FD_SET(master_fd, &rfds);
+    	max_fd = master_fd; //The master is the first socket
+
+    	//Add child sockets to the socket set
+    	for ( n = 0; n < MAX_SOCKETS ; n++) {
+
+    		fd = child_socket[n].fd; //file descriptor/socket
+
+    		//if the socket is valid then add to the read list
+    		if(fd > 0)	FD_SET(fd, &rfds);
+
+    		//The highest file descriptor is saved for the select fnc
+    		if(fd > max_fd)	max_fd = fd;
+    	}
+
+    	//wait for one of the descriptors is ready, writen to
+    	activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL);
+
+    	if(activity < 0){
+    		printf("error on select\n");
+    		return EXIT_FAILURE;
+    	}
+
+    	//if something happens on master_fd create and allocate new socket
+    	if (FD_ISSET(master_fd, &rfds)){
+
+    		//Create new socket, new_fd
+	    	if ( (new_fd = accept(master_fd, (struct sockaddr *)&commaddr,
+	    		(socklen_t*)&addrlen))<0 ){
+
+	    		printf("error accepting communication\n");
+	    		return EXIT_FAILURE;
+	    	}
+
+	   		//Send message like SGET_MESSAGES to request messages
+	   		strcpy(message, "SGET_MESSAGES\n");
+	   		if( send(new_fd, message, strlen(message), 0) != strlen(message) ) {
+
+                printf("error sending communication\n");
+	    		return EXIT_FAILURE;
+            }
+
+            //add new socket to array of sockets
+            for (n = 0; n < MAX_SOCKETS; n++) 
+            {
+
+                //if position is empty
+                if( child_socket[n].fd == 0 )
+                {
+                    child_socket[n].fd = new_fd;
+                    child_socket[n].info = commaddr;  
+                    printf("New child socket on %s:%hu connected\n",
+        				inet_ntoa(child_socket[n].info.sin_addr), ntohs(child_socket[n].info.sin_port) );          
+                    break;
+                }
+            }
+        }
+
+        //if something happened on other socket we must process it
+        for ( n=0 ; n<MAX_SOCKETS; n++){
+
+        	fd = child_socket[n].fd;
+
+        	if ( FD_ISSET(fd , &rfds) ){
+
+        		read_size = read( fd, buffer, SIZE_BUFFER );
+
+        		if ( 0 == read_size ){
+        			
+        			//The server disconnected, remove from the fd list and close fd
+        			close(fd);
+        			child_socket[n].fd = 0;
+        			printf("Child socket on %s:%hu disconnected\n",
+        				inet_ntoa(child_socket[n].info.sin_addr), ntohs(child_socket[n].info.sin_port) );
+        		}
+        		else{
+
+        			//Echo back the message that came in
+        			buffer[read_size] = '\0';
+        			printf("echoing: %s to %s:%hu\n", buffer, inet_ntoa(child_socket[n].info.sin_addr),
+        				ntohs(child_socket[n].info.sin_port) );
+        			if( send(fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
+
+		                printf("error sending communication\n");
+	    				return EXIT_FAILURE;
+            		}
+        		}
+        	}
+        }
+    }
+
+    close(master_fd);
     exit(EXIT_SUCCESS);
 }
 
