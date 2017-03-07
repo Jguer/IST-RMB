@@ -10,6 +10,21 @@ typedef struct _server {
     bool    connected;
 } server;
 
+struct addrinfo *get_server_address(char *server_ip, char *server_port) {
+    struct addrinfo hints = { .ai_socktype = SOCK_DGRAM, .ai_family=AF_INET };
+    struct addrinfo *result;
+    int err;
+
+    err = getaddrinfo(server_ip, server_port, &hints, &result);
+    if(err != 0){
+        perror("getaddrinfo");
+        printf("getaddrinfo : %s \n",gai_strerror(err));
+        return NULL;
+    }
+
+    return result;
+}
+
 char *get_servers(char *server_ip, u_short server_port) {
     int i     = 0;
     int fd    = 0;
@@ -171,9 +186,9 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
    		return NULL;
    	}
 
-    pserver_to_node->connected = false;
    	pserver_to_node->udp_port  = udp_port;
    	pserver_to_node->tcp_port  = tcp_port;
+    pserver_to_node->connected = false;
 
    	return pserver_to_node;
 }
@@ -190,12 +205,17 @@ u_short get_udp_port(server *this) {
     return this->udp_port;
 }
 
-u_short get_tcp_port(server *this) {
-    return this->tcp_port;
-}
-
 bool get_connected(server *this) {
     return this->connected;
+}
+
+void set_connected(server *this, bool connected) {
+    this->connected = connected;
+    return;
+}
+
+u_short get_tcp_port(server *this) {
+    return this->tcp_port;
 }
 
 void print_server(item got_item) {
