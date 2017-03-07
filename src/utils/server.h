@@ -15,8 +15,9 @@
 
 typedef struct _server server;
 
+struct addrinfo *get_server_address(char *server_ip, char *server_port);
 list *parse_servers(char *id_serv_info);
-list *fetch_servers(char *server_ip, u_short server_port);
+list *fetch_servers(int fd, struct addrinfo *id_server);
 
 /* Server Functions */
 server *new_server(char *name, char* ip_address, u_short udp_port, u_short tcp_port);
