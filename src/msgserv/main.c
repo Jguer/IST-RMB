@@ -87,6 +87,7 @@ int main(int argc, char *argv[]) {
     char input_buffer[STRING_SIZE];
     int err = 1;
     list *msgservers_lst = NULL;
+    server* host = new_server(name, ip, udp_port, tcp_port); //host parameters
 
     // Interactive loop
     while (1) {
@@ -113,6 +114,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    free_server((item)host);
     free(name);
     free(ip);
     return EXIT_SUCCESS;

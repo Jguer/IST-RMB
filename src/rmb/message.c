@@ -64,3 +64,7 @@ int publish(server *sel_server, char *msg) {
     free(msg_to_send);
     return 0;
 }
+
+void get_latest_messages() {
+
+}

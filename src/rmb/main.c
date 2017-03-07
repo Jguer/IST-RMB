@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
-    
+
     server *sel_server   = NULL;
     list *msgservers_lst = NULL;
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
             memset( input_buffer, '\0', sizeof(char)*STRING_SIZE-1 );
 
             fprintf(stdout, KGRN "Prompt > " KNRM);
-            scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer); 
+            scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer);
             // Grab word, then throw away space and finally grab until \n
         }
         //User options input: show_servers, exit, publish message, show_latest_messages n;
