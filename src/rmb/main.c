@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
             msgservers_lst = fetch_servers(fd, id_server);
             sel_server = select_server(msgservers_lst);
             if (NULL == sel_server) {
+                fprintf(stderr, KGRN "No servers available\n" KNRM);
                 exit_code = EXIT_FAILURE;
                 goto PROGRAM_EXIT;
             }

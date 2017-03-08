@@ -4,7 +4,6 @@
 server *select_server(list *server_list) {
     node *head = get_head(server_list);
     if (NULL == head) {
-        printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
         return NULL;
     }
 
@@ -28,12 +27,6 @@ int publish(int fd, server *sel_server, char *msg) {
         memory_error("failed to allocate error buffer");
     }
 
-    if (-1 == fd)
-    {
-        printf("error creating socket\n");
-        exit(EXIT_FAILURE);
-    }
-
     msg_to_send[0] = '\0';
     strcat(msg_to_send, PUBLISH);
     strcat(msg_to_send, msg);
@@ -54,7 +47,7 @@ int publish(int fd, server *sel_server, char *msg) {
 
     if (-1 == n) {
         fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
-        return -1;
+        return 1;
     }
 
     close(fd);
@@ -62,6 +55,6 @@ int publish(int fd, server *sel_server, char *msg) {
     return 0;
 }
 
-void get_latest_messages() {
-
+list *get_latest_messages() {
+    return NULL;
 }

@@ -135,11 +135,10 @@ list *fetch_servers(int fd, struct addrinfo *id_server) {
 }
 
 /* Server Functions */
-
 server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port){
 	server *pserver_to_node = NULL;
 
-	pserver_to_node = (server *)malloc( sizeof(server) );
+	pserver_to_node = (server *)malloc(sizeof(server));
     if( NULL == pserver_to_node ) memory_error("Unable to reserve server struct memory");
 
    	pserver_to_node->name = (char *)malloc( sizeof(char)*(strlen(name)+1) );
