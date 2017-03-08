@@ -18,18 +18,17 @@ server *select_server(list *server_list) {
     return (server *)get_node_item(head);
 }
 
-int publish(server *sel_server, char *msg) {
-    int fd = 0;
+int publish(int fd, server *sel_server, char *msg) {
     ssize_t n = 0;
     struct sockaddr_in server_addr;
     socklen_t addr_len;
+
     char *msg_to_send = (char *)malloc(RESPONSE_SIZE);
-    if (msg_to_send == NULL) {
+    if (NULL == msg_to_send) {
         memory_error("failed to allocate error buffer");
     }
 
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (fd==-1)
+    if (-1 == fd)
     {
         printf("error creating socket\n");
         exit(EXIT_FAILURE);
@@ -43,19 +42,17 @@ int publish(server *sel_server, char *msg) {
             sizeof(server_addr));
 
     server_addr.sin_family = AF_INET;
-    if (inet_aton(get_ip_address(sel_server), &server_addr.sin_addr) != 1) {
+    if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
         fprintf(stderr, KYEL "unable to convert %s to address\n" KNRM, get_ip_address(sel_server));
     }
 
     server_addr.sin_port = htons(get_udp_port(sel_server ));
     addr_len = sizeof(server_addr);
 
-    printf("Connected to: [%s:%hu]\n",inet_ntoa(server_addr.sin_addr),ntohs(server_addr.sin_port));
-
     n = sendto(fd, msg_to_send, strlen(msg_to_send) + 1, 0,
             (struct sockaddr*)&server_addr, addr_len);
 
-    if (n == -1) {
+    if (-1 == n) {
         fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
         return -1;
     }

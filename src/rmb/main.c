@@ -21,6 +21,14 @@ int main(int argc, char *argv[]) {
     char server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
     /* u_short server_port = 59000; */
     char server_port[STRING_SIZE] = "59000";
+    int err = 1;
+    int fd = 0;
+    int exit_code = EXIT_SUCCESS;
+    char op[STRING_SIZE];
+    char input_buffer[STRING_SIZE];
+
+    server *sel_server   = NULL;
+    list *msgservers_lst = NULL;
 
     srand(time(NULL));
     // Treat options
@@ -45,31 +53,24 @@ int main(int argc, char *argv[]) {
     }
 
     fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%s\n", server_ip, server_port);
-
-    int err = 1;
-    int fd = 0;
-    char op[STRING_SIZE];
-    char input_buffer[STRING_SIZE];
-
-    server *sel_server   = NULL;
-    list *msgservers_lst = NULL;
+    struct addrinfo *id_server = get_server_address(server_ip, server_port);
 
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (-1 == fd)
     {
         printf("error creating socket\n");
-        return EXIT_FAILURE;
+        exit_code = EXIT_FAILURE;
+        goto PROGRAM_EXIT;
     }
 
-    struct addrinfo *id_server = get_server_address(server_ip, server_port);
-
     // Interactive loop
-    while (1) {
+    while (true) {
         if (0 != err) {
             msgservers_lst = fetch_servers(fd, id_server);
             sel_server = select_server(msgservers_lst);
             if (NULL == sel_server) {
-                return EXIT_FAILURE;
+                exit_code = EXIT_FAILURE;
+                goto PROGRAM_EXIT;
             }
             err = 0;
         }
@@ -79,29 +80,31 @@ int main(int argc, char *argv[]) {
             memset( input_buffer, '\0', sizeof(char)*STRING_SIZE-1 );
 
             fprintf(stdout, KGRN "Prompt > " KNRM);
-            scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer);
+            scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer);
             // Grab word, then throw away space and finally grab until \n
         }
         //User options input: show_servers, exit, publish message, show_latest_messages n;
         if (0 == strcmp("show_servers", op)) {
             print_list(msgservers_lst, print_server);
         } else if (strcmp("exit", op) == 0) {
+                goto PROGRAM_EXIT;
             return EXIT_SUCCESS;
         } else if (0 == strcmp("publish", op)) {
             if (0 == strlen(input_buffer)) {
                 continue;
             }
-            err = publish(sel_server, input_buffer);
+            err = publish(fd, sel_server, input_buffer);
         } else if (0 == strcmp("show_latest_messages", op)) {
         } else {
             fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
         }
     }
 
+PROGRAM_EXIT:
     freeaddrinfo(id_server);
     free_list(msgservers_lst, free_server);
     close(fd);
-    return EXIT_SUCCESS;
+    return exit_code;
 }
 
 

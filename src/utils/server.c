@@ -97,7 +97,6 @@ list *parse_servers(char *id_serv_info){
     u_short step_mem_tcp_port;
     list *msgserv_list = create_list();
 
-
     separated_info = strtok(id_serv_info, "\n"); //Gets the first info, stoping at newline
     separated_info = strtok(NULL, "\n");
 
@@ -127,7 +126,6 @@ list *fetch_servers(int fd, struct addrinfo *id_server) {
 	list *msgserv_lst;
 
 	response = get_servers(fd, id_server); //Show server will return NULL on disconnection
-    puts(response);
     if (NULL != response){
         msgserv_lst = parse_servers(response);
     }
