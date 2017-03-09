@@ -1,5 +1,7 @@
 #include "identity.h"
 
+static char REG_MESSAGE[RESPONSE_SIZE];
+
 int init_tcp(server *host){
 	int master_fd;
 	struct sockaddr_in tcpaddr;
@@ -67,4 +69,66 @@ int init_udp(server *host){
     }
 
     return u_fd;
+}
+
+struct addrinfo *reg_server( int *fd, server *host ,char *ip_name, char *udp_port ){
+
+    struct addrinfo *id_server_info = get_server_address(ip_name, udp_port);
+    int times = 0;
+    int n;
+    int local_fd;
+
+    if(id_server_info == NULL) return NULL;
+
+    local_fd = socket( AF_INET, SOCK_DGRAM, 0);
+    if(local_fd <= 0){
+        printf(KRED "error creating udp socket for registry\n" KNRM);
+        return NULL;
+    }
+    *fd = local_fd;
+
+    if ( 0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host), 
+    get_ip_address(host), get_udp_port(host), get_tcp_port(host) ) ) return NULL;
+
+    while (times < 3) { // Try to send 3 times in case of disconnect
+        n = sendto(local_fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
+                id_server_info->ai_addr, id_server_info->ai_addrlen);
+
+        if (n == -1) {
+            fprintf(stderr, KYEL "unable to register\n" KNRM);
+            times++;
+        } else {
+            break;
+        }
+    }
+    if (times == 3) {
+        return NULL;
+    }
+
+
+    return id_server_info;
+}
+
+int update_reg( int fd, struct addrinfo* id_server_info ){
+    
+    int times= 0;
+    int n;
+
+    while (times < 3) { // Try to send 3 times in case of disconnect
+        n = sendto(fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
+                id_server_info->ai_addr, id_server_info->ai_addrlen);
+
+        if (n == -1) {
+            fprintf(stderr, KYEL "unable to update register\n" KNRM);
+            times++;
+        } else {
+            break;
+        }
+    }
+    if (times == 3) {
+        return -1;
+    }
+
+    return 0;
+
 }

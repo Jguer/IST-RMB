@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     u_short tcp_port = 0;
 
     char id_server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
-    u_short id_server_port = 59000;
+    char id_server_port[STRING_SIZE] = "59000";
 
     int m = 200;
     int r = 10;
@@ -44,7 +44,8 @@ int main(int argc, char *argv[]) {
     fd_set rfds;
 
     int tcp_listen_fd; //TCP socket to accept connections
-    int udp_global_fd; //UDP global socket 
+    int udp_global_fd; //UDP global socket
+    int udp_register_fd; //UDP socket for id server comms
     int max_fd;        //Max fd number.
 
     char buffer[STRING_SIZE];
@@ -52,7 +53,9 @@ int main(int argc, char *argv[]) {
     int read_size;
     int err = 1;
     list *msgservers_lst = NULL;
-    
+    node *head = NULL;
+
+    struct addrinfo * id_server;
 
     srand(time(NULL));
     // Treat options
@@ -84,7 +87,7 @@ int main(int argc, char *argv[]) {
                 strcpy(id_server_ip, optarg);
                 break;
             case 'p':
-                id_server_port = (u_short)atoi(optarg);
+                strcpy(id_server_port, optarg);
                 break;
             case 'm':
                 m = atoi(optarg);
@@ -115,14 +118,14 @@ int main(int argc, char *argv[]) {
     }
 
     fprintf(stdout, KBLU "Server Parameters:" KNRM " %s:%s:%d:%d\n", name, ip, udp_port, tcp_port);
-    fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%d\n", id_server_ip, id_server_port);
+    fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%s\n", id_server_ip, id_server_port);
 
     server* host = new_server(name, ip, udp_port, tcp_port); //host parameters
 
     udp_global_fd = init_udp( host ); //Initiates UDP connection
     tcp_listen_fd = init_tcp( host ); //Initiates TCP connection
 
-    if ( -1 == udp_global_fd || -1 == tcp_listen_fd ){
+    if ( 0 >= udp_global_fd || 0 >= tcp_listen_fd ){
         fprintf(stdout, KYEL "Cannot initializate UDP and/or TCP connections\n" KGRN
          "Check the ip address and ports\n" KNRM) ;
         return EXIT_FAILURE;
@@ -165,7 +168,7 @@ int main(int argc, char *argv[]) {
         int activity;
         activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(activity < 0){
-            printf("error on select\n");
+            printf("error on select\n%d\n", errno);
             return EXIT_FAILURE;
         }
 
@@ -214,10 +217,26 @@ int main(int argc, char *argv[]) {
 
                 //User options input: show_servers, exit, publish message, show_latest_messages n;
             if (strcmp("join", buffer) == 0) {
+
+                //Register on idServer
+                id_server = reg_server( &udp_register_fd, host, id_server_ip, id_server_port);
+                if(id_server == NULL){
+                    printf( KYEL "error registing on id_server\n" KNRM);
+                }
+
+                //Get the message servers list
+                msgservers_lst = fetch_servers(udp_register_fd, id_server);
+                head = get_head(msgservers_lst);
+                if (NULL == head) {
+                    printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+                }
+
+
             } else if (strcmp("exit", buffer) == 0) {
                 return EXIT_SUCCESS;
             } else if (strcmp("show_servers", buffer) == 0) {
-                print_list(msgservers_lst, print_server);
+                if (msgservers_lst != NULL) print_list(msgservers_lst, print_server);
+                else printf("No registred servers\n");
             } else if (strcmp("show_messages", buffer) == 0) {
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
@@ -254,7 +273,7 @@ int main(int argc, char *argv[]) {
 
 
 
-        if(msgservers_lst != NULL){ //TCP sockets already connected handling
+        if(msgservers_lst != NULL ){ //TCP sockets already connected handling
             
             node *aux_node;
             for ( aux_node = get_head(msgservers_lst); 
@@ -278,7 +297,7 @@ int main(int argc, char *argv[]) {
                     }
                     else{
 
-                        //Echo back the message that came in
+                        //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
                         if( send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
                             printf("error sending communication\n");

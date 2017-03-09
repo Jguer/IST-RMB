@@ -164,6 +164,7 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
    	pserver_to_node->udp_port  = udp_port;
    	pserver_to_node->tcp_port  = tcp_port;
     pserver_to_node->connected = false;
+    pserver_to_node->fd = -1;
 
    	return pserver_to_node;
 }
