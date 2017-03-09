@@ -66,6 +66,7 @@ int main(int argc, char *argv[]) {
     // Interactive loop
     while (true) {
         if (0 != err) {
+            free_list(msgservers_lst, free_server);
             msgservers_lst = fetch_servers(fd, id_server);
             sel_server = select_server(msgservers_lst);
             if (NULL == sel_server) {

@@ -88,6 +88,10 @@ void print_list(list *got_list, void (*print_item)(item)) {
 }
 
 void free_list(list *got_list, void (*free_item)(item)) {
+    if (NULL == got_list) {
+        return;
+    }
+
     node *got_node = get_head(got_list);
 
     /* Free every node of list*/
