@@ -2,9 +2,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/select.h>
 #include <string.h>
 #include <time.h>
+#include <netdb.h>
+#include <errno.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
+#include "identity.h"
 #include "server.h"
 #include "utils.h"
 
@@ -34,23 +41,44 @@ int main(int argc, char *argv[]) {
     int m = 200;
     int r = 10;
 
+    fd_set rfds;
+
+    int tcp_listen_fd; //TCP socket to accept connections
+    int udp_global_fd; //UDP global socket 
+    int max_fd;        //Max fd number.
+
+    char buffer[STRING_SIZE];
+    char message[STRING_SIZE];
+    int read_size;
+    int err = 1;
+    list *msgservers_lst = NULL;
+    
+
     srand(time(NULL));
     // Treat options
+    int flag_n = 0;
+    int flag_j = 0;
+    int flag_u = 0;
+    int flag_t = 0;
     while ((oc = getopt(argc, argv, "n:j:u:t:i:p:m:r:h")) != -1) { //Command-line args parsing, 'i' and 'p' args required for both
         switch (oc) {
             case 'n':
                 name = (char *)malloc(strlen(optarg) + 1);
                 strcpy(name, optarg); //optarg has the string corresponding to oc value
+                flag_n = 1;
                 break;
             case 'j':
                 ip = (char *)malloc(strlen(optarg) + 1);
                 strcpy(ip, optarg);
+                flag_j = 1;
                 break;
             case 'u':
                 udp_port = (u_short)atoi(optarg);
+                flag_u = 1;
                 break;
             case 't':
                 tcp_port = (u_short)atoi(optarg);
+                flag_t = 1;
                 break;
             case 'i':
                 strcpy(id_server_ip, optarg);
@@ -73,51 +101,194 @@ int main(int argc, char *argv[]) {
                 fprintf(stderr, "%s: option '-%c' requires an argument\n",
                         argv[0], optopt);
                 break;
-            case '?': //Left blank on purpose, help option
+            case '?':
             default:
                 usage(argv[0]);
                 return EXIT_FAILURE;
         }
     }
 
+    if ( (flag_n && flag_j && flag_u && flag_t) != 1 ){
+        printf("Required arguments not present\n");
+        usage(argv[0]);
+        return EXIT_FAILURE;
+    }
+
     fprintf(stdout, KBLU "Server Parameters:" KNRM " %s:%s:%d:%d\n", name, ip, udp_port, tcp_port);
     fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%d\n", id_server_ip, id_server_port);
 
-    char op[STRING_SIZE];
-    char input_buffer[STRING_SIZE];
-    int err = 1;
-    list *msgservers_lst = NULL;
     server* host = new_server(name, ip, udp_port, tcp_port); //host parameters
 
-    // Interactive loop
-    while (1) {
-        if (err != 0) {
-            msgservers_lst = fetch_servers(id_server_ip, id_server_port);
-            err = 0;
-        }
-        memset( op, '\0', sizeof(char)*STRING_SIZE ); //Fill strings with string terminator (\0)
-        memset( input_buffer, '\0', sizeof(char)*STRING_SIZE-1 );
+    udp_global_fd = init_udp( host ); //Initiates UDP connection
+    tcp_listen_fd = init_tcp( host ); //Initiates TCP connection
 
-        fprintf(stdout, KGRN "Prompt > " KNRM);
-        scanf("%s%*[ ]%126[^\t\n]" , op, input_buffer);
-        // Grab word, then throw away space and finally grab until \n
-
-        //User options input: show_servers, exit, publish message, show_latest_messages n;
-        if (strcmp("join", op) == 0) {
-        } else if (strcmp("exit", op) == 0) {
-            return EXIT_SUCCESS;
-        } else if (strcmp("show_servers", op) == 0) {
-            print_list(msgservers_lst, print_server);
-        } else if (strcmp("show_messages", op) == 0) {
-        } else {
-            fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
-        }
+    if ( -1 == udp_global_fd || -1 == tcp_listen_fd ){
+        fprintf(stdout, KYEL "Cannot initializate UDP and/or TCP connections\n" KGRN
+         "Check the ip address and ports\n" KNRM) ;
+        return EXIT_FAILURE;
     }
 
-    free_server((item)host);
-    free(name);
-    free(ip);
-    return EXIT_SUCCESS;
+    while(1){
+        int addrlen;
+
+        //Clear the set
+        FD_ZERO(&rfds);
+
+        //Add tcp_listen_fd, udp_global_fd and stdio to the socket set
+        FD_SET(0, &rfds);
+        FD_SET(udp_global_fd, &rfds);
+        FD_SET(tcp_listen_fd, &rfds);
+        
+        max_fd = tcp_listen_fd; //The master is the first socket
+        if(udp_global_fd > max_fd)   max_fd = udp_global_fd;
+
+
+        if(msgservers_lst != NULL){ //Add child sockets to the socket set
+            node *aux_node;
+            for ( aux_node = get_head(msgservers_lst); 
+                    aux_node != NULL ; 
+                    aux_node = get_next_node(aux_node)) {
+
+                int processing_fd;
+
+                processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+
+                //if the socket is valid then add to the read list
+                if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
+
+                //The highest file descriptor is saved for the select fnc
+                if(processing_fd > max_fd) max_fd = processing_fd;
+            }
+        }
+
+        //wait for one of the descriptors is ready
+        int activity;
+        activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
+        if(activity < 0){
+            printf("error on select\n");
+            return EXIT_FAILURE;
+        }
+
+        
+        if (FD_ISSET(tcp_listen_fd, &rfds)){ //if something happens on tcp_listen_fd create and allocate new socket
+
+            struct sockaddr_in tcp_newserv_info;
+            int tcp_newserv_fd;
+
+            addrlen = sizeof( tcp_newserv_info );
+
+            //Create new socket, new_fd
+            if ( (tcp_newserv_fd = accept(tcp_listen_fd, (struct sockaddr *)&tcp_newserv_info,
+                (socklen_t*)&addrlen))<0 ){
+
+                printf("error accepting communication\n");
+                return EXIT_FAILURE;
+            }
+
+            //Send message like SGET_MESSAGES to request messages
+            strcpy(message, "SGET_MESSAGES\n");
+            if( send(tcp_newserv_fd, message, strlen(message), 0) != strlen(message) ) {
+
+                printf("error sending communication\n");
+                return EXIT_FAILURE;
+            }
+
+            //add new socket to list of sockets
+            server * tcp_newserv = new_server( NULL ,inet_ntoa(tcp_newserv_info.sin_addr), 0, ntohs(tcp_newserv_info.sin_port) );
+            set_fd(tcp_newserv, tcp_newserv_fd);
+            push_item_to_list( msgservers_lst, tcp_newserv);        
+
+        }
+
+        //if something happened on other socket we must process it
+        if ( FD_ISSET(0, &rfds) ){ //Stdio input
+
+            read_size = read( 0, buffer, STRING_SIZE);
+            if ( 0 == read_size )
+            {
+                printf("error reading from stdio\n");
+                return EXIT_FAILURE;
+            }
+
+            buffer[read_size-1] = '\0'; //switches \n to \0
+
+                //User options input: show_servers, exit, publish message, show_latest_messages n;
+            if (strcmp("join", buffer) == 0) {
+            } else if (strcmp("exit", buffer) == 0) {
+                return EXIT_SUCCESS;
+            } else if (strcmp("show_servers", buffer) == 0) {
+                print_list(msgservers_lst, print_server);
+            } else if (strcmp("show_messages", buffer) == 0) {
+            } else {
+                fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
+            }
+        }
+
+        if ( FD_ISSET(udp_global_fd, &rfds) ){ //UDP communications handling
+
+            struct sockaddr_in udpaddr;
+
+            addrlen = sizeof(udpaddr);
+
+            read_size = recvfrom(udp_global_fd, buffer, sizeof(buffer), 0,
+                            (struct sockaddr *)&udpaddr, (socklen_t*)&addrlen);
+
+            if (read_size == -1) {
+                printf("udp receive error\n");
+                return EXIT_FAILURE;
+            }
+
+            buffer[read_size]='\0';
+            printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
+                ntohs(udpaddr.sin_port) );
+
+            read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0, 
+                    (struct sockaddr*)&udpaddr, addrlen);
+
+            if (read_size == -1) {
+                printf("send error\n");
+                return EXIT_FAILURE;
+            }
+        }
+
+
+
+
+        if(msgservers_lst != NULL){ //TCP sockets already connected handling
+            
+            node *aux_node;
+            for ( aux_node = get_head(msgservers_lst); 
+                    aux_node != NULL ; 
+                    aux_node = get_next_node(aux_node)) {
+
+                int processing_fd;
+
+                processing_fd = get_fd( (server *)get_node_item(aux_node) ); //file descriptor/socket
+
+                if ( FD_ISSET(processing_fd , &rfds) ){
+
+                    read_size = read( processing_fd, buffer, STRING_SIZE );
+
+                    if ( 0 == read_size ){
+                        
+                        //The server disconnected, put fd equal to -1,             DELETE NODE: TO ADD
+                        close(processing_fd);
+                        set_fd( (server *)get_node_item(aux_node), -1 );   
+                        
+                    }
+                    else{
+
+                        //Echo back the message that came in
+                        buffer[read_size] = '\0';
+                        if( send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
+                            printf("error sending communication\n");
+                            return EXIT_FAILURE;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
