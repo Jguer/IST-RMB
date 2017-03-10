@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "server.h"
 #include "message.h"
+#include "utilmessage.h"
 
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s [-i siip] [-p sipt]\n", name);
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]) {
 
     server *sel_server   = NULL;
     list *msgservers_lst = NULL;
+    list *message_list = NULL;
 
     srand(time(NULL));
     // Treat options
@@ -88,7 +90,7 @@ int main(int argc, char *argv[]) {
         //User options input: show_servers, exit, publish message, show_latest_messages n;
         if (0 == strcmp("show_servers", op)) {
             print_list(msgservers_lst, print_server);
-        } else if (strcmp("exit", op) == 0) {
+        } else if (0 == strcmp("exit", op) ) {
                 goto PROGRAM_EXIT;
             return EXIT_SUCCESS;
         } else if (0 == strcmp("publish", op)) {
@@ -97,6 +99,9 @@ int main(int argc, char *argv[]) {
             }
             err = publish(fd, sel_server, input_buffer);
         } else if (0 == strcmp("show_latest_messages", op)) {
+            free_list(message_list, free_message);
+            message_list = get_latest_messages(fd, sel_server, atoi(input_buffer));
+            print_list(message_list, print_message);
         } else {
             fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
         }
@@ -105,6 +110,7 @@ int main(int argc, char *argv[]) {
 PROGRAM_EXIT:
     freeaddrinfo(id_server);
     free_list(msgservers_lst, free_server);
+    free_list(message_list, free_message);
     close(fd);
     return exit_code;
 }

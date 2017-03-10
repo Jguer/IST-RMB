@@ -1,4 +1,4 @@
-#include "message.h"
+#include "utilmessage.h"
 
 typedef struct _message {
     int lc;
@@ -45,4 +45,8 @@ void print_message(item got_item) {
             KBLU "Server IP:" RESET " %s ",
             this->lc, this->content);
     return;
+}
+
+list *parse_messages(char *buffer) {
+    return NULL;
 }
