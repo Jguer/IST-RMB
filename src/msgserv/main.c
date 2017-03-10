@@ -231,6 +231,13 @@ int main(int argc, char *argv[]) {
                     printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
                 }
 
+                //Start connections with the new listed servers
+                    //Protect from connecting to our host
+                    //create one socket for each
+                    //set_fd in server list
+                    //getadrrinfo
+                    //connect
+                    //write
 
             } else if (strcmp("exit", buffer) == 0) {
                 return EXIT_SUCCESS;
