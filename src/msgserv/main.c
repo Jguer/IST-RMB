@@ -153,6 +153,17 @@ int main(int argc, char *argv[]) {
                     aux_node = get_next_node(aux_node)) {
 
                 int processing_fd;
+                node *next_node;
+                server * next_server;
+
+                if( NULL != ( next_node = get_next_node(aux_node) ) ){
+                    if( NULL != ( next_server = (server *)get_node_item(next_node) ) ){
+                        if( -1 == get_fd(next_server) ){
+                            //Delete next node
+                            remove_next_node(aux_node, next_node, free_server);
+                        }
+                    }
+                }
 
                 processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
 
@@ -237,7 +248,7 @@ int main(int argc, char *argv[]) {
                     //set_fd in server list
                     //getadrrinfo
                     //connect
-                    //write
+                    //write SGET_MESSAGES
 
             } else if (strcmp("exit", buffer) == 0) {
                 return EXIT_SUCCESS;
@@ -277,9 +288,6 @@ int main(int argc, char *argv[]) {
             }
         }
 
-
-
-
         if(msgservers_lst != NULL ){ //TCP sockets already connected handling
             
             node *aux_node;
@@ -297,7 +305,7 @@ int main(int argc, char *argv[]) {
 
                     if ( 0 == read_size ){
                         
-                        //The server disconnected, put fd equal to -1,             DELETE NODE: TO ADD
+                        //The server disconnected, put fd equal to -1 (FD_INVALID)
                         close(processing_fd);
                         set_fd( (server *)get_node_item(aux_node), -1 );   
                         

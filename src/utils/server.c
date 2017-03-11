@@ -108,7 +108,7 @@ list *parse_servers(char *id_serv_info){
         sscanf_state = sscanf(separated_info, "%[^;];%[^;];%hu;%hu",step_mem_name, step_mem_ip_addr,
             &step_mem_udp_port, &step_mem_tcp_port);//Separates info and saves it in variables
 
-        if ( 3 >= sscanf_state || EOF == sscanf_state ){
+        if ( 4 != sscanf_state || EOF == sscanf_state ){
              fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
              return msgserv_list;
         }
