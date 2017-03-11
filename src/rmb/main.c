@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     char server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
     /* u_short server_port = 59000; */
     char server_port[STRING_SIZE] = "59000";
-    int err = 1;
+    int err = -1;
     int fd = 0;
     int exit_code = EXIT_SUCCESS;
     char op[STRING_SIZE];
@@ -58,8 +58,7 @@ int main(int argc, char *argv[]) {
     struct addrinfo *id_server = get_server_address(server_ip, server_port);
 
     fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (-1 == fd)
-    {
+    if (-1 == fd) {
         printf("error creating socket\n");
         exit_code = EXIT_FAILURE;
         goto PROGRAM_EXIT;
@@ -73,10 +72,12 @@ int main(int argc, char *argv[]) {
             sel_server = select_server(msgservers_lst);
             if (NULL == sel_server) {
                 fprintf(stderr, KGRN "No servers available\n" KNRM);
-                exit_code = EXIT_FAILURE;
-                goto PROGRAM_EXIT;
+                sleep(5);
+                continue;
             }
-            err = 0;
+            if (-1 == err) {
+                err = 0;
+            }
         }
 
         if (0 == err) {

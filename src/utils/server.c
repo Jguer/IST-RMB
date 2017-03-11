@@ -31,6 +31,7 @@ char *get_servers(int fd, struct addrinfo *id_server) {
 
     char *return_string = NULL;
     char *response = (char *)malloc(RESPONSE_SIZE);
+    memset(response, '\0', RESPONSE_SIZE);
 
     if (response == NULL) {
         memory_error("failed to allocate error buffer");
@@ -71,7 +72,6 @@ char *get_servers(int fd, struct addrinfo *id_server) {
         return NULL;
     }
 
-    close(fd);
     free(response);
     return return_string; //Dirty Pointer
 }
@@ -89,10 +89,10 @@ char *get_servers(int fd, struct addrinfo *id_server) {
     Returns pointer to the head of the list.
     Returns NULL on failure.
 */
-list *parse_servers(char *id_serv_info){
-    char *separated_info;
-    char step_mem_name[STRING_SIZE]; //To define later
-    char step_mem_ip_addr[STRING_SIZE];
+list *parse_servers(char *id_serv_info) {
+    char    *separated_info;
+    char    step_mem_name[STRING_SIZE]; //To define later
+    char    step_mem_ip_addr[STRING_SIZE];
     u_short step_mem_udp_port;
     u_short step_mem_tcp_port;
     list *msgserv_list = create_list();
@@ -106,7 +106,7 @@ list *parse_servers(char *id_serv_info){
         sscanf_state = sscanf(separated_info, "%[^;];%[^;];%hu;%hu",step_mem_name, step_mem_ip_addr,
             &step_mem_udp_port, &step_mem_tcp_port);//Separates info and saves it in variables
 
-        if ( 3 >= sscanf_state || EOF == sscanf_state ){
+        if ( 4 != sscanf_state ) {
              fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
              return msgserv_list;
         }
@@ -135,7 +135,7 @@ list *fetch_servers(int fd, struct addrinfo *id_server) {
 }
 
 /* Server Functions */
-server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port){
+server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port) {
 	server *pserver_to_node = NULL;
 
 	pserver_to_node = (server *)malloc(sizeof(server));

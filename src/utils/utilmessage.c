@@ -48,5 +48,28 @@ void print_message(item got_item) {
 }
 
 list *parse_messages(char *buffer) {
-    return NULL;
+    list *message_list = create_list();
+    char msg[STRING_SIZE];
+    char *separated_info;
+    int  i = 0;
+
+    separated_info = strtok(buffer, "\n"); //Gets the first info, stoping at newline
+    separated_info = strtok(NULL, "\n");
+
+    while ( separated_info != NULL ) { //Proceeds getting info and treating
+        int sscanf_state = 0;
+        sscanf_state = sscanf(separated_info, "%[^\n]", msg); //Separates info and saves it in variables
+
+        if ( 1 != sscanf_state ) {
+             fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
+             break;
+        }
+
+        push_item_to_list(message_list, (item)new_message(i, msg)); //Pushes to list
+
+        separated_info = strtok(NULL, "\n");//Gets new info
+        i++;
+    }
+
+    return message_list;
 }
