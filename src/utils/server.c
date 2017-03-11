@@ -8,6 +8,7 @@ typedef struct _server {
     u_short udp_port;
     u_short tcp_port;
     bool    connected;
+    int     fd;
 } server;
 
 struct addrinfo *get_server_address(char *server_ip, char *server_port) {
@@ -106,7 +107,11 @@ list *parse_servers(char *id_serv_info) {
         sscanf_state = sscanf(separated_info, "%[^;];%[^;];%hu;%hu",step_mem_name, step_mem_ip_addr,
             &step_mem_udp_port, &step_mem_tcp_port);//Separates info and saves it in variables
 
+<<<<<<< HEAD
         if ( 4 != sscanf_state ) {
+=======
+        if ( 4 != sscanf_state || EOF == sscanf_state ){
+>>>>>>> msgserver
              fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
              return msgserv_list;
         }
@@ -141,12 +146,14 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
 	pserver_to_node = (server *)malloc(sizeof(server));
     if( NULL == pserver_to_node ) memory_error("Unable to reserve server struct memory");
 
-   	pserver_to_node->name = (char *)malloc( sizeof(char)*(strlen(name)+1) );
-   	if ( NULL == pserver_to_node->name) memory_error("Unable to reserve server name memory");
-   	if ( NULL == memcpy(pserver_to_node->name, name, strlen(name)+1) ){
-   		printf( KRED "error copying name to server struct" KNRM );
-   		return NULL;
-   	}
+   	if(name != NULL){
+        pserver_to_node->name = (char *)malloc( sizeof(char)*(strlen(name)+1) );
+       	if ( NULL == pserver_to_node->name) memory_error("Unable to reserve server name memory");
+       	if ( NULL == memcpy(pserver_to_node->name, name, strlen(name)+1) ){
+       		printf( KRED "error copying name to server struct" KNRM );
+       		return NULL;
+       	}
+    }
 
 	pserver_to_node->ip_addr = (char *)malloc( sizeof(char)*(strlen(ip_addr)+1) );
    	if(pserver_to_node->ip_addr == NULL) memory_error("Unable to reserve server ip address memory");
@@ -158,6 +165,7 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
    	pserver_to_node->udp_port  = udp_port;
    	pserver_to_node->tcp_port  = tcp_port;
     pserver_to_node->connected = false;
+    pserver_to_node->fd = -1;
 
    	return pserver_to_node;
 }
@@ -185,6 +193,15 @@ void set_connected(server *this, bool connected) {
 
 u_short get_tcp_port(server *this) {
     return this->tcp_port;
+}
+
+int get_fd(server *this){
+    return this->fd;
+}
+
+void set_fd(server *this, int fd){
+    this->fd = fd;
+    return;
 }
 
 void print_server(item got_item) {

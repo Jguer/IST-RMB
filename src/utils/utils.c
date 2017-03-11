@@ -152,6 +152,14 @@ void free_connected_nodes(node *got_node, void (*free_item)(item)) {
     return;
 }
 
+
+void remove_next_node(node *cur_node, node *node_to_remove, void (*free_item)(item)){
+
+    cur_node->next = node_to_remove->next;
+    free_node(node_to_remove, free_item);
+    return;
+}
+
 void merge_lists(list *list_a, list *list_b) {
     node *aux_node;
     node *final_head;

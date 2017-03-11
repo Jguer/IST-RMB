@@ -37,6 +37,7 @@ node *get_next_node(node *got_node);
 item get_node_item(node *got_node);
 void free_node(node *got_node, void (*free_item)(item));
 void free_connected_nodes(node *got_node, void (*free_item)(item));
+void remove_next_node(node *cur_node, node * next_node, void (*free_item)(item));
 
 /* UTILS */
 void memory_error(char *msg);

@@ -27,7 +27,9 @@ char   *get_ip_address(server *this);
 u_short get_udp_port(server *this);
 u_short get_tcp_port(server *this);
 bool    get_connected(server *this);
+int 	get_fd(server *this);
 
+void set_fd(server *this, int fd);
 void set_connected(server *this, bool connected);
 
 void free_server(item got_item);
