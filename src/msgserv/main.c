@@ -59,29 +59,21 @@ int main(int argc, char *argv[]) {
 
     srand(time(NULL));
     // Treat options
-    int flag_n = 0;
-    int flag_j = 0;
-    int flag_u = 0;
-    int flag_t = 0;
     while ((oc = getopt(argc, argv, "n:j:u:t:i:p:m:r:h")) != -1) { //Command-line args parsing, 'i' and 'p' args required for both
         switch (oc) {
             case 'n':
                 name = (char *)malloc(strlen(optarg) + 1);
                 strcpy(name, optarg); //optarg has the string corresponding to oc value
-                flag_n = 1;
                 break;
             case 'j':
                 ip = (char *)malloc(strlen(optarg) + 1);
                 strcpy(ip, optarg);
-                flag_j = 1;
                 break;
             case 'u':
                 udp_port = (u_short)atoi(optarg);
-                flag_u = 1;
                 break;
             case 't':
                 tcp_port = (u_short)atoi(optarg);
-                flag_t = 1;
                 break;
             case 'i':
                 strcpy(id_server_ip, optarg);
@@ -111,7 +103,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if ( (flag_n && flag_j && flag_u && flag_t) != 1 ){
+    if ( (NULL == name) || (NULL == ip) || (0 == udp_port) || (0 == tcp_port)){
         printf("Required arguments not present\n");
         usage(argv[0]);
         return EXIT_FAILURE;
@@ -141,15 +133,15 @@ int main(int argc, char *argv[]) {
         FD_SET(0, &rfds);
         FD_SET(udp_global_fd, &rfds);
         FD_SET(tcp_listen_fd, &rfds);
-        
+
         max_fd = tcp_listen_fd; //The master is the first socket
         if(udp_global_fd > max_fd)   max_fd = udp_global_fd;
 
 
         if(msgservers_lst != NULL){ //Add child sockets to the socket set
             node *aux_node;
-            for ( aux_node = get_head(msgservers_lst); 
-                    aux_node != NULL ; 
+            for ( aux_node = get_head(msgservers_lst);
+                    aux_node != NULL ;
                     aux_node = get_next_node(aux_node)) {
 
                 int processing_fd;
@@ -183,7 +175,7 @@ int main(int argc, char *argv[]) {
             return EXIT_FAILURE;
         }
 
-        
+
         if (FD_ISSET(tcp_listen_fd, &rfds)){ //if something happens on tcp_listen_fd create and allocate new socket
 
             struct sockaddr_in tcp_newserv_info;
@@ -210,7 +202,7 @@ int main(int argc, char *argv[]) {
             //add new socket to list of sockets
             server * tcp_newserv = new_server( NULL ,inet_ntoa(tcp_newserv_info.sin_addr), 0, ntohs(tcp_newserv_info.sin_port) );
             set_fd(tcp_newserv, tcp_newserv_fd);
-            push_item_to_list( msgservers_lst, tcp_newserv);        
+            push_item_to_list( msgservers_lst, tcp_newserv);
 
         }
 
@@ -279,7 +271,7 @@ int main(int argc, char *argv[]) {
             printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
                 ntohs(udpaddr.sin_port) );
 
-            read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0, 
+            read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0,
                     (struct sockaddr*)&udpaddr, addrlen);
 
             if (read_size == -1) {
@@ -289,10 +281,10 @@ int main(int argc, char *argv[]) {
         }
 
         if(msgservers_lst != NULL ){ //TCP sockets already connected handling
-            
+
             node *aux_node;
-            for ( aux_node = get_head(msgservers_lst); 
-                    aux_node != NULL ; 
+            for ( aux_node = get_head(msgservers_lst);
+                    aux_node != NULL ;
                     aux_node = get_next_node(aux_node)) {
 
                 int processing_fd;
@@ -304,11 +296,11 @@ int main(int argc, char *argv[]) {
                     read_size = read( processing_fd, buffer, STRING_SIZE );
 
                     if ( 0 == read_size ){
-                        
+
                         //The server disconnected, put fd equal to -1 (FD_INVALID)
                         close(processing_fd);
-                        set_fd( (server *)get_node_item(aux_node), -1 );   
-                        
+                        set_fd( (server *)get_node_item(aux_node), -1 );
+
                     }
                     else{
 
