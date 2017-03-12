@@ -140,30 +140,50 @@ int main(int argc, char *argv[]) {
 
         if(msgservers_lst != NULL){ //Add child sockets to the socket set
             node *aux_node;
-            for ( aux_node = get_head(msgservers_lst);
+            if ( NULL != (aux_node = get_head( msgservers_lst ) ) ){
+
+                if ( NULL == get_next_node( get_head(msgservers_lst) ) ){ //1 node list
+                    int processing_fd;
+
+                    if( -1 == get_fd(aux_node) ){
+                        remove_first_node(msgservers_lst, free_server);
+                    }
+
+                    processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+
+                    //if the socket is valid then add to the read list
+                    if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
+
+                    //The highest file descriptor is saved for the select fnc
+                    if(processing_fd > max_fd) max_fd = processing_fd;
+
+                } else { //More than 1 node list
+                    for ( aux_node = get_head(msgservers_lst);
                     aux_node != NULL ;
                     aux_node = get_next_node(aux_node)) {
 
-                int processing_fd;
-                node *next_node;
-                server * next_server;
+                        int processing_fd;
+                        node *next_node;
+                        server * next_server;
 
-                if( NULL != ( next_node = get_next_node(aux_node) ) ){
-                    if( NULL != ( next_server = (server *)get_node_item(next_node) ) ){
-                        if( -1 == get_fd(next_server) ){
-                            //Delete next node
-                            remove_next_node(aux_node, next_node, free_server);
+                        if( NULL != ( next_node = get_next_node(aux_node) ) ){
+                            if( NULL != ( next_server = (server *)get_node_item(next_node) ) ){
+                                if( -1 == get_fd(next_server) ){
+                                    //Delete next node
+                                    remove_next_node(aux_node, next_node, free_server);
+                                }
+                            }
                         }
+
+                        processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+
+                        //if the socket is valid then add to the read list
+                        if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
+
+                        //The highest file descriptor is saved for the select fnc
+                        if(processing_fd > max_fd) max_fd = processing_fd;
                     }
                 }
-
-                processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
-
-                //if the socket is valid then add to the read list
-                if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
-
-                //The highest file descriptor is saved for the select fnc
-                if(processing_fd > max_fd) max_fd = processing_fd;
             }
         }
 

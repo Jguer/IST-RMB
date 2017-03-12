@@ -152,6 +152,16 @@ void free_connected_nodes(node *got_node, void (*free_item)(item)) {
     return;
 }
 
+void remove_first_node(list *got_list, void (*free_item)(item)){
+    if ( NULL != got_list->head ){
+        node *aux_node = got_list->head;
+        got_list->head = aux_node->next;
+        free_node(aux_node, free_item);
+    }
+
+    return;
+}
+
 
 void remove_next_node(node *cur_node, node *node_to_remove, void (*free_item)(item)){
 
