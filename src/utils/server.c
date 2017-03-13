@@ -41,21 +41,6 @@ struct addrinfo *get_server_address_tcp(char *server_ip, char *server_port) {
     return result;
 }
 
-struct addrinfo *get_server_address_tcp(char *server_ip, char *server_port) {
-    struct addrinfo hints = { .ai_socktype = SOCK_STREAM, .ai_family=AF_INET };
-    struct addrinfo *result;
-    int err;
-
-    err = getaddrinfo(server_ip, server_port, &hints, &result);
-    if(err != 0){
-        perror("getaddrinfo");
-        printf("getaddrinfo : %s \n",gai_strerror(err));
-        return NULL;
-    }
-
-    return result;
-}
-
 char *get_servers(int fd, struct addrinfo *id_server) {
     struct timeval timeout = {3,0}; //set timeout for 2 seconds
     ssize_t n = 0;
