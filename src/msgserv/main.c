@@ -1,15 +1,16 @@
+#include <arpa/inet.h>
+#include <errno.h>
+#include <netdb.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/select.h>
 #include <string.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <sys/timerfd.h>
+#include <sys/types.h>
 #include <time.h>
-#include <netdb.h>
-#include <errno.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include <unistd.h>
 
 #include "identity.h"
 #include "server.h"
@@ -46,6 +47,8 @@ int main(int argc, char *argv[]) {
     int tcp_listen_fd; //TCP socket to accept connections
     int udp_global_fd; //UDP global socket
     int udp_register_fd; //UDP socket for id server comms
+    int timer_fd; //Timer socket for reregister
+
     int max_fd;        //Max fd number.
 
     char buffer[STRING_SIZE];
@@ -114,6 +117,11 @@ int main(int argc, char *argv[]) {
 
     server* host = new_server(name, ip, udp_port, tcp_port); //host parameters
 
+    /* Start Timer */
+    timer_fd = timerfd_create (CLOCK_MONOTONIC, TFD_NONBLOCK);
+    if (timer_fd == -1) {
+        printf(KRED "Unable to create timer.\n" KNRM);
+    }
     udp_global_fd = init_udp( host ); //Initiates UDP connection
     tcp_listen_fd = init_tcp( host ); //Initiates TCP connection
 
@@ -123,6 +131,15 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
+    // add event to be triggered
+    struct itimerspec new_timer;
+
+    // Periodic timer setup
+    new_timer.it_interval.tv_sec = r;
+    new_timer.it_interval.tv_nsec = 0;
+    new_timer.it_value.tv_sec = r;
+    new_timer.it_value.tv_nsec = 0;
+
     while(1){
         int addrlen;
 
@@ -131,12 +148,12 @@ int main(int argc, char *argv[]) {
 
         //Add tcp_listen_fd, udp_global_fd and stdio to the socket set
         FD_SET(0, &rfds);
+        FD_SET(timer_fd, &rfds);
         FD_SET(udp_global_fd, &rfds);
         FD_SET(tcp_listen_fd, &rfds);
 
-        max_fd = tcp_listen_fd; //The master is the first socket
-        if(udp_global_fd > max_fd)   max_fd = udp_global_fd;
-
+        max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd ;
+        max_fd = timer_fd > tcp_listen_fd ? timer_fd: tcp_listen_fd ;
 
         if(msgservers_lst != NULL){ //Add child sockets to the socket set
             node *aux_node;
@@ -163,7 +180,7 @@ int main(int argc, char *argv[]) {
                 if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
 
                 //The highest file descriptor is saved for the select fnc
-                if(processing_fd > max_fd) max_fd = processing_fd;
+                max_fd = processing_fd > max_fd ? processing_fd : max_fd;
             }
         }
 
@@ -175,6 +192,10 @@ int main(int argc, char *argv[]) {
             return EXIT_FAILURE;
         }
 
+        if (FD_ISSET(timer_fd, &rfds)){ //if the timer is triggered
+            update_reg(udp_register_fd, id_server);
+            err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
+        }
 
         if (FD_ISSET(tcp_listen_fd, &rfds)){ //if something happens on tcp_listen_fd create and allocate new socket
 
@@ -193,7 +214,7 @@ int main(int argc, char *argv[]) {
 
             //Send message like SGET_MESSAGES to request messages
             strcpy(message, "SGET_MESSAGES\n");
-            if( send(tcp_newserv_fd, message, strlen(message), 0) != strlen(message) ) {
+            if( (unsigned int)send(tcp_newserv_fd, message, strlen(message), 0) != strlen(message) ) {
 
                 printf("error sending communication\n");
                 return EXIT_FAILURE;
@@ -207,7 +228,7 @@ int main(int argc, char *argv[]) {
         }
 
         //if something happened on other socket we must process it
-        if ( FD_ISSET(0, &rfds) ){ //Stdio input
+        if (FD_ISSET(0, &rfds)){ //Stdio input
 
             read_size = read( 0, buffer, STRING_SIZE);
             if ( 0 == read_size )
@@ -226,6 +247,8 @@ int main(int argc, char *argv[]) {
                 if(id_server == NULL){
                     printf( KYEL "error registing on id_server\n" KNRM);
                 }
+
+                err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
 
                 //Get the message servers list
                 msgservers_lst = fetch_servers(udp_register_fd, id_server);
@@ -281,7 +304,6 @@ int main(int argc, char *argv[]) {
         }
 
         if(msgservers_lst != NULL ){ //TCP sockets already connected handling
-
             node *aux_node;
             for ( aux_node = get_head(msgservers_lst);
                     aux_node != NULL ;
@@ -306,7 +328,7 @@ int main(int argc, char *argv[]) {
 
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
-                        if( send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
+                        if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
                             printf("error sending communication\n");
                             return EXIT_FAILURE;
                         }

@@ -23,7 +23,7 @@ int init_tcp(server *host){
 
     if ( 0 != bind(master_fd, (struct sockaddr*)&tcpaddr,
             sizeof(tcpaddr)) ){ //Bind socket to the PORT_TCP defined
- 
+
         printf(KRED "error bind failed\n" KNRM);
         return -1;
     }
@@ -34,8 +34,8 @@ int init_tcp(server *host){
     }
 
     if ( (old_handler=signal(SIGPIPE,SIG_IGN))==SIG_ERR ) {
-        
-        printf(KRED "error protecting from SIGPIPE\n" KNRM);    
+
+        printf(KRED "error protecting from SIGPIPE\n" KNRM);
         return -1;
     }
 
@@ -71,10 +71,8 @@ int init_udp(server *host){
     return u_fd;
 }
 
-struct addrinfo *reg_server( int *fd, server *host ,char *ip_name, char *udp_port ){
-
+struct addrinfo *reg_server(int *fd, server *host ,char *ip_name, char *udp_port) {
     struct addrinfo *id_server_info = get_server_address(ip_name, udp_port);
-    int times = 0;
     int n;
     int local_fd;
 
@@ -87,46 +85,25 @@ struct addrinfo *reg_server( int *fd, server *host ,char *ip_name, char *udp_por
     }
     *fd = local_fd;
 
-    if ( 0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host), 
-    get_ip_address(host), get_udp_port(host), get_tcp_port(host) ) ) return NULL;
+    if ( 0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host),
+                get_ip_address(host), get_udp_port(host), get_tcp_port(host) ) ) return NULL;
 
-    while (times < 3) { // Try to send 3 times in case of disconnect
-        n = sendto(local_fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
-                id_server_info->ai_addr, id_server_info->ai_addrlen);
+    n = sendto(local_fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
+            id_server_info->ai_addr, id_server_info->ai_addrlen);
 
-        if (n == -1) {
-            fprintf(stderr, KYEL "unable to register\n" KNRM);
-            times++;
-        } else {
-            break;
-        }
+    if (n == -1) {
+        fprintf(stderr, KYEL "unable to register\n" KNRM);
     }
-    if (times == 3) {
-        return NULL;
-    }
-
 
     return id_server_info;
 }
 
-int update_reg( int fd, struct addrinfo* id_server_info ){
-    
-    int times= 0;
-    int n;
+int update_reg(int fd, struct addrinfo* id_server_info) {
+    int n = sendto(fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
+            id_server_info->ai_addr, id_server_info->ai_addrlen);
 
-    while (times < 3) { // Try to send 3 times in case of disconnect
-        n = sendto(fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
-                id_server_info->ai_addr, id_server_info->ai_addrlen);
-
-        if (n == -1) {
-            fprintf(stderr, KYEL "unable to update register\n" KNRM);
-            times++;
-        } else {
-            break;
-        }
-    }
-    if (times == 3) {
-        return -1;
+    if (n == -1) {
+        fprintf(stderr, KYEL "unable to update register\n" KNRM);
     }
 
     return 0;
