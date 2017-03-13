@@ -4,6 +4,7 @@
 #define PUBLISH "PUBLISH "
 #define ASK "GET_MESSAGES "
 
+
 server *select_server(list *server_list) {
     node *head = get_head(server_list);
     if (NULL == head) {
@@ -60,6 +61,7 @@ int publish(int fd, server *sel_server, char *msg) {
 
 
 list *get_latest_messages(int fd, server *sel_server, int num) {
+    struct timeval timeout={3,0}; //set timeout for 2 seconds
     char *response = (char *)malloc(RESPONSE_SIZE);
     if (response == NULL) {
         memory_error("failed to allocate error buffer");
@@ -92,16 +94,18 @@ list *get_latest_messages(int fd, server *sel_server, int num) {
     n = sendto(fd, msg_to_send, strlen(msg_to_send) + 1, 0,
             (struct sockaddr*)&server_addr, addr_len);
 
-    if (-1 == n) {
+    if (0 > n) {
         fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
         return NULL;
     }
+
+    setsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char*)&timeout,sizeof(struct timeval));
 
     n = recvfrom(fd, response, RESPONSE_SIZE, 0,
             (struct sockaddr*)&server_addr,
             &addr_len);
 
-    if (-1 == n) {
+    if (0 > n) {
         fprintf(stderr, KYEL "unable to receive\n" KNRM);
     } else {
         message_list = parse_messages(response);
