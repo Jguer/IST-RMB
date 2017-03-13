@@ -103,7 +103,7 @@ void free_list(list *got_list, void (*free_item)(item)) {
     return;
 }
 
-void dec_size(list *got_list){
+void dec_size_list(list *got_list){
     got_list->size --;
     return;
 }
