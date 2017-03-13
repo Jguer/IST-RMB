@@ -1,8 +1,8 @@
 #include "message.h"
 #include "utilmessage.h"
 
-#define PUBLISH "PUBLISH "
-#define ASK "GET_MESSAGES "
+#define PUBLISH "PUBLISH"
+#define ASK "GET_MESSAGES"
 
 
 server *select_server(list *server_list) {
