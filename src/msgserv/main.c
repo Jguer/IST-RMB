@@ -142,11 +142,30 @@ int main(int argc, char *argv[]) {
             node *aux_node;
             if ( NULL != (aux_node = get_head( msgservers_lst ) ) ){
 
-                if ( NULL == get_next_node( get_head(msgservers_lst) ) ){ //1 node list
-                    int processing_fd;
+                if ( -1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
 
-                    if( -1 == get_fd(aux_node) ){
-                        remove_first_node(msgservers_lst, free_server);
+                    remove_first_node(msgservers_lst, free_server);
+                } 
+                
+                if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
+                    printf("Our Host is registred and removed from the list\n");
+                    remove_first_node(msgservers_lst, free_server);
+                }
+
+                for ( aux_node = get_head(msgservers_lst);
+                aux_node != NULL ;
+                aux_node = get_next_node(aux_node)) {
+
+                    int processing_fd;
+                    node *next_node;
+                    server * next_server;
+
+                    if( NULL != ( next_node = get_next_node(aux_node) ) ){     
+                        if( -1 == get_fd( (server *)get_node_item(next_node) ) ){
+                            //Delete next node
+                            remove_next_node(aux_node, next_node, free_server);
+                            dec_size(msgservers_lst);
+                        }                        
                     }
 
                     processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
@@ -156,33 +175,6 @@ int main(int argc, char *argv[]) {
 
                     //The highest file descriptor is saved for the select fnc
                     if(processing_fd > max_fd) max_fd = processing_fd;
-
-                } else { //More than 1 node list
-                    for ( aux_node = get_head(msgservers_lst);
-                    aux_node != NULL ;
-                    aux_node = get_next_node(aux_node)) {
-
-                        int processing_fd;
-                        node *next_node;
-                        server * next_server;
-
-                        if( NULL != ( next_node = get_next_node(aux_node) ) ){
-                            if( NULL != ( next_server = (server *)get_node_item(next_node) ) ){
-                                if( -1 == get_fd(next_server) ){
-                                    //Delete next node
-                                    remove_next_node(aux_node, next_node, free_server);
-                                }
-                            }
-                        }
-
-                        processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
-
-                        //if the socket is valid then add to the read list
-                        if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
-
-                        //The highest file descriptor is saved for the select fnc
-                        if(processing_fd > max_fd) max_fd = processing_fd;
-                    }
                 }
             }
         }
@@ -220,8 +212,9 @@ int main(int argc, char *argv[]) {
             }
 
             //add new socket to list of sockets
-            server * tcp_newserv = new_server( NULL ,inet_ntoa(tcp_newserv_info.sin_addr), 0, ntohs(tcp_newserv_info.sin_port) );
+            server * tcp_newserv = new_server( "MSG Server",inet_ntoa(tcp_newserv_info.sin_addr), 0, ntohs(tcp_newserv_info.sin_port) );
             set_fd(tcp_newserv, tcp_newserv_fd);
+            set_connected(tcp_newserv, 1);
             push_item_to_list( msgservers_lst, tcp_newserv);
 
         }
@@ -320,12 +313,15 @@ int main(int argc, char *argv[]) {
                         //The server disconnected, put fd equal to -1 (FD_INVALID)
                         close(processing_fd);
                         set_fd( (server *)get_node_item(aux_node), -1 );
+                        set_connected((server *)get_node_item(aux_node), 0);
+                        printf("%d\n", get_fd( (server *)get_node_item(aux_node)));
 
                     }
                     else{
 
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
+                        printf("sending %s to tcp\n",buffer );
                         if( send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
                             printf("error sending communication\n");
                             return EXIT_FAILURE;

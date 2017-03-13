@@ -112,8 +112,12 @@ list *parse_servers(char *id_serv_info) {
              return msgserv_list;
         }
 
-        push_item_to_list( msgserv_list, new_server(step_mem_name ,
-        	step_mem_ip_addr, step_mem_udp_port, step_mem_tcp_port) ); //Pushes to list
+        server *alloc_server = new_server(step_mem_name ,
+            step_mem_ip_addr, step_mem_udp_port, step_mem_tcp_port);
+
+        set_fd(alloc_server, -2);
+        set_connected(alloc_server, 0);
+        push_item_to_list( msgserv_list, alloc_server ); //Pushes to list
 
         separated_info = strtok(NULL, "\n");//Gets new info
     }
@@ -164,6 +168,17 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
     pserver_to_node->fd = -1;
 
    	return pserver_to_node;
+}
+
+int comp_servers(server *serv1, server *serv2){
+    if ( 0 == strcmp(serv1->name,serv2->name) 
+        && 0 == strcmp(serv1->ip_addr,serv2->ip_addr) 
+        && serv1->udp_port == serv2->udp_port 
+        && serv1->tcp_port == serv2->tcp_port ){
+        return 0;
+    }
+
+    return 1;
 }
 
 char *get_name(server *this) {

@@ -22,6 +22,8 @@ list *fetch_servers(int fd, struct addrinfo *id_server);
 /* Server Functions */
 server *new_server(char *name, char* ip_address, u_short udp_port, u_short tcp_port);
 
+int comp_servers(server *serv1, server *serv2);
+
 char   *get_name(server *this);
 char   *get_ip_address(server *this);
 u_short get_udp_port(server *this);
