@@ -159,8 +159,7 @@ int main(int argc, char *argv[]) {
             if ( NULL != (aux_node = get_head( msgservers_lst ) ) ){
 
                 if ( -1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
-<<<<<<< HEAD
-
+                    
                     remove_first_node(msgservers_lst, free_server);
                 }
                 
@@ -191,39 +190,7 @@ int main(int argc, char *argv[]) {
                         struct addrinfo *res = get_server_address_tcp( get_ip_address((server *)get_node_item(aux_node)), 
                             portitoa);
 
-=======
 
-                    remove_first_node(msgservers_lst, free_server);
-                }
-                
-                if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
-
-                    remove_first_node(msgservers_lst, free_server);
-                    printf("Our Host is registred and removed from the list\n");
-                }
-                
-                for ( aux_node = get_head(msgservers_lst);
-                aux_node != NULL ;
-                aux_node = get_next_node(aux_node)) {
-
-                    int processing_fd;
-                    node *next_node;
-
-                    if ( -2 == get_fd( (server *)get_node_item(aux_node) ) ){
-                        // create new comunication
-                        processing_fd = socket(AF_INET, SOCK_STREAM, 0);
-                        if ( -1 == processing_fd ){
-                            printf( KRED "error creating socket\n" KNRM );
-                            return -1;
-                        }
-
-                        char portitoa[20];
-                        sprintf(portitoa, "%hu",get_tcp_port( (server *)get_node_item(aux_node)) );
-
-                        struct addrinfo *res = get_server_address_tcp( get_ip_address((server *)get_node_item(aux_node)), 
-                            portitoa);
-
->>>>>>> b47845f5ff39bd82ebd783038776f1cc6c518993
                         if (connect(processing_fd,res->ai_addr,res->ai_addrlen)==-1) {
 
                             printf("%s\n",strerror(errno));
