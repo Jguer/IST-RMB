@@ -103,6 +103,11 @@ void free_list(list *got_list, void (*free_item)(item)) {
     return;
 }
 
+void dec_size(list *got_list){
+    got_list->size --;
+    return;
+}
+
 /* NODE */
 
 node *create_node(item new_item, node *next_node) {
@@ -157,6 +162,7 @@ void remove_first_node(list *got_list, void (*free_item)(item)){
         node *aux_node = got_list->head;
         got_list->head = aux_node->next;
         free_node(aux_node, free_item);
+        (got_list->size)--;
     }
 
     return;
