@@ -377,12 +377,7 @@ int main(int argc, char *argv[]) {
                     else{
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
-<<<<<<< HEAD
                         if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
-=======
-                        printf("sending %s to tcp\n",buffer );
-                        if( send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
->>>>>>> Comparing servers, removing own from list, feedbacking good register
                             printf("error sending communication\n");
                             return EXIT_FAILURE;
                         }
