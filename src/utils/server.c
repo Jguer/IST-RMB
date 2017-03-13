@@ -2,14 +2,14 @@
 
 #define REQUEST "GET_SERVERS"
 
-typedef struct _server {
+struct _server {
     char    *name;
     char    *ip_addr;
     u_short udp_port;
     u_short tcp_port;
     bool    connected;
     int     fd;
-} server;
+};
 
 struct addrinfo *get_server_address(char *server_ip, char *server_port) {
     struct addrinfo hints = { .ai_socktype = SOCK_DGRAM, .ai_family=AF_INET };
