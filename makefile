@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g --pedantic
+CFLAGS = -Wall -Wextra -std=gnu11 -g --pedantic
 CLIENT = rmb
 SERVER = msgserv
 UTILS_DIR = src/utils

@@ -1,9 +1,9 @@
 #include "utilmessage.h"
 
-typedef struct _message {
+struct _message {
     int lc;
     char *content;
-} message;
+};
 
 message *new_message(int lc, char *src) {
     message *new_msg = (message *)malloc(sizeof(message));

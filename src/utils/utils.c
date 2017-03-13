@@ -72,7 +72,7 @@ size_t get_list_size(list *got_list) {
 void print_list(list *got_list, void (*print_item)(item)) {
     node *aux_node;
     printf("Print list:\n");
-    fprintf(stdout, "Size of list: %lu\n", get_list_size(got_list));
+    fprintf(stdout, "Size of list: %zu\n", get_list_size(got_list));
 
     for(aux_node = get_head(got_list);
             aux_node != NULL;
