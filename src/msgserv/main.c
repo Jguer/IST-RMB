@@ -153,6 +153,7 @@ int main(int argc, char *argv[]) {
         max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd ;
         max_fd = timer_fd > tcp_listen_fd ? timer_fd: tcp_listen_fd ;
 
+        printf("still alive\n");
         if(msgservers_lst != NULL){ //Add child sockets to the socket set
             node *aux_node;
             if ( NULL != (aux_node = get_head( msgservers_lst ) ) ){
@@ -160,27 +161,57 @@ int main(int argc, char *argv[]) {
                 if ( -1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
 
                     remove_first_node(msgservers_lst, free_server);
-                } 
+                }
                 
                 if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
-                    printf("Our Host is registred and removed from the list\n");
-                    remove_first_node(msgservers_lst, free_server);
-                }
 
+                    remove_first_node(msgservers_lst, free_server);
+                    printf("Our Host is registred and removed from the list\n");
+                }
+                
                 for ( aux_node = get_head(msgservers_lst);
                 aux_node != NULL ;
                 aux_node = get_next_node(aux_node)) {
 
                     int processing_fd;
                     node *next_node;
-                    server * next_server;
 
-                    if( NULL != ( next_node = get_next_node(aux_node) ) ){     
-                        if( -1 == get_fd( (server *)get_node_item(next_node) ) ){
+                    if ( -2 == get_fd( (server *)get_node_item(aux_node) ) ){
+                        // create new comunication
+                        processing_fd = socket(AF_INET, SOCK_STREAM, 0);
+                        if ( -1 == processing_fd ){
+                            printf( KRED "error creating socket\n" KNRM );
+                            return -1;
+                        }
+
+                        char portitoa[20];
+                        sprintf(portitoa, "%hu",get_tcp_port( (server *)get_node_item(aux_node)) );
+
+                        struct addrinfo *res = get_server_address_tcp( get_ip_address((server *)get_node_item(aux_node)), 
+                            portitoa);
+
+                        if (connect(processing_fd,res->ai_addr,res->ai_addrlen)==-1) {
+
+                            printf("%s\n",strerror(errno));
+                            close(processing_fd);
+                            processing_fd = -1;
+                        }
+
+                        set_fd((server *)get_node_item(aux_node), processing_fd);
+                    }
+
+                    if ( NULL != ( next_node = get_next_node(aux_node) ) ){     
+                        if ( -1 == get_fd( (server *)get_node_item(next_node) ) ){
                             //Delete next node
                             remove_next_node(aux_node, next_node, free_server);
-                            dec_size(msgservers_lst);
-                        }                        
+                            dec_size_list(msgservers_lst);
+                        }
+
+                        if ( 0 == comp_servers((server *)get_node_item(next_node),host) ){
+
+                            printf("Our Host is registred and removed from the list\n");
+                            remove_next_node(aux_node, next_node, free_server);
+                        }
                     }
 
                     processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
@@ -195,12 +226,14 @@ int main(int argc, char *argv[]) {
         }
 
         //wait for one of the descriptors is ready
+        printf("last place:select\n");
         int activity;
         activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
             printf("error on select\n%d\n", errno);
             return EXIT_FAILURE;
         }
+        printf("out of:select\n");
 
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             update_reg(udp_register_fd, id_server);

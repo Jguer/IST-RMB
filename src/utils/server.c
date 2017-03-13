@@ -26,6 +26,21 @@ struct addrinfo *get_server_address(char *server_ip, char *server_port) {
     return result;
 }
 
+struct addrinfo *get_server_address_tcp(char *server_ip, char *server_port) {
+    struct addrinfo hints = { .ai_socktype = SOCK_STREAM, .ai_family=AF_INET };
+    struct addrinfo *result;
+    int err;
+
+    err = getaddrinfo(server_ip, server_port, &hints, &result);
+    if(err != 0){
+        perror("getaddrinfo");
+        printf("getaddrinfo : %s \n",gai_strerror(err));
+        return NULL;
+    }
+
+    return result;
+}
+
 char *get_servers(int fd, struct addrinfo *id_server) {
     struct timeval timeout = {3,0}; //set timeout for 2 seconds
     ssize_t n = 0;
@@ -207,8 +222,9 @@ void print_server(item got_item) {
             KYEL "Server IP:" RESET " %s "
             KYEL "UDP Port:" RESET " %hu "
             KYEL "TCP Port:" RESET " %hu "
-            KYEL "Connected:" RESET " %d ",
-            this->name, this->ip_addr, this->udp_port, this->tcp_port, this->connected);
+            KYEL "Connected:" RESET " %d "
+            KYEL "fd:" RESET " %d ", 
+            this->name, this->ip_addr, this->udp_port, this->tcp_port, this->connected, this->fd);
     return;
 }
 

@@ -30,6 +30,7 @@ size_t get_list_size(list *got_list);
 void print_list(list *got_list, void (*print_item)(item));
 void free_list(list *got_list, void (*free_item)(item));
 void merge_lists(list *list_a, list *list_b);
+void dec_size_list(list *got_list);
 
 /* NODE */
 node *create_node(item new_item, node *next_node);
