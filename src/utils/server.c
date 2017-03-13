@@ -27,50 +27,35 @@ struct addrinfo *get_server_address(char *server_ip, char *server_port) {
 }
 
 char *get_servers(int fd, struct addrinfo *id_server) {
-    int i     = 0;
+    struct timeval timeout = {3,0}; //set timeout for 2 seconds
     ssize_t n = 0;
 
     char *return_string = NULL;
     char *response = (char *)malloc(RESPONSE_SIZE);
     memset(response, '\0', RESPONSE_SIZE);
 
-    if (response == NULL) {
+    if (NULL == response) {
         memory_error("failed to allocate error buffer");
     }
 
-    while (i < 3) { // Try to send 3 times in case of disconnect
-        n = sendto(fd, REQUEST, strlen(REQUEST) + 1, 0,
-                id_server->ai_addr, id_server->ai_addrlen);
+    n = sendto(fd, REQUEST, strlen(REQUEST) + 1, 0,
+            id_server->ai_addr, id_server->ai_addrlen);
 
-        if (n == -1) {
-            fprintf(stderr, KYEL "unable to send\n" KNRM);
-            i++;
-        } else {
-            break;
-        }
-    }
-    if (i == 3) {
-        return NULL;
+    if (0 > n) {
+        fprintf(stderr, KYEL "unable to send\n" KNRM);
     }
 
-    i = 0;
-    while (i < 3) { // Try to receive 3 times in case of disconnect
-        n = recvfrom(fd, response, RESPONSE_SIZE, 0,
-                id_server->ai_addr,
-                &id_server->ai_addrlen);
+    setsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char*)&timeout,sizeof(struct timeval));
 
-        if (n == -1) {
-            fprintf(stderr, KYEL "unable to receive\n" KNRM);
-            i++;
-        } else {
-            return_string = (char *)malloc((n+1) * sizeof(char));
-            strcpy(return_string, response);
-            break;
-        }
-    }
+    n = recvfrom(fd, response, RESPONSE_SIZE, 0,
+            id_server->ai_addr,
+            &id_server->ai_addrlen);
 
-    if (i == 3) {
-        return NULL;
+    if (0 > n) {
+        fprintf(stderr, KYEL "unable to receive\n" KNRM);
+    } else {
+        return_string = (char *)malloc((n+1) * sizeof(char));
+        strcpy(return_string, response);
     }
 
     free(response);
