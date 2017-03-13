@@ -48,7 +48,6 @@ int main(int argc, char *argv[]) {
     int udp_global_fd; //UDP global socket
     int udp_register_fd; //UDP socket for id server comms
     int timer_fd; //Timer socket for reregister
-
     int max_fd;        //Max fd number.
 
     char buffer[STRING_SIZE];
@@ -59,6 +58,7 @@ int main(int argc, char *argv[]) {
     node *head = NULL;
 
     struct addrinfo * id_server;
+    struct itimerspec new_timer = { {r,0}, {r,0}};
 
     srand(time(NULL));
     // Treat options
@@ -112,8 +112,6 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    fprintf(stdout, KBLU "Server Parameters:" KNRM " %s:%s:%d:%d\n", name, ip, udp_port, tcp_port);
-    fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%s\n", id_server_ip, id_server_port);
 
     server* host = new_server(name, ip, udp_port, tcp_port); //host parameters
 
@@ -131,15 +129,15 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    // add event to be triggered
-    struct itimerspec new_timer;
-
     // Periodic timer setup
-    new_timer.it_interval.tv_sec = r;
-    new_timer.it_interval.tv_nsec = 0;
-    new_timer.it_value.tv_sec = r;
-    new_timer.it_value.tv_nsec = 0;
 
+    fprintf(stdout, KBLU "Server Parameters:" KNRM " %s:%s:%d:%d\n"
+            KBLU "Identity Server:" KNRM " %s:%s\n"
+            KGRN "Prompt > " KNRM
+            ,name, ip, udp_port, tcp_port, id_server_ip, id_server_port);
+    fflush(stdout);
+
+    // Processing Loop
     while(1){
         int addrlen;
 
@@ -147,7 +145,7 @@ int main(int argc, char *argv[]) {
         FD_ZERO(&rfds);
 
         //Add tcp_listen_fd, udp_global_fd and stdio to the socket set
-        FD_SET(0, &rfds);
+        FD_SET(STDIN_FILENO, &rfds);
         FD_SET(timer_fd, &rfds);
         FD_SET(udp_global_fd, &rfds);
         FD_SET(tcp_listen_fd, &rfds);
@@ -177,7 +175,7 @@ int main(int argc, char *argv[]) {
                 processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
 
                 //if the socket is valid then add to the read list
-                if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
+                if(0 < processing_fd)  FD_SET(processing_fd, &rfds);
 
                 //The highest file descriptor is saved for the select fnc
                 max_fd = processing_fd > max_fd ? processing_fd : max_fd;
@@ -187,17 +185,17 @@ int main(int argc, char *argv[]) {
         //wait for one of the descriptors is ready
         int activity;
         activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
-        if(activity < 0){
+        if(0 > activity){
             printf("error on select\n%d\n", errno);
             return EXIT_FAILURE;
         }
 
-        if (FD_ISSET(timer_fd, &rfds)){ //if the timer is triggered
+        if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             update_reg(udp_register_fd, id_server);
             err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
         }
 
-        if (FD_ISSET(tcp_listen_fd, &rfds)){ //if something happens on tcp_listen_fd create and allocate new socket
+        if (FD_ISSET(tcp_listen_fd, &rfds)) { //if something happens on tcp_listen_fd create and allocate new socket
 
             struct sockaddr_in tcp_newserv_info;
             int tcp_newserv_fd;
@@ -228,8 +226,7 @@ int main(int argc, char *argv[]) {
         }
 
         //if something happened on other socket we must process it
-        if (FD_ISSET(0, &rfds)){ //Stdio input
-
+        if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
             read_size = read( 0, buffer, STRING_SIZE);
             if ( 0 == read_size )
             {
@@ -239,7 +236,7 @@ int main(int argc, char *argv[]) {
 
             buffer[read_size-1] = '\0'; //switches \n to \0
 
-                //User options input: show_servers, exit, publish message, show_latest_messages n;
+            //User options input: show_servers, exit, publish message, show_latest_messages n;
             if (strcmp("join", buffer) == 0) {
 
                 //Register on idServer
@@ -249,6 +246,8 @@ int main(int argc, char *argv[]) {
                 }
 
                 err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
+                if (-1 == err)
+                    printf(KRED "Unable to set timer\n" KNRM);
 
                 //Get the message servers list
                 msgservers_lst = fetch_servers(udp_register_fd, id_server);
@@ -274,6 +273,9 @@ int main(int argc, char *argv[]) {
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
+
+            fprintf(stdout, KGRN "Prompt > " KNRM);
+            fflush(stdout);
         }
 
         if ( FD_ISSET(udp_global_fd, &rfds) ){ //UDP communications handling
@@ -285,7 +287,7 @@ int main(int argc, char *argv[]) {
             read_size = recvfrom(udp_global_fd, buffer, sizeof(buffer), 0,
                             (struct sockaddr *)&udpaddr, (socklen_t*)&addrlen);
 
-            if (read_size == -1) {
+            if (-1 == read_size) {
                 printf("udp receive error\n");
                 return EXIT_FAILURE;
             }
@@ -297,13 +299,13 @@ int main(int argc, char *argv[]) {
             read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0,
                     (struct sockaddr*)&udpaddr, addrlen);
 
-            if (read_size == -1) {
+            if (-1 == read_size) {
                 printf("send error\n");
                 return EXIT_FAILURE;
             }
         }
 
-        if(msgservers_lst != NULL ){ //TCP sockets already connected handling
+        if(NULL != msgservers_lst){ //TCP sockets already connected handling
             node *aux_node;
             for ( aux_node = get_head(msgservers_lst);
                     aux_node != NULL ;
@@ -325,7 +327,6 @@ int main(int argc, char *argv[]) {
 
                     }
                     else{
-
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
                         if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {

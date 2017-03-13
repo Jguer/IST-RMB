@@ -17,7 +17,7 @@ struct addrinfo *get_server_address(char *server_ip, char *server_port) {
     int err;
 
     err = getaddrinfo(server_ip, server_port, &hints, &result);
-    if(err != 0){
+    if(0 != err){
         perror("getaddrinfo");
         printf("getaddrinfo : %s \n",gai_strerror(err));
         return NULL;
@@ -86,13 +86,13 @@ list *parse_servers(char *id_serv_info) {
     separated_info = strtok(id_serv_info, "\n"); //Gets the first info, stoping at newline
     separated_info = strtok(NULL, "\n");
 
-    while ( separated_info != NULL ){ //Proceeds getting info and treating
+    while (NULL != separated_info){ //Proceeds getting info and treating
         int sscanf_state = 0;
 
         sscanf_state = sscanf(separated_info, "%[^;];%[^;];%hu;%hu",step_mem_name, step_mem_ip_addr,
             &step_mem_udp_port, &step_mem_tcp_port);//Separates info and saves it in variables
 
-        if ( 4 != sscanf_state ) {
+        if (4 != sscanf_state) {
              fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
              return msgserv_list;
         }
@@ -104,7 +104,6 @@ list *parse_servers(char *id_serv_info) {
     }
 
     return msgserv_list;
-
 }
 
 list *fetch_servers(int fd, struct addrinfo *id_server) {
