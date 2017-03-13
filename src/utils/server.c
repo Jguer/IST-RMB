@@ -31,12 +31,7 @@ char *get_servers(int fd, struct addrinfo *id_server) {
     ssize_t n = 0;
 
     char *return_string = NULL;
-    char *response = (char *)malloc(RESPONSE_SIZE);
-    memset(response, '\0', RESPONSE_SIZE);
-
-    if (NULL == response) {
-        memory_error("failed to allocate error buffer");
-    }
+    char response[RESPONSE_SIZE] = {'\0'};
 
     n = sendto(fd, REQUEST, strlen(REQUEST) + 1, 0,
             id_server->ai_addr, id_server->ai_addrlen);
@@ -58,7 +53,6 @@ char *get_servers(int fd, struct addrinfo *id_server) {
         strcpy(return_string, response);
     }
 
-    free(response);
     return return_string; //Dirty Pointer
 }
 

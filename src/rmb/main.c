@@ -18,19 +18,19 @@ void usage(char* name) {
 }
 
 int main(int argc, char *argv[]) {
-    int oc;
     char server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
-    /* u_short server_port = 59000; */
     char server_port[STRING_SIZE] = "59000";
-    int err = -1;
+    int_fast8_t oc  = 0;
+    int_fast8_t err = -1;
+    uint_fast8_t exit_code = EXIT_SUCCESS;
+
     int fd = 0;
-    int exit_code = EXIT_SUCCESS;
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
 
     server *sel_server   = NULL;
     list *msgservers_lst = NULL;
-    list *message_list = NULL;
+    list *message_list   = NULL;
 
     srand(time(NULL));
     // Treat options

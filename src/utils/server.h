@@ -1,5 +1,4 @@
-#ifndef SERVERH
-#define SERVERH
+#pragma once
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -34,5 +33,3 @@ void set_connected(server *this, bool connected);
 
 void free_server(item got_item);
 void print_server(item got_item);
-
-#endif

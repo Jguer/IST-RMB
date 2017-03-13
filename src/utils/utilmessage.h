@@ -1,6 +1,4 @@
-#ifndef MESSAGEUTILH
-#define MESSAGEUTILH
-
+#pragma once
 #include "utils.h"
 #include "string.h"
 
@@ -13,5 +11,3 @@ void    set_lc(message *this, int new_lc);
 void    free_message(item got_item);
 void    print_message(item got_item);
 list    *parse_messages(char *buffer);
-
-#endif

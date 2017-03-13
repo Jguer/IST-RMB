@@ -1,6 +1,4 @@
-#ifndef IDENTITYH
-#define IDENTITYH
-	
+#pragma once
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <string.h>
@@ -16,4 +14,3 @@ int init_udp( server *host );
 struct addrinfo *reg_server( int *fd, server * host, char *ip_name, char *udp_port );
 int update_reg( int fd, struct addrinfo* id_server_info );
 
-#endif

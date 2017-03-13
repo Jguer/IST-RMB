@@ -1,6 +1,4 @@
-#ifndef MESSAGEH
-#define MESSAGEH
-
+#pragma once
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -18,5 +16,4 @@
 int publish(int fd, server *sel_server, char *msg);
 server *select_server(list *server_list);
 list *get_latest_messages(int fd, server *sel_server, int num);
-#endif
 

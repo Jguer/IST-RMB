@@ -26,11 +26,7 @@ int publish(int fd, server *sel_server, char *msg) {
     int exit_code = 0;
     struct sockaddr_in server_addr;
     socklen_t addr_len;
-
-    char *msg_to_send = (char *)malloc(RESPONSE_SIZE);
-    if (NULL == msg_to_send) {
-        memory_error("failed to allocate error buffer");
-    }
+    char msg_to_send[RESPONSE_SIZE];
 
     sprintf(msg_to_send, "%s %s", PUBLISH, msg);
 
@@ -53,7 +49,6 @@ int publish(int fd, server *sel_server, char *msg) {
         exit_code = 1;
     }
 
-    free(msg_to_send);
     return exit_code;
 }
 
@@ -62,11 +57,7 @@ int publish(int fd, server *sel_server, char *msg) {
 
 list *get_latest_messages(int fd, server *sel_server, int num) {
     struct timeval timeout={3,0}; //set timeout for 2 seconds
-    char *response = (char *)malloc(RESPONSE_SIZE);
-    if (response == NULL) {
-        memory_error("failed to allocate error buffer");
-    }
-    memset(response, '\0', RESPONSE_SIZE);
+    char response[RESPONSE_SIZE] = {'\0'};
 
     ssize_t   n = 0;
     struct    sockaddr_in server_addr;
@@ -111,7 +102,6 @@ list *get_latest_messages(int fd, server *sel_server, int num) {
         message_list = parse_messages(response);
     }
 
-    free(response);
     free(msg_to_send);
     return message_list;
 }
