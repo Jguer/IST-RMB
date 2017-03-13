@@ -58,7 +58,6 @@ int main(int argc, char *argv[]) {
     node *head = NULL;
 
     struct addrinfo * id_server;
-    struct itimerspec new_timer = { {r,0}, {r,0}};
 
     srand(time(NULL));
     // Treat options
@@ -113,6 +112,7 @@ int main(int argc, char *argv[]) {
     }
 
 
+    struct itimerspec new_timer = { {r,0}, {r,0}};
     server* host = new_server(name, ip, udp_port, tcp_port); //host parameters
 
     /* Start Timer */
