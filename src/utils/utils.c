@@ -103,6 +103,11 @@ void free_list(list *got_list, void (*free_item)(item)) {
     return;
 }
 
+void dec_size_list(list *got_list){
+    got_list->size --;
+    return;
+}
+
 /* NODE */
 
 node *create_node(item new_item, node *next_node) {
@@ -149,6 +154,17 @@ void free_connected_nodes(node *got_node, void (*free_item)(item)) {
         free_node(got_node, free_item);
         got_node = aux_node;
     }
+    return;
+}
+
+void remove_first_node(list *got_list, void (*free_item)(item)){
+    if ( NULL != got_list->head ){
+        node *aux_node = got_list->head;
+        got_list->head = aux_node->next;
+        free_node(aux_node, free_item);
+        (got_list->size)--;
+    }
+
     return;
 }
 
