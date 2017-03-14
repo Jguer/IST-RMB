@@ -37,3 +37,9 @@ bin/*
 Labs/TCP_Server/server
 Labs/TCP_Server_select/server
 Labs/example_TCP_UDP_STDIO/server
+.cproject
+.project
+.settings/
+src/.cproject
+src/.project
+

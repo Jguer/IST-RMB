@@ -153,7 +153,6 @@ int main(int argc, char *argv[]) {
         max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd ;
         max_fd = timer_fd > tcp_listen_fd ? timer_fd: tcp_listen_fd ;
 
-        printf("still alive\n");
         if(msgservers_lst != NULL){ //Add child sockets to the socket set
             node *aux_node;
             if ( NULL != (aux_node = get_head( msgservers_lst ) ) ){
@@ -161,12 +160,9 @@ int main(int argc, char *argv[]) {
                 if ( -1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
                     
                     remove_first_node(msgservers_lst, free_server);
-                }
-                
-                if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
+                }else if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
 
                     remove_first_node(msgservers_lst, free_server);
-                    printf("Our Host is registred and removed from the list\n");
                 }
                 
                 for ( aux_node = get_head(msgservers_lst);
@@ -191,11 +187,21 @@ int main(int argc, char *argv[]) {
                             portitoa);
 
 
-                        if (connect(processing_fd,res->ai_addr,res->ai_addrlen)==-1) {
+                        if ( -1 == connect(processing_fd,res->ai_addr,res->ai_addrlen) ) {
 
-                            printf("%s\n",strerror(errno));
+                            printf("%s\n",strerror(errno)); //Connect return Failure
                             close(processing_fd);
                             processing_fd = -1;
+                        }
+                        else {                              //Connect returns success
+
+                            //Send message like SGET_MESSAGES to request messages
+                            strcpy(message, "SGET_MESSAGES\n");
+                            if( (unsigned int)send(processing_fd, message, strlen(message), 0) != strlen(message) ) {
+
+                                printf("error sending initial communication\n");
+                                processing_fd = -1;
+                            }
                         }
 
                         set_fd((server *)get_node_item(aux_node), processing_fd);
@@ -206,12 +212,11 @@ int main(int argc, char *argv[]) {
                             //Delete next node
                             remove_next_node(aux_node, next_node, free_server);
                             dec_size_list(msgservers_lst);
-                        }
+                        }else if ( 0 == comp_servers((server *)get_node_item(next_node),host) ){
 
-                        if ( 0 == comp_servers((server *)get_node_item(next_node),host) ){
-
-                            printf("Our Host is registred and removed from the list\n");
                             remove_next_node(aux_node, next_node, free_server);
+                            dec_size_list(msgservers_lst);
+
                         }
                     }
 
@@ -227,14 +232,12 @@ int main(int argc, char *argv[]) {
         }
 
         //wait for one of the descriptors is ready
-        printf("last place:select\n");
         int activity;
         activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
             printf("error on select\n%d\n", errno);
             return EXIT_FAILURE;
         }
-        printf("out of:select\n");
 
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             update_reg(udp_register_fd, id_server);
@@ -260,7 +263,7 @@ int main(int argc, char *argv[]) {
             strcpy(message, "SGET_MESSAGES\n");
             if( (unsigned int)send(tcp_newserv_fd, message, strlen(message), 0) != strlen(message) ) {
 
-                printf("error sending communication\n");
+                printf("error sending initial communication\n");
                 return EXIT_FAILURE;
             }
 
@@ -314,7 +317,7 @@ int main(int argc, char *argv[]) {
             } else if (strcmp("exit", buffer) == 0) {
                 return EXIT_SUCCESS;
             } else if (strcmp("show_servers", buffer) == 0) {
-                if (msgservers_lst != NULL) print_list(msgservers_lst, print_server);
+                if (msgservers_lst != NULL && 0 != get_list_size(msgservers_lst)) print_list(msgservers_lst, print_server);
                 else printf("No registred servers\n");
             } else if (strcmp("show_messages", buffer) == 0) {
             } else {
@@ -372,12 +375,13 @@ int main(int argc, char *argv[]) {
                         close(processing_fd);
                         set_fd( (server *)get_node_item(aux_node), -1 );
                         set_connected((server *)get_node_item(aux_node), 0);
-                        printf("%d\n", get_fd( (server *)get_node_item(aux_node)));
 
                     }
                     else{
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
+                        printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
+                 get_tcp_port((server *)get_node_item(aux_node) ) );
 
                         if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
 

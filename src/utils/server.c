@@ -217,14 +217,19 @@ void set_fd(server *this, int fd){
 void print_server(item got_item) {
     server *this = (server *)got_item;
 
-    fprintf(stdout,
+    if (-1 != this->fd ){
+        fprintf(stdout,
             KYEL "Server name:" RESET " %s "
             KYEL "Server IP:" RESET " %s "
             KYEL "UDP Port:" RESET " %hu "
             KYEL "TCP Port:" RESET " %hu "
             KYEL "Connected:" RESET " %d "
             KYEL "fd:" RESET " %d ", 
-            this->name, this->ip_addr, this->udp_port, this->tcp_port, this->connected, this->fd);
+            this->name, this->ip_addr, this->udp_port, this->tcp_port, this->connected, this->fd);    
+    }
+    else{
+        fprintf(stdout, KCYN "Server to remove: invalid" KNRM);
+    }
     return;
 }
 
