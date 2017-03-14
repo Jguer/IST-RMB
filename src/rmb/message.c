@@ -61,7 +61,7 @@ list *get_latest_messages(int fd, server *sel_server, int num) {
     socklen_t addr_len;
     list      *message_list;
 
-    char *response = (char *)malloc(STRING_SIZE * num);
+    char *response = (char *)malloc(STRING_SIZE * (num+1));
     if (NULL == response) {
         memory_error("failed to allocate error buffer");
     }
