@@ -380,13 +380,15 @@ int main(int argc, char *argv[]) {
                     else{
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
-                        printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
-                 get_tcp_port((server *)get_node_item(aux_node) ) );
+                        //printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
+                 //get_tcp_port((server *)get_node_item(aux_node) ) );
 
                         if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
 
                             printf("error sending communication\n");
-                            return EXIT_FAILURE;
+                            close(processing_fd);
+                            set_fd( (server *)get_node_item(aux_node), -1 );
+                            set_connected((server *)get_node_item(aux_node), 0);                            
                         }
                     }
                 }
