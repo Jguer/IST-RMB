@@ -107,14 +107,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if ( (NULL == name) || (NULL == ip) || (0 == udp_port) || (0 == tcp_port)){
+    if ((NULL == name) || (NULL == ip) || (0 == udp_port) || (0 == tcp_port)){
         printf("Required arguments not present\n");
         usage(argv[0]);
         return EXIT_FAILURE;
     }
 
 
-    struct itimerspec new_timer = { {r,0}, {r,0}};
+    struct itimerspec new_timer = {{r,0}, {r,0}};
     server* host = new_server(name, ip, udp_port, tcp_port); //host parameters
 
     /* Start Timer */
@@ -122,12 +122,13 @@ int main(int argc, char *argv[]) {
     if (timer_fd == -1) {
         printf(KRED "Unable to create timer.\n" KNRM);
     }
-    udp_global_fd = init_udp( host ); //Initiates UDP connection
-    tcp_listen_fd = init_tcp( host ); //Initiates TCP connection
+
+    udp_global_fd = init_udp(host); //Initiates UDP connection
+    tcp_listen_fd = init_tcp(host); //Initiates TCP connection
 
     if ( 0 >= udp_global_fd || 0 >= tcp_listen_fd ){
         fprintf(stdout, KYEL "Cannot initializate UDP and/or TCP connections\n" KGRN
-         "Check the ip address and ports\n" KNRM) ;
+                "Check the ip address and ports\n" KNRM) ;
         return EXIT_FAILURE;
     }
 
@@ -140,7 +141,7 @@ int main(int argc, char *argv[]) {
     fflush(stdout);
 
     // Processing Loop
-    while(1){
+    while(true) {
         int addrlen;
 
         //Clear the set
@@ -152,14 +153,14 @@ int main(int argc, char *argv[]) {
         FD_SET(udp_global_fd, &rfds);
         FD_SET(tcp_listen_fd, &rfds);
 
-        max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd ;
-        max_fd = timer_fd > tcp_listen_fd ? timer_fd: tcp_listen_fd ;
+        max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd;
+        max_fd = timer_fd > tcp_listen_fd ? timer_fd : tcp_listen_fd;
 
-        if(msgservers_lst != NULL){ //Add child sockets to the socket set
+        if(msgservers_lst != NULL) { //Add child sockets to the socket set
             node *aux_node;
             if (NULL != (aux_node = get_head( msgservers_lst))) {
 
-                if (-1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
+                if (-1 == get_fd((server *)get_node_item(aux_node))) { //1 node erasement
 
                     remove_first_node(msgservers_lst, free_server);
                 } else if (0 == comp_servers((server *)get_node_item(aux_node),host)) {
@@ -167,235 +168,234 @@ int main(int argc, char *argv[]) {
                 }
 
                 bool sent_new_request = false;
-                
-                for ( aux_node = get_head(msgservers_lst);
-                aux_node != NULL ;
-                aux_node = get_next_node(aux_node)) {
 
-                for (aux_node     = get_head(msgservers_lst);
+                for (aux_node = get_head(msgservers_lst);
                         aux_node != NULL ;
-                        aux_node  = get_next_node(aux_node)) {
-                    int processing_fd;
-                    node *next_node;
+                        aux_node = get_next_node(aux_node)) {
 
-                    if (-2 == get_fd( (server *)get_node_item(aux_node))){
-                        // create new comunication
-                        processing_fd = socket(AF_INET, SOCK_STREAM, 0);
-                        if (-1 == processing_fd){
-                            printf( KRED "error creating socket\n" KNRM );
-                            return -1;
-                        }
+                    for (aux_node = get_head(msgservers_lst);
+                            aux_node != NULL ;
+                            aux_node = get_next_node(aux_node)) {
+                        int processing_fd;
+                        node *next_node;
 
-                        char portitoa[20];
-                        sprintf(portitoa, "%hu",get_tcp_port( (server *)get_node_item(aux_node)) );
-
-                        struct addrinfo *res = get_server_address_tcp( get_ip_address((server *)get_node_item(aux_node)),
-                            portitoa);
-
-
-                        if (-1 == connect(processing_fd,res->ai_addr,res->ai_addrlen)) {
-                            printf("%s\n",strerror(errno)); //Connect return Failure
-                            close(processing_fd);
-                            processing_fd = -1;
-                        } else { //Connect returns success
-                            //Send message like SGET_MESSAGES to request messages
-                            strcpy(msg, "SGET_MESSAGES\n");
-                            if(strlen(msg) != (unsigned int)send(processing_fd, msg, strlen(msg), 0)) {
-                        }                                       //Sends only a request for one of the initial servers
-                        else if ( false == sent_new_request) {                            //Connect returns success
-
-                            //Send message like SGET_MESSAGES to request messages
-                            sent_new_request = true;
-                            strcpy(message, "SGET_MESSAGES\n");
-                            printf("Sending new connection to:%s\n",get_name((server *)get_node_item(aux_node)) );
-                            if( (unsigned int)send(processing_fd, message, strlen(message), 0) != strlen(message) ) {
-                                printf("error sending initial communication\n");
-                                processing_fd = -1;
-                                sent_new_request = false;
+                        if (-2 == get_fd( (server *)get_node_item(aux_node))){
+                            // create new comunication
+                            processing_fd = socket(AF_INET, SOCK_STREAM, 0);
+                            if (-1 == processing_fd){
+                                printf( KRED "error creating socket\n" KNRM );
+                                return -1;
                             }
-                        }
 
-                        set_fd((server *)get_node_item(aux_node), processing_fd);
+                            char portitoa[20];
+                            sprintf(portitoa, "%hu",get_tcp_port( (server *)get_node_item(aux_node)) );
+
+                            struct addrinfo *res = get_server_address_tcp( get_ip_address((server *)get_node_item(aux_node)),
+                                    portitoa);
+
+
+                            if (-1 == connect(processing_fd,res->ai_addr,res->ai_addrlen)) {
+                                printf("%s\n",strerror(errno)); //Connect return Failure
+                                close(processing_fd);
+                                processing_fd = -1;
+                            } else { //Connect returns success
+                                //Send message like SGET_MESSAGES to request messages
+                                strcpy(msg, "SGET_MESSAGES\n");
+                                if(strlen(msg) != (unsigned int)send(processing_fd, msg, strlen(msg), 0)) {
+                                    //Sends only a request for one of the initial servers
+                                } else if (false == sent_new_request) {                            //Connect returns success
+
+                                    //Send message like SGET_MESSAGES to request messages
+                                    sent_new_request = true;
+                                    strcpy(msg, "SGET_MESSAGES\n");
+                                    printf("Sending new connection to:%s\n",get_name((server *)get_node_item(aux_node)));
+                                    if ((unsigned int)send(processing_fd, msg, strlen(msg), 0) != strlen(msg)) {
+                                        printf("error sending initial communication\n");
+                                        processing_fd = -1;
+                                        sent_new_request = false;
+                                    }
+                                }
+                                set_fd((server *)get_node_item(aux_node), processing_fd);
+                            }
+
+                            if (NULL != ( next_node = get_next_node(aux_node))) {
+                                if (-1 == get_fd( (server *)get_node_item(next_node))) {
+                                    //Delete next node
+                                    remove_next_node(aux_node, next_node, free_server);
+                                    dec_size_list(msgservers_lst);
+                                } else if (0 == comp_servers((server *)get_node_item(next_node),host)) {
+                                    remove_next_node(aux_node, next_node, free_server);
+                                    dec_size_list(msgservers_lst);
+
+                                }
+                            }
+
+                            processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+
+                            //if the socket is valid then add to the read list
+                            if(processing_fd > 0) FD_SET(processing_fd, &rfds);
+
+                            //The highest file descriptor is saved for the select fnc
+                            if(processing_fd > max_fd) max_fd = processing_fd;
+                        }
+                    }
+                }
+
+                //wait for one of the descriptors is ready
+                int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
+                if(0 > activity){
+                    printf("error on select\n%d\n", errno);
+                    return EXIT_FAILURE;
+                }
+
+                if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
+                    update_reg(udp_register_fd, id_server);
+                    err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
+                }
+
+                if (FD_ISSET(tcp_listen_fd, &rfds)) { //if something happens on tcp_listen_fd create and allocate new socket
+
+                    struct sockaddr_in tcp_newserv_info;
+                    int tcp_newserv_fd;
+
+                    addrlen = sizeof( tcp_newserv_info );
+
+                    //Create new socket, new_fd
+                    if ( (tcp_newserv_fd = accept(tcp_listen_fd, (struct sockaddr *)&tcp_newserv_info,
+                                    (socklen_t*)&addrlen))<0 ){
+
+                        printf("error accepting communication\n");
+                        return EXIT_FAILURE;
                     }
 
-                    if ( NULL != ( next_node = get_next_node(aux_node) ) ){
-                        if ( -1 == get_fd( (server *)get_node_item(next_node) ) ){
-                            //Delete next node
-                            remove_next_node(aux_node, next_node, free_server);
-                            dec_size_list(msgservers_lst);
-                        }else if ( 0 == comp_servers((server *)get_node_item(next_node),host) ){
-                            remove_next_node(aux_node, next_node, free_server);
-                            dec_size_list(msgservers_lst);
-
-                        }
+                    //Send message like SGET_MESSAGES to request messages
+                    strcpy(msg, "SGET_MESSAGES\n");
+                    if(strlen(msg) != (unsigned int)send(tcp_newserv_fd, msg, strlen(msg), 0)) {
+                        printf("error sending initial communication\n");
+                        return EXIT_FAILURE;
                     }
 
-                    processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
-
-                    //if the socket is valid then add to the read list
-                    if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
-
-                    //The highest file descriptor is saved for the select fnc
-                    if(processing_fd > max_fd) max_fd = processing_fd;
-                }
-            }
-        }
-
-        //wait for one of the descriptors is ready
-        int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
-        if(0 > activity){
-            printf("error on select\n%d\n", errno);
-            return EXIT_FAILURE;
-        }
-
-        if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
-            update_reg(udp_register_fd, id_server);
-            err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
-        }
-
-        if (FD_ISSET(tcp_listen_fd, &rfds)) { //if something happens on tcp_listen_fd create and allocate new socket
-
-            struct sockaddr_in tcp_newserv_info;
-            int tcp_newserv_fd;
-
-            addrlen = sizeof( tcp_newserv_info );
-
-            //Create new socket, new_fd
-            if ( (tcp_newserv_fd = accept(tcp_listen_fd, (struct sockaddr *)&tcp_newserv_info,
-                (socklen_t*)&addrlen))<0 ){
-
-                printf("error accepting communication\n");
-                return EXIT_FAILURE;
-            }
-
-            //Send message like SGET_MESSAGES to request messages
-            strcpy(msg, "SGET_MESSAGES\n");
-            if(strlen(msg) != (unsigned int)send(tcp_newserv_fd, msg, strlen(msg), 0)) {
-                printf("error sending initial communication\n");
-                return EXIT_FAILURE;
-            }
-
-            //add new socket to list of sockets
-            server * tcp_newserv = new_server( "MSG Server",inet_ntoa(tcp_newserv_info.sin_addr), 0, ntohs(tcp_newserv_info.sin_port) );
-            set_fd(tcp_newserv, tcp_newserv_fd);
-            set_connected(tcp_newserv, 1);
-            push_item_to_list( msgservers_lst, tcp_newserv);
-        }
-
-        //if something happened on other socket we must process it
-        if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
-            read_size = read( 0, buffer, STRING_SIZE);
-            if (0 == read_size)
-            {
-                printf("error reading from stdio\n");
-                return EXIT_FAILURE;
-            }
-
-            buffer[read_size-1] = '\0'; //switches \n to \0
-
-            //User options input: show_servers, exit, publish message, show_latest_messages n;
-            if (0 == strcmp("join", buffer)) {
-
-                //Register on idServer
-                id_server = reg_server( &udp_register_fd, host, id_server_ip, id_server_port);
-                if(id_server == NULL){
-                    printf( KYEL "error registing on id_server\n" KNRM);
+                    //add new socket to list of sockets
+                    server *tcp_newserv = new_server( "MSG Server",inet_ntoa(tcp_newserv_info.sin_addr), 0, ntohs(tcp_newserv_info.sin_port) );
+                    set_fd(tcp_newserv, tcp_newserv_fd);
+                    set_connected(tcp_newserv, 1);
+                    push_item_to_list( msgservers_lst, tcp_newserv);
                 }
 
-                err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
-                if (-1 == err)
-                    printf(KRED "Unable to set timer\n" KNRM);
+                //if something happened on other socket we must process it
+                if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
+                    read_size = read( 0, buffer, STRING_SIZE);
+                    if (0 == read_size)
+                    {
+                        printf("error reading from stdio\n");
+                        return EXIT_FAILURE;
+                    }
 
-                //Get the message servers list
-                msgservers_lst = fetch_servers(udp_register_fd, id_server);
-                head = get_head(msgservers_lst);
-                if (NULL == head) {
-                    printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+                    buffer[read_size-1] = '\0'; //switches \n to \0
+
+                    //User options input: show_servers, exit, publish message, show_latest_messages n;
+                    if (0 == strcmp("join", buffer)) {
+                        //Register on idServer
+                        id_server = reg_server( &udp_register_fd, host, id_server_ip, id_server_port);
+                        if(id_server == NULL){
+                            printf( KYEL "error registing on id_server\n" KNRM);
+                        }
+
+                        err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
+                        if (-1 == err)
+                            printf(KRED "Unable to set timer\n" KNRM);
+
+                        //Get the message servers list
+                        msgservers_lst = fetch_servers(udp_register_fd, id_server);
+                        head = get_head(msgservers_lst);
+                        if (NULL == head) {
+                            printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+                        }
+
+                        //Start connections with the new listed servers
+                        //Protect from connecting to our host
+                        //create one socket for each
+                        //set_fd in server list
+                        //getadrrinfo
+                        //connect
+                        //write SGET_MESSAGES
+                    } else if (strcmp("exit", buffer) == 0) {
+                        return EXIT_SUCCESS;
+                    } else if (strcmp("show_servers", buffer) == 0) {
+                        if (msgservers_lst != NULL && 0 != get_list_size(msgservers_lst)) print_list(msgservers_lst, print_server);
+                        else printf("No registred servers\n");
+                    } else if (strcmp("show_messages", buffer) == 0) {
+                        print_list(message_lst, print_message);
+                    } else {
+                        fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
+                    }
+
+                    fprintf(stdout, KGRN "Prompt > " KNRM);
+                    fflush(stdout);
                 }
 
-                //Start connections with the new listed servers
-                    //Protect from connecting to our host
-                    //create one socket for each
-                    //set_fd in server list
-                    //getadrrinfo
-                    //connect
-                    //write SGET_MESSAGES
-            } else if (strcmp("exit", buffer) == 0) {
-                return EXIT_SUCCESS;
-            } else if (strcmp("show_servers", buffer) == 0) {
-                if (msgservers_lst != NULL && 0 != get_list_size(msgservers_lst)) print_list(msgservers_lst, print_server);
-                else printf("No registred servers\n");
-            } else if (strcmp("show_messages", buffer) == 0) {
-                print_list(message_lst, print_message);
-            } else {
-                fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
-            }
+                if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
 
-            fprintf(stdout, KGRN "Prompt > " KNRM);
-            fflush(stdout);
-        }
+                    struct sockaddr_in udpaddr;
 
-        if ( FD_ISSET(udp_global_fd, &rfds) ){ //UDP communications handling
+                    addrlen = sizeof(udpaddr);
 
-            struct sockaddr_in udpaddr;
-
-            addrlen = sizeof(udpaddr);
-
-            read_size = recvfrom(udp_global_fd, buffer, sizeof(buffer), 0,
+                    read_size = recvfrom(udp_global_fd, buffer, sizeof(buffer), 0,
                             (struct sockaddr *)&udpaddr, (socklen_t*)&addrlen);
 
-            if (-1 == read_size) {
-                printf("udp receive error\n");
-                return EXIT_FAILURE;
-            }
-
-            buffer[read_size]='\0';
-            printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
-                ntohs(udpaddr.sin_port) );
-
-            read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0,
-                    (struct sockaddr*)&udpaddr, addrlen);
-
-            if (-1 == read_size) {
-                printf("send error\n");
-                return EXIT_FAILURE;
-            }
-        }
-
-        if(NULL != msgservers_lst){ //TCP sockets already connected handling
-            node *aux_node;
-            for ( aux_node = get_head(msgservers_lst);
-                    aux_node != NULL ;
-                    aux_node = get_next_node(aux_node)) {
-
-                int processing_fd;
-
-                processing_fd = get_fd( (server *)get_node_item(aux_node) ); //file descriptor/socket
-
-                if ( FD_ISSET(processing_fd , &rfds) ){
-
-                    read_size = read( processing_fd, buffer, STRING_SIZE );
-
-                    if ( 0 == read_size ){
-
-                        //The server disconnected, put fd equal to -1 (FD_INVALID)
-                        close(processing_fd);
-                        set_fd( (server *)get_node_item(aux_node), -1 );
-                        set_connected((server *)get_node_item(aux_node), 0);
-
+                    if (-1 == read_size) {
+                        printf("udp receive error\n");
+                        return EXIT_FAILURE;
                     }
-                    else{
-                        //Echo back the message that came in / INPLEMENT DATA TREATMENT
-                        buffer[read_size] = '\0';
-                        //printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
-                            //get_tcp_port((server *)get_node_item(aux_node) ) );
 
-                        if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
+                    buffer[read_size]='\0';
+                    printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
+                            ntohs(udpaddr.sin_port) );
 
-                            printf("error sending communication\n");
-                            close(processing_fd);
-                            set_fd( (server *)get_node_item(aux_node), -1 );
-                            set_connected((server *)get_node_item(aux_node), 0);
+                    read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0,
+                            (struct sockaddr*)&udpaddr, addrlen);
+
+                    if (-1 == read_size) {
+                        printf("send error\n");
+                        return EXIT_FAILURE;
+                    }
+                }
+
+                if(NULL != msgservers_lst){ //TCP sockets already connected handling
+                    for (aux_node = get_head(msgservers_lst);
+                            aux_node != NULL ;
+                            aux_node = get_next_node(aux_node)) {
+
+                        int processing_fd;
+
+                        processing_fd = get_fd( (server *)get_node_item(aux_node) ); //file descriptor/socket
+
+                        if ( FD_ISSET(processing_fd , &rfds) ){
+
+                            read_size = read( processing_fd, buffer, STRING_SIZE );
+
+                            if ( 0 == read_size ){
+
+                                //The server disconnected, put fd equal to -1 (FD_INVALID)
+                                close(processing_fd);
+                                set_fd( (server *)get_node_item(aux_node), -1 );
+                                set_connected((server *)get_node_item(aux_node), 0);
+
+                            }
+                            else{
+                                //Echo back the message that came in / INPLEMENT DATA TREATMENT
+                                buffer[read_size] = '\0';
+                                //printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
+                                //get_tcp_port((server *)get_node_item(aux_node) ) );
+
+                                if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
+
+                                    printf("error sending communication\n");
+                                    close(processing_fd);
+                                    set_fd( (server *)get_node_item(aux_node), -1 );
+                                    set_connected((server *)get_node_item(aux_node), 0);
+                                }
+                            }
                         }
                     }
                 }
@@ -403,5 +403,4 @@ int main(int argc, char *argv[]) {
         }
     }
 }
-
 
