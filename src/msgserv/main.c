@@ -15,6 +15,7 @@
 #include "identity.h"
 #include "server.h"
 #include "utils.h"
+#include "utilmessage.h"
 
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–m m] [–r r] \n", name);
@@ -50,10 +51,11 @@ int main(int argc, char *argv[]) {
     int timer_fd;        //Timer socket for reregister
     int max_fd;          //Max fd number.
 
-    char buffer[STRING_SIZE];
-    char message[STRING_SIZE];
+    char buffer[STRING_SIZE] = {'\0'};
+    char msg[STRING_SIZE] = {'\0'};
     int read_size;
     int err = 1;
+    list *message_lst = NULL;
     list *msgservers_lst = NULL;
     node *head = NULL;
 
@@ -155,27 +157,31 @@ int main(int argc, char *argv[]) {
 
         if(msgservers_lst != NULL){ //Add child sockets to the socket set
             node *aux_node;
-            if ( NULL != (aux_node = get_head( msgservers_lst ) ) ){
+            if (NULL != (aux_node = get_head( msgservers_lst))) {
 
-                if ( -1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
-                    
+                if (-1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
+
                     remove_first_node(msgservers_lst, free_server);
-                }else if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
-
+                } else if (0 == comp_servers((server *)get_node_item(aux_node),host)) {
                     remove_first_node(msgservers_lst, free_server);
                 }
+
+                bool sent_new_request = false;
                 
                 for ( aux_node = get_head(msgservers_lst);
                 aux_node != NULL ;
                 aux_node = get_next_node(aux_node)) {
 
+                for (aux_node     = get_head(msgservers_lst);
+                        aux_node != NULL ;
+                        aux_node  = get_next_node(aux_node)) {
                     int processing_fd;
                     node *next_node;
 
-                    if ( -2 == get_fd( (server *)get_node_item(aux_node) ) ){
+                    if (-2 == get_fd( (server *)get_node_item(aux_node))){
                         // create new comunication
                         processing_fd = socket(AF_INET, SOCK_STREAM, 0);
-                        if ( -1 == processing_fd ){
+                        if (-1 == processing_fd){
                             printf( KRED "error creating socket\n" KNRM );
                             return -1;
                         }
@@ -183,37 +189,41 @@ int main(int argc, char *argv[]) {
                         char portitoa[20];
                         sprintf(portitoa, "%hu",get_tcp_port( (server *)get_node_item(aux_node)) );
 
-                        struct addrinfo *res = get_server_address_tcp( get_ip_address((server *)get_node_item(aux_node)), 
+                        struct addrinfo *res = get_server_address_tcp( get_ip_address((server *)get_node_item(aux_node)),
                             portitoa);
 
 
-                        if ( -1 == connect(processing_fd,res->ai_addr,res->ai_addrlen) ) {
-
+                        if (-1 == connect(processing_fd,res->ai_addr,res->ai_addrlen)) {
                             printf("%s\n",strerror(errno)); //Connect return Failure
                             close(processing_fd);
                             processing_fd = -1;
-                        }
-                        else {                              //Connect returns success
+                        } else { //Connect returns success
+                            //Send message like SGET_MESSAGES to request messages
+                            strcpy(msg, "SGET_MESSAGES\n");
+                            if(strlen(msg) != (unsigned int)send(processing_fd, msg, strlen(msg), 0)) {
+                        }                                       //Sends only a request for one of the initial servers
+                        else if ( false == sent_new_request) {                            //Connect returns success
 
                             //Send message like SGET_MESSAGES to request messages
+                            sent_new_request = true;
                             strcpy(message, "SGET_MESSAGES\n");
+                            printf("Sending new connection to:%s\n",get_name((server *)get_node_item(aux_node)) );
                             if( (unsigned int)send(processing_fd, message, strlen(message), 0) != strlen(message) ) {
-
                                 printf("error sending initial communication\n");
                                 processing_fd = -1;
+                                sent_new_request = false;
                             }
                         }
 
                         set_fd((server *)get_node_item(aux_node), processing_fd);
                     }
 
-                    if ( NULL != ( next_node = get_next_node(aux_node) ) ){     
+                    if ( NULL != ( next_node = get_next_node(aux_node) ) ){
                         if ( -1 == get_fd( (server *)get_node_item(next_node) ) ){
                             //Delete next node
                             remove_next_node(aux_node, next_node, free_server);
                             dec_size_list(msgservers_lst);
                         }else if ( 0 == comp_servers((server *)get_node_item(next_node),host) ){
-
                             remove_next_node(aux_node, next_node, free_server);
                             dec_size_list(msgservers_lst);
 
@@ -259,9 +269,8 @@ int main(int argc, char *argv[]) {
             }
 
             //Send message like SGET_MESSAGES to request messages
-            strcpy(message, "SGET_MESSAGES\n");
-            if( (unsigned int)send(tcp_newserv_fd, message, strlen(message), 0) != strlen(message) ) {
-
+            strcpy(msg, "SGET_MESSAGES\n");
+            if(strlen(msg) != (unsigned int)send(tcp_newserv_fd, msg, strlen(msg), 0)) {
                 printf("error sending initial communication\n");
                 return EXIT_FAILURE;
             }
@@ -271,13 +280,12 @@ int main(int argc, char *argv[]) {
             set_fd(tcp_newserv, tcp_newserv_fd);
             set_connected(tcp_newserv, 1);
             push_item_to_list( msgservers_lst, tcp_newserv);
-
         }
 
         //if something happened on other socket we must process it
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
             read_size = read( 0, buffer, STRING_SIZE);
-            if ( 0 == read_size )
+            if (0 == read_size)
             {
                 printf("error reading from stdio\n");
                 return EXIT_FAILURE;
@@ -286,7 +294,7 @@ int main(int argc, char *argv[]) {
             buffer[read_size-1] = '\0'; //switches \n to \0
 
             //User options input: show_servers, exit, publish message, show_latest_messages n;
-            if (strcmp("join", buffer) == 0) {
+            if (0 == strcmp("join", buffer)) {
 
                 //Register on idServer
                 id_server = reg_server( &udp_register_fd, host, id_server_ip, id_server_port);
@@ -312,13 +320,13 @@ int main(int argc, char *argv[]) {
                     //getadrrinfo
                     //connect
                     //write SGET_MESSAGES
-
             } else if (strcmp("exit", buffer) == 0) {
                 return EXIT_SUCCESS;
             } else if (strcmp("show_servers", buffer) == 0) {
                 if (msgservers_lst != NULL && 0 != get_list_size(msgservers_lst)) print_list(msgservers_lst, print_server);
                 else printf("No registred servers\n");
             } else if (strcmp("show_messages", buffer) == 0) {
+                print_list(message_lst, print_message);
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
@@ -380,14 +388,14 @@ int main(int argc, char *argv[]) {
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
                         //printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
-                 //get_tcp_port((server *)get_node_item(aux_node) ) );
+                            //get_tcp_port((server *)get_node_item(aux_node) ) );
 
                         if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
 
                             printf("error sending communication\n");
                             close(processing_fd);
                             set_fd( (server *)get_node_item(aux_node), -1 );
-                            set_connected((server *)get_node_item(aux_node), 0);                            
+                            set_connected((server *)get_node_item(aux_node), 0);
                         }
                     }
                 }
