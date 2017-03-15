@@ -4,7 +4,6 @@
 #define PUBLISH "PUBLISH"
 #define ASK "GET_MESSAGES"
 
-
 server *select_server(list *server_list) {
     node *head = get_head(server_list);
     if (NULL == head) {
@@ -57,12 +56,16 @@ int publish(int fd, server *sel_server, char *msg) {
 
 list *get_latest_messages(int fd, server *sel_server, int num) {
     struct timeval timeout={3,0}; //set timeout for 2 seconds
-    char response[RESPONSE_SIZE] = {'\0'};
-
     ssize_t   n = 0;
     struct    sockaddr_in server_addr;
     socklen_t addr_len;
     list      *message_list;
+
+    char *response = (char *)malloc(STRING_SIZE * (num+1));
+    if (NULL == response) {
+        memory_error("failed to allocate error buffer");
+    }
+    memset(response, '\0', sizeof(char));
 
     char *msg_to_send = (char *)malloc(RESPONSE_SIZE);
     if (NULL == msg_to_send) {
@@ -102,6 +105,7 @@ list *get_latest_messages(int fd, server *sel_server, int num) {
         message_list = parse_messages(response);
     }
 
+    free(response);
     free(msg_to_send);
     return message_list;
 }

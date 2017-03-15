@@ -166,6 +166,12 @@ int main(int argc, char *argv[]) {
                     remove_first_node(msgservers_lst, free_server);
                 }
 
+                bool sent_new_request = false;
+                
+                for ( aux_node = get_head(msgservers_lst);
+                aux_node != NULL ;
+                aux_node = get_next_node(aux_node)) {
+
                 for (aux_node     = get_head(msgservers_lst);
                         aux_node != NULL ;
                         aux_node  = get_next_node(aux_node)) {
@@ -195,9 +201,17 @@ int main(int argc, char *argv[]) {
                             //Send message like SGET_MESSAGES to request messages
                             strcpy(msg, "SGET_MESSAGES\n");
                             if(strlen(msg) != (unsigned int)send(processing_fd, msg, strlen(msg), 0)) {
+                        }                                       //Sends only a request for one of the initial servers
+                        else if ( false == sent_new_request) {                            //Connect returns success
 
+                            //Send message like SGET_MESSAGES to request messages
+                            sent_new_request = true;
+                            strcpy(message, "SGET_MESSAGES\n");
+                            printf("Sending new connection to:%s\n",get_name((server *)get_node_item(aux_node)) );
+                            if( (unsigned int)send(processing_fd, message, strlen(message), 0) != strlen(message) ) {
                                 printf("error sending initial communication\n");
                                 processing_fd = -1;
+                                sent_new_request = false;
                             }
                         }
 
@@ -210,7 +224,6 @@ int main(int argc, char *argv[]) {
                             remove_next_node(aux_node, next_node, free_server);
                             dec_size_list(msgservers_lst);
                         }else if ( 0 == comp_servers((server *)get_node_item(next_node),host) ){
-
                             remove_next_node(aux_node, next_node, free_server);
                             dec_size_list(msgservers_lst);
 
@@ -229,8 +242,7 @@ int main(int argc, char *argv[]) {
         }
 
         //wait for one of the descriptors is ready
-        int activity;
-        activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
+        int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
             printf("error on select\n%d\n", errno);
             return EXIT_FAILURE;
@@ -376,7 +388,7 @@ int main(int argc, char *argv[]) {
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
                         //printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
-                 //get_tcp_port((server *)get_node_item(aux_node) ) );
+                            //get_tcp_port((server *)get_node_item(aux_node) ) );
 
                         if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
 
