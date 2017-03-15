@@ -18,8 +18,8 @@ struct addrinfo *get_server_address(char *server_ip, char *server_port) {
 
     err = getaddrinfo(server_ip, server_port, &hints, &result);
     if(0 != err){
-        perror("getaddrinfo");
-        printf("getaddrinfo : %s \n",gai_strerror(err));
+        if ( true == is_verbose() ) perror("getaddrinfo");
+        if ( true == is_verbose() ) printf("getaddrinfo : %s \n",gai_strerror(err));
         return NULL;
     }
 
@@ -33,8 +33,8 @@ struct addrinfo *get_server_address_tcp(char *server_ip, char *server_port) {
 
     err = getaddrinfo(server_ip, server_port, &hints, &result);
     if(err != 0){
-        perror("getaddrinfo");
-        printf("getaddrinfo : %s \n",gai_strerror(err));
+        if ( true == is_verbose() ) perror("getaddrinfo");
+        if ( true == is_verbose() ) printf("getaddrinfo : %s \n",gai_strerror(err));
         return NULL;
     }
 
@@ -52,7 +52,7 @@ char *get_servers(int fd, struct addrinfo *id_server) {
             id_server->ai_addr, id_server->ai_addrlen);
 
     if (0 > n) {
-        fprintf(stderr, KYEL "unable to send\n" KNRM);
+        if ( true == is_verbose() ) fprintf(stderr, KYEL "unable to send\n" KNRM);
     }
 
     setsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char*)&timeout,sizeof(struct timeval));
@@ -62,7 +62,7 @@ char *get_servers(int fd, struct addrinfo *id_server) {
             &id_server->ai_addrlen);
 
     if (0 > n) {
-        fprintf(stderr, KYEL "unable to receive\n" KNRM);
+        if ( true == is_verbose() ) fprintf(stderr, KYEL "unable to receive\n" KNRM);
     } else {
         return_string = (char *)malloc((n+1) * sizeof(char));
         strcpy(return_string, response);
@@ -102,7 +102,7 @@ list *parse_servers(char *id_serv_info) {
             &step_mem_udp_port, &step_mem_tcp_port);//Separates info and saves it in variables
 
         if (4 != sscanf_state) {
-             fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
+             if ( true == is_verbose() ) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
              return msgserv_list;
         }
 
@@ -143,7 +143,7 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
         pserver_to_node->name = (char *)malloc( sizeof(char)*(strlen(name)+1) );
        	if ( NULL == pserver_to_node->name) memory_error("Unable to reserve server name memory");
        	if ( NULL == memcpy(pserver_to_node->name, name, strlen(name)+1) ){
-       		printf( KRED "error copying name to server struct" KNRM );
+       		if ( true == is_verbose() ) printf( KRED "error copying name to server struct" KNRM );
        		return NULL;
        	}
     }
@@ -151,7 +151,7 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
 	pserver_to_node->ip_addr = (char *)malloc( sizeof(char)*(strlen(ip_addr)+1) );
    	if(pserver_to_node->ip_addr == NULL) memory_error("Unable to reserve server ip address memory");
    	if ( NULL == memcpy(pserver_to_node->ip_addr, ip_addr, strlen(ip_addr)+1) ){
-   		printf( KRED "error copying ip address to server struct" KNRM );
+   		if ( true == is_verbose() ) printf( KRED "error copying ip address to server struct" KNRM );
    		return NULL;
    	}
 

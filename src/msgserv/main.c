@@ -26,7 +26,8 @@ void usage(char* name) {
             "\t-i\t\t[identity server ip (default:tejo.tecnico.ulisboa.pt)]\n"
             "\t-p\t\t[identity server port (default:59000)]\n"
             "\t-m\t\t[max server storage (default:200)]\n"
-            "\t-r\t\t[register interval (default:10)]\n");
+            "\t-r\t\t[register interval (default:10)]\n"
+            "\t-v\t\t[verbose]\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -61,7 +62,7 @@ int main(int argc, char *argv[]) {
 
     srand(time(NULL));
     // Treat options
-    while ((oc = getopt(argc, argv, "n:j:u:t:i:p:m:r:h")) != -1) { //Command-line args parsing, 'i' and 'p' args required for both
+    while ((oc = getopt(argc, argv, "n:j:u:t:i:p:m:r:h:v")) != -1) { //Command-line args parsing, 'i' and 'p' args required for both
         switch (oc) {
             case 'n':
                 name = (char *)malloc(strlen(optarg) + 1);
@@ -93,6 +94,9 @@ int main(int argc, char *argv[]) {
                 usage(argv[0]);
                 return EXIT_SUCCESS;
                 break;
+            case 'v':
+                verbose( true );
+                break; 
             case ':':
                 /* missing option argument */
                 fprintf(stderr, "%s: option '-%c' requires an argument\n",
@@ -200,7 +204,7 @@ int main(int argc, char *argv[]) {
         //wait for one of the descriptors is ready
         int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
-            printf("error on select\n%d\n", errno);
+            if ( true == is_verbose() ) printf("error on select\n%d\n", errno);
             return EXIT_FAILURE;
         }
 
@@ -220,7 +224,7 @@ int main(int argc, char *argv[]) {
             if ( (tcp_newserv_fd = accept(tcp_listen_fd, (struct sockaddr *)&tcp_newserv_info,
                 (socklen_t*)&addrlen))<0 ){
 
-                printf("error accepting communication\n");
+                if ( true == is_verbose() ) printf("error accepting communication\n");
                 return EXIT_FAILURE;
             }
 
@@ -237,7 +241,7 @@ int main(int argc, char *argv[]) {
             read_size = read( 0, buffer, STRING_SIZE);
             if ( 0 == read_size )
             {
-                printf("error reading from stdio\n");
+                if ( true == is_verbose() ) printf("error reading from stdio\n");
                 return EXIT_FAILURE;
             }
 
@@ -249,13 +253,13 @@ int main(int argc, char *argv[]) {
                     //Register on idServer
                     id_server = reg_server( &udp_register_fd, host, id_server_ip, id_server_port);
                     if(id_server == NULL){
-                        printf( KYEL "error registing on id_server\n" KNRM);
+                        if ( true == is_verbose() ) printf( KYEL "error registing on id_server\n" KNRM);
                         return EXIT_FAILURE;
                     }
 
                     err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
                     if (-1 == err){
-                        printf(KRED "Unable to set timer\n" KNRM);
+                        if ( true == is_verbose() ) printf(KRED "Unable to set timer\n" KNRM);
                         return EXIT_FAILURE;
                     }
 
@@ -263,7 +267,7 @@ int main(int argc, char *argv[]) {
                     msgservers_lst = fetch_servers(udp_register_fd, id_server);
                     node *head = get_head(msgservers_lst);
                     if (NULL == head) {
-                        printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+                        if ( true == is_verbose() ) printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
 /*>>>>>>>>>>>>>>>>>>*/  return EXIT_FAILURE; //Change with try again option
                     }
 
@@ -301,19 +305,19 @@ int main(int argc, char *argv[]) {
                             (struct sockaddr *)&udpaddr, (socklen_t*)&addrlen);
 
             if (-1 == read_size) {
-                printf("udp receive error\n");
+                if ( true == is_verbose() ) printf("udp receive error\n");
                 return EXIT_FAILURE;
             }
 
             buffer[read_size]='\0';
-            printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
+            if ( true == is_verbose() ) printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
                 ntohs(udpaddr.sin_port) );
 
             read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0,
                     (struct sockaddr*)&udpaddr, addrlen);
 
             if (-1 == read_size) {
-                printf("send error\n");
+                if ( true == is_verbose() ) printf("error sending communication UDP\n");
                 return EXIT_FAILURE;
             }
         }
@@ -343,12 +347,12 @@ int main(int argc, char *argv[]) {
                     else{
                         //Echo back the message that came in / INPLEMENT DATA TREATMENT
                         buffer[read_size] = '\0';
-                        //printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
-                            //get_tcp_port((server *)get_node_item(aux_node) ) );
+                        if ( true == is_verbose() ) printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
+                            get_tcp_port((server *)get_node_item(aux_node) ) );
 
                         if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
 
-                            printf("error sending communication\n");
+                            if ( true == is_verbose() ) printf("error sending communication TCP\n");
                             close(processing_fd);
                             set_fd( (server *)get_node_item(aux_node), -1 );
                             set_connected((server *)get_node_item(aux_node), 0);                            

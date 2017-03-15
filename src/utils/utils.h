@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define KNRM  "\x1B[0m"		//Terminal color codes
 #define KRED  "\x1B[31m"
@@ -42,4 +43,6 @@ void remove_next_node(node *cur_node, node * next_node, void (*free_item)(item))
 
 /* UTILS */
 void memory_error(char *msg);
+void verbose(bool verbosity);
+bool is_verbose();
 

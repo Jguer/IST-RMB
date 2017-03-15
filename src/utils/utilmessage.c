@@ -61,7 +61,7 @@ list *parse_messages(char *buffer) {
         sscanf_state = sscanf(separated_info, "%[^\n]", msg); //Separates info and saves it in variables
 
         if ( 1 != sscanf_state ) {
-             fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
+             if ( true == is_verbose() ) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
              break;
         }
 
