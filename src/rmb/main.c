@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
 
 #include "utils.h"
 #include "server.h"
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
     int_fast8_t err = -1;
     uint_fast8_t exit_code = EXIT_SUCCESS;
 
-    int fd = 0;
+
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
 
@@ -57,54 +58,73 @@ int main(int argc, char *argv[]) {
     fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%s\n", server_ip, server_port);
     struct addrinfo *id_server = get_server_address(server_ip, server_port);
 
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
+    int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (-1 == fd) {
         printf("error creating socket\n");
         exit_code = EXIT_FAILURE;
         goto PROGRAM_EXIT;
     }
 
+    int max_fd = fd; //Max fd number.
+
+    fprintf(stdout, KGRN "Prompt > " KNRM);
+    fflush(stdout);
+    fd_set rfds;
+    FD_SET(STDIN_FILENO, &rfds);
+    FD_SET(fd, &rfds);
     // Interactive loop
     while (true) {
-        if (0 != err) {
-            free_list(msgservers_lst, free_server);
-            msgservers_lst = fetch_servers(fd, id_server);
-            sel_server = select_server(msgservers_lst);
-            if (NULL == sel_server) {
-                fprintf(stderr, KGRN "No servers available\n" KNRM);
-                sleep(5);
-                continue;
-            }
-            if (-1 == err) {
-                err = 0;
-            }
+        int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
+        if(0 > activity){
+            printf("error on select\n%d\n", errno);
+            exit_code = EXIT_FAILURE;
+            goto PROGRAM_EXIT;
         }
 
-        if (0 == err) {
-            memset( op, '\0', sizeof(char)*STRING_SIZE ); //Fill strings with string terminator (\0)
-            memset( input_buffer, '\0', sizeof(char)*STRING_SIZE-1 );
+        if (FD_ISSET(fd, &rfds)) { //UDP receive
+
+        }
+
+        if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
+            if (0 != err) {
+                free_list(msgservers_lst, free_server);
+                msgservers_lst = fetch_servers(fd, id_server);
+                sel_server = select_server(msgservers_lst);
+                if (NULL == sel_server) {
+                    fprintf(stderr, KGRN "No servers available\n" KNRM);
+                    sleep(5);
+                    continue;
+                }
+                if (-1 == err) {
+                    err = 0;
+                }
+            }
+
+            if (0 == err) {
+                scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer);
+                // Grab word, then throw away space and finally grab until \n
+            }
+            //User options input: show_servers, exit, publish message, show_latest_messages n;
+            if (0 == strcmp("show_servers", op)) {
+                print_list(msgservers_lst, print_server);
+            } else if (0 == strcmp("exit", op) ) {
+                exit_code = EXIT_SUCCESS;
+                goto PROGRAM_EXIT;
+            } else if (0 == strcmp("publish", op)) {
+                if (0 == strlen(input_buffer)) {
+                    continue;
+                }
+                err = publish(fd, sel_server, input_buffer);
+            } else if (0 == strcmp("show_latest_messages", op)) {
+                free_list(message_list, free_message);
+                message_list = get_latest_messages(fd, sel_server, atoi(input_buffer));
+                print_list(message_list, print_message);
+            } else {
+                fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
+            }
 
             fprintf(stdout, KGRN "Prompt > " KNRM);
-            scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer);
-            // Grab word, then throw away space and finally grab until \n
-        }
-        //User options input: show_servers, exit, publish message, show_latest_messages n;
-        if (0 == strcmp("show_servers", op)) {
-            print_list(msgservers_lst, print_server);
-        } else if (0 == strcmp("exit", op) ) {
-                goto PROGRAM_EXIT;
-            return EXIT_SUCCESS;
-        } else if (0 == strcmp("publish", op)) {
-            if (0 == strlen(input_buffer)) {
-                continue;
-            }
-            err = publish(fd, sel_server, input_buffer);
-        } else if (0 == strcmp("show_latest_messages", op)) {
-            free_list(message_list, free_message);
-            message_list = get_latest_messages(fd, sel_server, atoi(input_buffer));
-            print_list(message_list, print_message);
-        } else {
-            fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
+            fflush(stdout);
         }
     }
 

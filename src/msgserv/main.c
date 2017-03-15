@@ -44,11 +44,11 @@ int main(int argc, char *argv[]) {
 
     fd_set rfds;
 
-    int tcp_listen_fd; //TCP socket to accept connections
-    int udp_global_fd; //UDP global socket
+    int tcp_listen_fd;   //TCP socket to accept connections
+    int udp_global_fd;   //UDP global socket
     int udp_register_fd; //UDP socket for id server comms
-    int timer_fd; //Timer socket for reregister
-    int max_fd;        //Max fd number.
+    int timer_fd;        //Timer socket for reregister
+    int max_fd;          //Max fd number.
 
     char buffer[STRING_SIZE];
     char message[STRING_SIZE];
@@ -232,8 +232,7 @@ int main(int argc, char *argv[]) {
         }
 
         //wait for one of the descriptors is ready
-        int activity;
-        activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
+        int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
             printf("error on select\n%d\n", errno);
             return EXIT_FAILURE;

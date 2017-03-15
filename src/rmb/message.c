@@ -51,9 +51,6 @@ int publish(int fd, server *sel_server, char *msg) {
     return exit_code;
 }
 
-
-
-
 list *get_latest_messages(int fd, server *sel_server, int num) {
     struct timeval timeout={3,0}; //set timeout for 2 seconds
     ssize_t   n = 0;
