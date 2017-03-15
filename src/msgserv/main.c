@@ -42,6 +42,8 @@ int main(int argc, char *argv[]) {
     int m = 200;
     int r = 10;
 
+    bool is_join_complete = false;
+
     fd_set rfds;
 
     int tcp_listen_fd; //TCP socket to accept connections
@@ -51,11 +53,9 @@ int main(int argc, char *argv[]) {
     int max_fd;        //Max fd number.
 
     char buffer[STRING_SIZE];
-    char message[STRING_SIZE];
     int read_size;
     int err = 1;
     list *msgservers_lst = NULL;
-    node *head = NULL;
 
     struct addrinfo * id_server;
 
@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
                     remove_first_node(msgservers_lst, free_server);
                 }
 
-                bool sent_new_request = false;
+                
                 
                 for ( aux_node = get_head(msgservers_lst);
                 aux_node != NULL ;
@@ -173,44 +173,6 @@ int main(int argc, char *argv[]) {
 
                     int processing_fd;
                     node *next_node;
-
-                    if ( -2 == get_fd( (server *)get_node_item(aux_node) ) ){
-                        // create new comunication
-                        processing_fd = socket(AF_INET, SOCK_STREAM, 0);
-                        if ( -1 == processing_fd ){
-                            printf( KRED "error creating socket\n" KNRM );
-                            return -1;
-                        }
-
-                        char portitoa[20];
-                        sprintf(portitoa, "%hu",get_tcp_port( (server *)get_node_item(aux_node)) );
-
-                        struct addrinfo *res = get_server_address_tcp( get_ip_address((server *)get_node_item(aux_node)), 
-                            portitoa);
-
-
-                        if ( -1 == connect(processing_fd,res->ai_addr,res->ai_addrlen) ) {
-
-                            printf("%s\n",strerror(errno)); //Connect return Failure
-                            close(processing_fd);
-                            processing_fd = -1;
-                        }                                       //Sends only a request for one of the initial servers
-                        else if ( false == sent_new_request) {                            //Connect returns success
-
-                            //Send message like SGET_MESSAGES to request messages
-                            sent_new_request = true;
-                            strcpy(message, "SGET_MESSAGES\n");
-                            printf("Sending new connection to:%s\n",get_name((server *)get_node_item(aux_node)) );
-                            if( (unsigned int)send(processing_fd, message, strlen(message), 0) != strlen(message) ) {
-
-                                printf("error sending initial communication\n");
-                                processing_fd = -1;
-                                sent_new_request = false;
-                            }
-                        }
-
-                        set_fd((server *)get_node_item(aux_node), processing_fd);
-                    }
 
                     if ( NULL != ( next_node = get_next_node(aux_node) ) ){     
                         if ( -1 == get_fd( (server *)get_node_item(next_node) ) ){
@@ -282,32 +244,38 @@ int main(int argc, char *argv[]) {
             buffer[read_size-1] = '\0'; //switches \n to \0
 
             //User options input: show_servers, exit, publish message, show_latest_messages n;
-            if (strcmp("join", buffer) == 0) {
+            if ( strcmp("join", buffer) == 0 ) {
+                if (false == is_join_complete ){
+                    //Register on idServer
+                    id_server = reg_server( &udp_register_fd, host, id_server_ip, id_server_port);
+                    if(id_server == NULL){
+                        printf( KYEL "error registing on id_server\n" KNRM);
+                        return EXIT_FAILURE;
+                    }
 
-                //Register on idServer
-                id_server = reg_server( &udp_register_fd, host, id_server_ip, id_server_port);
-                if(id_server == NULL){
-                    printf( KYEL "error registing on id_server\n" KNRM);
+                    err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
+                    if (-1 == err){
+                        printf(KRED "Unable to set timer\n" KNRM);
+                        return EXIT_FAILURE;
+                    }
+
+                    //Get the message servers list
+                    msgservers_lst = fetch_servers(udp_register_fd, id_server);
+                    node *head = get_head(msgservers_lst);
+                    if (NULL == head) {
+                        printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+/*>>>>>>>>>>>>>>>>>>*/  return EXIT_FAILURE; //Change with try again option
+                    }
+
+                    if ( 0 != join_to_old_servers(msgservers_lst, host) ){
+                        return EXIT_FAILURE;
+                    }
+
+                    is_join_complete = true;
                 }
-
-                err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
-                if (-1 == err)
-                    printf(KRED "Unable to set timer\n" KNRM);
-
-                //Get the message servers list
-                msgservers_lst = fetch_servers(udp_register_fd, id_server);
-                head = get_head(msgservers_lst);
-                if (NULL == head) {
-                    printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+                else {
+                    printf(KGRN "Already joined!\n" KNRM);
                 }
-
-                //Start connections with the new listed servers
-                    //Protect from connecting to our host
-                    //create one socket for each
-                    //set_fd in server list
-                    //getadrrinfo
-                    //connect
-                    //write SGET_MESSAGES
 
             } else if (strcmp("exit", buffer) == 0) {
                 return EXIT_SUCCESS;

@@ -14,3 +14,7 @@ int init_udp( server *host );
 struct addrinfo *reg_server( int *fd, server * host, char *ip_name, char *udp_port );
 int update_reg( int fd, struct addrinfo* id_server_info );
 
+int send_initial_comm( int processing_fd );
+int connect_to_old_server( server *old_server, bool is_comm_sent );
+int join_to_old_servers( list *servers_list, server *host );
+

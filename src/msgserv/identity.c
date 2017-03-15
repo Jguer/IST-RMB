@@ -109,3 +109,99 @@ int update_reg(int fd, struct addrinfo* id_server_info) {
     return 0;
 
 }
+
+int send_initial_comm( int processing_fd ){
+    
+    int status = 1;
+    if( (unsigned int)send(processing_fd, "SGET_MESSAGES\n", strlen("SGET_MESSAGES\n"), 0) != strlen("SGET_MESSAGES\n") ) {
+
+        printf("error sending initial communication\n");
+        status = 0;
+    }
+
+    return ( status ? processing_fd : (-1) );
+}
+
+int connect_to_old_server( server *old_server, bool is_comm_sent ){
+    
+    int processing_fd;
+    int status = 1; //false
+
+
+    if ( -2 == get_fd( old_server ) ){
+        // create new comunication
+        processing_fd = socket(AF_INET, SOCK_STREAM, 0); 
+        if ( -1 == processing_fd ){
+            printf( KRED "error creating socket\n" KNRM );
+            status = -1; //fatal error
+            return status;
+        }
+
+        char portitoa[STRING_SIZE];
+        if ( 0 > sprintf(portitoa, "%hu",get_tcp_port( old_server )) ){
+            printf(KRED "error converting u_short to string\n" KNRM);
+            status = -1; //fatal error
+            return status;
+        }
+        struct addrinfo *res = get_server_address_tcp( get_ip_address(old_server), 
+            portitoa);
+        if( res == NULL ){
+            processing_fd = -1;
+            status = 1; //false
+        }
+        else if ( -1 == connect(processing_fd, res->ai_addr, res->ai_addrlen) ) {
+
+            printf( KYEL "cant connect to:%s:[%s]\n" KNRM, get_ip_address(old_server),
+                portitoa); //Connect return Failure
+            close(processing_fd);
+            processing_fd = -1;
+            status = 1; //false
+
+        }                                       //Sends only a request for one of the initial servers
+        else if ( false == is_comm_sent ) {                            //Connect returns success
+
+            //Send message like SGET_MESSAGES to request messages
+            printf( "Sending new connection to:%s\n", get_name( old_server ) );
+            processing_fd = send_initial_comm( processing_fd );
+            if ( processing_fd == -1) status = 1; //false
+            else{
+                status = 0; //true
+            }
+        }
+
+        set_fd(old_server, processing_fd);
+    }
+
+    if( 1 == status && true == is_comm_sent ) status = 0; //if comm is already sent to one is good
+
+    return status;
+
+}
+
+int join_to_old_servers( list *msgservers_list , server *host ){
+    
+    bool is_comm_sent = false;
+    node *aux_node = NULL;
+    
+    for ( aux_node = get_head(msgservers_list); //Initialize comms with one new server
+    aux_node != NULL;
+    aux_node = get_next_node(aux_node)) {
+
+        if ( 0 != comp_servers( (server *)get_node_item(aux_node), host ) ){
+        
+            int status_check = connect_to_old_server( (server *)get_node_item(aux_node), is_comm_sent );
+            if (0 == status_check) is_comm_sent = true;
+            else if (1 == status_check) is_comm_sent = false;
+            else{
+                return -1; //Fatal error
+            }
+        }
+    }
+
+    if (false == is_comm_sent)
+    {
+        printf(KYEL "No connectable servers present: " KGRN "Wait mode\n" KNRM );
+    }
+
+    return 0; //Success
+}
