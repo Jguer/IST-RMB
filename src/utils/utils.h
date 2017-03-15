@@ -2,6 +2,19 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+#ifndef DEBUG	//Verbose is not an option
+#define _VERBOSE_TEST false
+#define _VERBOSE_OPT_CHECK
+#define _VERBOSE_OPT_SHOW ""
+#define _VERBOSE_OPT_INFO ""
+#else			//Verbose working
+#define _VERBOSE_TEST ( (true) == (is_verbose()) ) 
+#define _VERBOSE_OPT_CHECK verbose( (true) ); break;
+#define _VERBOSE_OPT_SHOW "[-v]"
+#define _VERBOSE_OPT_INFO "\t-v\t\t[verbose]\n"
+#endif
 
 #define KNRM  "\x1B[0m"		//Terminal color codes
 #define KRED  "\x1B[31m"
@@ -42,4 +55,6 @@ void remove_next_node(node *cur_node, node * next_node, void (*free_item)(item))
 
 /* UTILS */
 void memory_error(char *msg);
+void verbose(bool verbosity);
+bool is_verbose();
 

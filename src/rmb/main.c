@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
     int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (-1 == fd) {
-        printf("error creating socket\n");
+        if ( true == is_verbose() ) printf("error creating socket\n");
         exit_code = EXIT_FAILURE;
         goto PROGRAM_EXIT;
     }
