@@ -18,3 +18,4 @@ int send_initial_comm( int processing_fd );
 int connect_to_old_server( server *old_server, bool is_comm_sent );
 int join_to_old_servers( list *servers_list, server *host );
 
+int remove_bad_servers( list *servers_list, server *host, int max_fd, fd_set *rfds, void (*SET_FD)(int, fd_set *) );

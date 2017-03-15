@@ -30,6 +30,11 @@ void usage(char* name) {
             "\t-v\t\t[verbose]\n");
 }
 
+void put_fd_set(int fd, fd_set *rfds){
+    FD_SET(fd, rfds);
+    return;
+}
+
 int main(int argc, char *argv[]) {
     int oc;
     char *name = NULL;
@@ -124,16 +129,14 @@ int main(int argc, char *argv[]) {
     if (timer_fd == -1) {
         printf(KRED "Unable to create timer.\n" KNRM);
     }
+    
     udp_global_fd = init_udp( host ); //Initiates UDP connection
     tcp_listen_fd = init_tcp( host ); //Initiates TCP connection
-
     if ( 0 >= udp_global_fd || 0 >= tcp_listen_fd ){
         fprintf(stdout, KYEL "Cannot initializate UDP and/or TCP connections\n" KGRN
          "Check the ip address and ports\n" KNRM) ;
         return EXIT_FAILURE;
     }
-
-    // Periodic timer setup
 
     fprintf(stdout, KBLU "Server Parameters:" KNRM " %s:%s:%d:%d\n"
             KBLU "Identity Server:" KNRM " %s:%s\n"
@@ -157,49 +160,7 @@ int main(int argc, char *argv[]) {
         max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd ;
         max_fd = timer_fd > tcp_listen_fd ? timer_fd: tcp_listen_fd ;
 
-        if(msgservers_lst != NULL){ //Add child sockets to the socket set
-            node *aux_node;
-            if ( NULL != (aux_node = get_head( msgservers_lst ) ) ){
-
-                if ( -1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
-                    
-                    remove_first_node(msgservers_lst, free_server);
-                }else if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
-
-                    remove_first_node(msgservers_lst, free_server);
-                }
-
-                
-                
-                for ( aux_node = get_head(msgservers_lst);
-                aux_node != NULL ;
-                aux_node = get_next_node(aux_node)) {
-
-                    int processing_fd;
-                    node *next_node;
-
-                    if ( NULL != ( next_node = get_next_node(aux_node) ) ){     
-                        if ( -1 == get_fd( (server *)get_node_item(next_node) ) ){
-                            //Delete next node
-                            remove_next_node(aux_node, next_node, free_server);
-                            dec_size_list(msgservers_lst);
-                        }else if ( 0 == comp_servers((server *)get_node_item(next_node),host) ){
-                            remove_next_node(aux_node, next_node, free_server);
-                            dec_size_list(msgservers_lst);
-
-                        }
-                    }
-
-                    processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
-
-                    //if the socket is valid then add to the read list
-                    if(processing_fd > 0)  FD_SET(processing_fd, &rfds);
-
-                    //The highest file descriptor is saved for the select fnc
-                    if(processing_fd > max_fd) max_fd = processing_fd;
-                }
-            }
-        }
+        max_fd = remove_bad_servers( msgservers_lst, host, max_fd, &rfds, put_fd_set);
 
         //wait for one of the descriptors is ready
         int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function

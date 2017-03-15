@@ -205,3 +205,50 @@ int join_to_old_servers( list *msgservers_list , server *host ){
 
     return 0; //Success
 }
+
+
+int remove_bad_servers( list *servers_list, server *host, int max_fd, fd_set *rfds, void (*SET_FD)(int, fd_set *) ){
+
+    if(servers_list != NULL){ //Add child sockets to the socket set
+        node *aux_node;
+        if ( NULL != (aux_node = get_head( servers_list ) ) ){
+
+            if ( -1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
+                
+                remove_first_node(servers_list, free_server);
+            }else if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
+
+                remove_first_node(servers_list, free_server);
+            }              
+            
+            for ( aux_node = get_head(servers_list);
+            aux_node != NULL ;
+            aux_node = get_next_node(aux_node)) {
+
+                int processing_fd;
+                node *next_node;
+
+                if ( NULL != ( next_node = get_next_node(aux_node) ) ){     
+                    if ( -1 == get_fd( (server *)get_node_item(next_node) ) ){
+                        //Delete next node
+                        remove_next_node(aux_node, next_node, free_server);
+                        dec_size_list(servers_list);
+                    }else if ( 0 == comp_servers((server *)get_node_item(next_node),host) ){
+                        remove_next_node(aux_node, next_node, free_server);
+                        dec_size_list(servers_list);
+                    }
+                }
+
+                processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+
+                //if the socket is valid then add to the read list
+                if(processing_fd > 0)  (*SET_FD)(processing_fd, rfds);
+
+                //The highest file descriptor is saved for the select fnc
+                if(processing_fd > max_fd) max_fd = processing_fd;
+            }
+        }
+    }
+
+    return max_fd;
+}
