@@ -9,6 +9,9 @@ UTILS_DIR = src/utils
 
 all: client server
 
+debug:	CFLAGS += -DDEBUG
+debug:	client server
+
 release:
 	$(CC) $(CFLAGS_RELEASE) -I$(UTILS_DIR) $(wildcard wildcard src/utils/*.c) $(wildcard src/rmb/*.c) -o bin/$(CLIENT)
 	$(CC) $(CFLAGS_RELEASE) -I$(UTILS_DIR) $(wildcard wildcard src/utils/*.c) $(wildcard src/msgserv/*.c) -o bin/$(SERVER)

@@ -17,7 +17,7 @@
 #include "utils.h"
 
 void usage(char* name) {
-    fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–m m] [–r r] \n", name);
+    fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–m m] [–r r] %s \n", name, _VERBOSE_OPT_SHOW );
     fprintf(stdout, "Arguments:\n"
             "\t-n\t\tserver name\n"
             "\t-j\t\tserver ip\n"
@@ -27,12 +27,15 @@ void usage(char* name) {
             "\t-p\t\t[identity server port (default:59000)]\n"
             "\t-m\t\t[max server storage (default:200)]\n"
             "\t-r\t\t[register interval (default:10)]\n"
-            "\t-v\t\t[verbose]\n");
+            "%s", _VERBOSE_OPT_INFO);
 }
 
 void put_fd_set(int fd, fd_set *rfds){
     FD_SET(fd, rfds);
     return;
+}
+int is_fd_set(int fd, fd_set *rfds){
+    return FD_ISSET(fd, rfds);
 }
 
 int main(int argc, char *argv[]) {
@@ -98,15 +101,14 @@ int main(int argc, char *argv[]) {
             case 'h':
                 usage(argv[0]);
                 return EXIT_SUCCESS;
-                break;
-            case 'v':
-                verbose( true );
                 break; 
             case ':':
                 /* missing option argument */
                 fprintf(stderr, "%s: option '-%c' requires an argument\n",
                         argv[0], optopt);
                 break;
+            case 'v':
+                _VERBOSE_OPT_CHECK;
             case '?':
             default:
                 usage(argv[0]);
@@ -129,7 +131,7 @@ int main(int argc, char *argv[]) {
     if (timer_fd == -1) {
         printf(KRED "Unable to create timer.\n" KNRM);
     }
-    
+
     udp_global_fd = init_udp( host ); //Initiates UDP connection
     tcp_listen_fd = init_tcp( host ); //Initiates TCP connection
     if ( 0 >= udp_global_fd || 0 >= tcp_listen_fd ){
@@ -160,12 +162,13 @@ int main(int argc, char *argv[]) {
         max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd ;
         max_fd = timer_fd > tcp_listen_fd ? timer_fd: tcp_listen_fd ;
 
-        max_fd = remove_bad_servers( msgservers_lst, host, max_fd, &rfds, put_fd_set);
+        //Removes the bad servers and sets the good in fd_set rfds.
+        max_fd = remove_bad_servers( msgservers_lst, host, max_fd, &rfds, put_fd_set); 
 
         //wait for one of the descriptors is ready
         int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
-            if ( true == is_verbose() ) printf("error on select\n%d\n", errno);
+            if ( _VERBOSE_TEST ) printf("error on select\n%d\n", errno);
             return EXIT_FAILURE;
         }
 
@@ -174,27 +177,8 @@ int main(int argc, char *argv[]) {
             err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
         }
 
-        if (FD_ISSET(tcp_listen_fd, &rfds)) { //if something happens on tcp_listen_fd create and allocate new socket
-
-            struct sockaddr_in tcp_newserv_info;
-            int tcp_newserv_fd;
-
-            addrlen = sizeof( tcp_newserv_info );
-
-            //Create new socket, new_fd
-            if ( (tcp_newserv_fd = accept(tcp_listen_fd, (struct sockaddr *)&tcp_newserv_info,
-                (socklen_t*)&addrlen))<0 ){
-
-                if ( true == is_verbose() ) printf("error accepting communication\n");
-                return EXIT_FAILURE;
-            }
-
-            //add new socket to list of sockets
-            server * tcp_newserv = new_server( "MSG Server",inet_ntoa(tcp_newserv_info.sin_addr), 0, ntohs(tcp_newserv_info.sin_port) );
-            set_fd(tcp_newserv, tcp_newserv_fd);
-            set_connected(tcp_newserv, 1);
-            push_item_to_list( msgservers_lst, tcp_newserv);
-
+        if ( 0 != tcp_new_comm(msgservers_lst, tcp_listen_fd, &rfds, is_fd_set ) ){ //Starts connection for incoming requests
+            return EXIT_FAILURE;
         }
 
         //if something happened on other socket we must process it
@@ -202,7 +186,7 @@ int main(int argc, char *argv[]) {
             read_size = read( 0, buffer, STRING_SIZE);
             if ( 0 == read_size )
             {
-                if ( true == is_verbose() ) printf("error reading from stdio\n");
+                if ( _VERBOSE_TEST ) printf("error reading from stdio\n");
                 return EXIT_FAILURE;
             }
 
@@ -214,13 +198,13 @@ int main(int argc, char *argv[]) {
                     //Register on idServer
                     id_server = reg_server( &udp_register_fd, host, id_server_ip, id_server_port);
                     if(id_server == NULL){
-                        if ( true == is_verbose() ) printf( KYEL "error registing on id_server\n" KNRM);
+                        if ( _VERBOSE_TEST ) printf( KYEL "error registing on id_server\n" KNRM);
                         return EXIT_FAILURE;
                     }
 
                     err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
                     if (-1 == err){
-                        if ( true == is_verbose() ) printf(KRED "Unable to set timer\n" KNRM);
+                        if ( _VERBOSE_TEST ) printf(KRED "Unable to set timer\n" KNRM);
                         return EXIT_FAILURE;
                     }
 
@@ -228,7 +212,7 @@ int main(int argc, char *argv[]) {
                     msgservers_lst = fetch_servers(udp_register_fd, id_server);
                     node *head = get_head(msgservers_lst);
                     if (NULL == head) {
-                        if ( true == is_verbose() ) printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+                        if ( _VERBOSE_TEST ) printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
 /*>>>>>>>>>>>>>>>>>>*/  return EXIT_FAILURE; //Change with try again option
                     }
 
@@ -266,62 +250,24 @@ int main(int argc, char *argv[]) {
                             (struct sockaddr *)&udpaddr, (socklen_t*)&addrlen);
 
             if (-1 == read_size) {
-                if ( true == is_verbose() ) printf("udp receive error\n");
+                if ( _VERBOSE_TEST ) printf("udp receive error\n");
                 return EXIT_FAILURE;
             }
 
             buffer[read_size]='\0';
-            if ( true == is_verbose() ) printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
+            if ( _VERBOSE_TEST ) printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
                 ntohs(udpaddr.sin_port) );
 
             read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0,
                     (struct sockaddr*)&udpaddr, addrlen);
 
             if (-1 == read_size) {
-                if ( true == is_verbose() ) printf("error sending communication UDP\n");
+                if ( _VERBOSE_TEST ) printf("error sending communication UDP\n");
                 return EXIT_FAILURE;
             }
         }
 
-        if(NULL != msgservers_lst){ //TCP sockets already connected handling
-            node *aux_node;
-            for ( aux_node = get_head(msgservers_lst);
-                    aux_node != NULL ;
-                    aux_node = get_next_node(aux_node)) {
-
-                int processing_fd;
-
-                processing_fd = get_fd( (server *)get_node_item(aux_node) ); //file descriptor/socket
-
-                if ( FD_ISSET(processing_fd , &rfds) ){
-
-                    read_size = read( processing_fd, buffer, STRING_SIZE );
-
-                    if ( 0 == read_size ){
-
-                        //The server disconnected, put fd equal to -1 (FD_INVALID)
-                        close(processing_fd);
-                        set_fd( (server *)get_node_item(aux_node), -1 );
-                        set_connected((server *)get_node_item(aux_node), 0);
-
-                    }
-                    else{
-                        //Echo back the message that came in / INPLEMENT DATA TREATMENT
-                        buffer[read_size] = '\0';
-                        if ( true == is_verbose() ) printf( "TCP -> echoing: %s to %s:%hu\n", buffer, get_ip_address( (server *)get_node_item(aux_node) ),
-                            get_tcp_port((server *)get_node_item(aux_node) ) );
-
-                        if( (unsigned int)send(processing_fd, buffer, strlen(buffer), 0) != strlen(buffer) ) {
-
-                            if ( true == is_verbose() ) printf("error sending communication TCP\n");
-                            close(processing_fd);
-                            set_fd( (server *)get_node_item(aux_node), -1 );
-                            set_connected((server *)get_node_item(aux_node), 0);                            
-                        }
-                    }
-                }
-            }
-        }
+        tcp_fd_handle( msgservers_lst, NULL, &rfds, is_fd_set ); //TCP already started comunications handling
     }
 }
 
