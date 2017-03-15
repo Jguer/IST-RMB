@@ -41,10 +41,10 @@ struct addrinfo *get_server_address_tcp(char *server_ip, char *server_port) {
     return result;
 }
 
+// get_servers asks the identity server for the server list.
+// Returns raw data.
 char *get_servers(int fd, struct addrinfo *id_server) {
-    struct timeval timeout = {3,0}; //set timeout for 2 seconds
     ssize_t n = 0;
-
     char *return_string = NULL;
     char response[RESPONSE_SIZE] = {'\0'};
 
@@ -53,9 +53,8 @@ char *get_servers(int fd, struct addrinfo *id_server) {
 
     if (0 > n) {
         fprintf(stderr, KYEL "unable to send\n" KNRM);
+        return NULL;
     }
-
-    setsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char*)&timeout,sizeof(struct timeval));
 
     n = recvfrom(fd, response, RESPONSE_SIZE, 0,
             id_server->ai_addr,
@@ -63,6 +62,7 @@ char *get_servers(int fd, struct addrinfo *id_server) {
 
     if (0 > n) {
         fprintf(stderr, KYEL "unable to receive\n" KNRM);
+        return NULL;
     } else {
         return_string = (char *)malloc((n+1) * sizeof(char));
         strcpy(return_string, response);
@@ -85,9 +85,10 @@ char *get_servers(int fd, struct addrinfo *id_server) {
     Returns NULL on failure.
 */
 list *parse_servers(char *id_serv_info) {
-    char    *separated_info;
-    char    step_mem_name[STRING_SIZE]; //To define later
-    char    step_mem_ip_addr[STRING_SIZE];
+    char *separated_info;
+    char step_mem_name[STRING_SIZE]; //To define later
+    char step_mem_ip_addr[STRING_SIZE];
+    int  sscanf_state = 0;
     u_short step_mem_udp_port;
     u_short step_mem_tcp_port;
     list *msgserv_list = create_list();
@@ -95,8 +96,7 @@ list *parse_servers(char *id_serv_info) {
     separated_info = strtok(id_serv_info, "\n"); //Gets the first info, stoping at newline
     separated_info = strtok(NULL, "\n");
 
-    while (NULL != separated_info){ //Proceeds getting info and treating
-        int sscanf_state = 0;
+    while (NULL != separated_info) { //Proceeds getting info and treating
 
         sscanf_state = sscanf(separated_info, "%[^;];%[^;];%hu;%hu",step_mem_name, step_mem_ip_addr,
             &step_mem_udp_port, &step_mem_tcp_port);//Separates info and saves it in variables
@@ -119,6 +119,7 @@ list *parse_servers(char *id_serv_info) {
     return msgserv_list;
 }
 
+// fetch_servers returns a list parsed from the response of (get_servers).
 list *fetch_servers(int fd, struct addrinfo *id_server) {
 	char *response;
 	list *msgserv_lst;
@@ -126,9 +127,9 @@ list *fetch_servers(int fd, struct addrinfo *id_server) {
 	response = get_servers(fd, id_server); //Show server will return NULL on disconnection
     if (NULL != response){
         msgserv_lst = parse_servers(response);
+        free(response);
     }
 
-    free(response);
    	return msgserv_lst;
 }
 
@@ -164,9 +165,9 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
 }
 
 int comp_servers(server *serv1, server *serv2){
-    if ( 0 == strcmp(serv1->name,serv2->name) 
-        && 0 == strcmp(serv1->ip_addr,serv2->ip_addr) 
-        && serv1->udp_port == serv2->udp_port 
+    if ( 0 == strcmp(serv1->name,serv2->name)
+        && 0 == strcmp(serv1->ip_addr,serv2->ip_addr)
+        && serv1->udp_port == serv2->udp_port
         && serv1->tcp_port == serv2->tcp_port ){
         return 0;
     }
@@ -218,8 +219,8 @@ void print_server(item got_item) {
             KYEL "UDP Port:" RESET " %hu "
             KYEL "TCP Port:" RESET " %hu "
             KYEL "Connected:" RESET " %d "
-            KYEL "fd:" RESET " %d ", 
-            this->name, this->ip_addr, this->udp_port, this->tcp_port, this->connected, this->fd);    
+            KYEL "fd:" RESET " %d ",
+            this->name, this->ip_addr, this->udp_port, this->tcp_port, this->connected, this->fd);
     }
     else{
         fprintf(stdout, KCYN "Server to remove: invalid" KNRM);
@@ -229,6 +230,9 @@ void print_server(item got_item) {
 
 void free_server(item got_item) {
     server *this = (server *)got_item;
+    if (this == NULL) {
+        return;
+    }
 
     free(this->name);
     free(this->ip_addr);

@@ -16,6 +16,7 @@
 #include "server.h"
 #include "utils.h"
 #include "utilmessage.h"
+#include "message.h"
 
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–m m] [–r r] \n", name);

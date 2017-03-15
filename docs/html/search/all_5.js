@@ -1,0 +1,18 @@
+var searchData=
+[
+  ['get_5fconnected',['get_connected',['../server_8c.html#ab64c30f8a394c4e0b62c0d7448ad286f',1,'get_connected(server *this):&#160;server.c'],['../server_8h.html#ab64c30f8a394c4e0b62c0d7448ad286f',1,'get_connected(server *this):&#160;server.c']]],
+  ['get_5ffd',['get_fd',['../server_8c.html#ae1dc7e40ee1a388ea3dc9bb63f786b44',1,'get_fd(server *this):&#160;server.c'],['../server_8h.html#ae1dc7e40ee1a388ea3dc9bb63f786b44',1,'get_fd(server *this):&#160;server.c']]],
+  ['get_5fhead',['get_head',['../utils_8c.html#a79f35963648438929641ab4028bc3e16',1,'get_head(list *got_list):&#160;utils.c'],['../utils_8h.html#a79f35963648438929641ab4028bc3e16',1,'get_head(list *got_list):&#160;utils.c']]],
+  ['get_5fip_5faddress',['get_ip_address',['../server_8c.html#aac8ba3697583c6d871ced1d81895ae5f',1,'get_ip_address(server *this):&#160;server.c'],['../server_8h.html#aac8ba3697583c6d871ced1d81895ae5f',1,'get_ip_address(server *this):&#160;server.c']]],
+  ['get_5flc',['get_lc',['../utilmessage_8c.html#aca56fed35cad4675f05ac31f356dbdb8',1,'get_lc(message *this):&#160;utilmessage.c'],['../utilmessage_8h.html#aca56fed35cad4675f05ac31f356dbdb8',1,'get_lc(message *this):&#160;utilmessage.c']]],
+  ['get_5flist_5fsize',['get_list_size',['../utils_8c.html#a9c30475487d055627cbc2e0ebc0bf9e7',1,'get_list_size(list *got_list):&#160;utils.c'],['../utils_8h.html#a9c30475487d055627cbc2e0ebc0bf9e7',1,'get_list_size(list *got_list):&#160;utils.c']]],
+  ['get_5fname',['get_name',['../server_8c.html#a0cf272dee2019da5a53e23af88b3db72',1,'get_name(server *this):&#160;server.c'],['../server_8h.html#a0cf272dee2019da5a53e23af88b3db72',1,'get_name(server *this):&#160;server.c']]],
+  ['get_5fnext_5fnode',['get_next_node',['../utils_8c.html#ae72cff23c48ab3b0c770e8a33b58b9e7',1,'get_next_node(node *got_node):&#160;utils.c'],['../utils_8h.html#ae72cff23c48ab3b0c770e8a33b58b9e7',1,'get_next_node(node *got_node):&#160;utils.c']]],
+  ['get_5fnode_5fitem',['get_node_item',['../utils_8c.html#a9583c173eb02b0ac8e5570af2f44c1ce',1,'get_node_item(node *got_node):&#160;utils.c'],['../utils_8h.html#a9583c173eb02b0ac8e5570af2f44c1ce',1,'get_node_item(node *got_node):&#160;utils.c']]],
+  ['get_5fserver_5faddress',['get_server_address',['../server_8c.html#a626030ee32d61ec5bc257d412dd2b0c8',1,'get_server_address(char *server_ip, char *server_port):&#160;server.c'],['../server_8h.html#a626030ee32d61ec5bc257d412dd2b0c8',1,'get_server_address(char *server_ip, char *server_port):&#160;server.c']]],
+  ['get_5fserver_5faddress_5ftcp',['get_server_address_tcp',['../server_8c.html#aef7b0e9d7a3905e1e8bfc4e0aa9692d7',1,'get_server_address_tcp(char *server_ip, char *server_port):&#160;server.c'],['../server_8h.html#aef7b0e9d7a3905e1e8bfc4e0aa9692d7',1,'get_server_address_tcp(char *server_ip, char *server_port):&#160;server.c']]],
+  ['get_5fservers',['get_servers',['../server_8c.html#a6ca61856ddebe488248f4c6048786e4a',1,'server.c']]],
+  ['get_5fstring',['get_string',['../utilmessage_8c.html#ab6cc7d2177099c91fb79bbba475d297f',1,'get_string(message *this):&#160;utilmessage.c'],['../utilmessage_8h.html#ab6cc7d2177099c91fb79bbba475d297f',1,'get_string(message *this):&#160;utilmessage.c']]],
+  ['get_5ftcp_5fport',['get_tcp_port',['../server_8c.html#acb8260a3e757e615426da2b2cc1ada3c',1,'get_tcp_port(server *this):&#160;server.c'],['../server_8h.html#acb8260a3e757e615426da2b2cc1ada3c',1,'get_tcp_port(server *this):&#160;server.c']]],
+  ['get_5fudp_5fport',['get_udp_port',['../server_8c.html#ace3e417e0e727f52630c089ebe015a1d',1,'get_udp_port(server *this):&#160;server.c'],['../server_8h.html#ace3e417e0e727f52630c089ebe015a1d',1,'get_udp_port(server *this):&#160;server.c']]]
+];
