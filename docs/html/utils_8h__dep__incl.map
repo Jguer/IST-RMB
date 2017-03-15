@@ -1,0 +1,15 @@
+<map id="src/utils/utils.h" name="src/utils/utils.h">
+<area shape="rect" id="node2" href="$identity_8h.html" title="src/msgserv/identity.h" alt="" coords="5,155,168,181"/>
+<area shape="rect" id="node4" href="$msgserv_2main_8c.html" title="src/msgserv/main.c" alt="" coords="391,229,539,256"/>
+<area shape="rect" id="node5" href="$msgserv_2message_8h.html" title="src/msgserv/message.h" alt="" coords="192,155,368,181"/>
+<area shape="rect" id="node7" href="$rmb_2main_8c.html" title="src/rmb/main.c" alt="" coords="871,229,990,256"/>
+<area shape="rect" id="node8" href="$server_8h.html" title="src/utils/server.h" alt="" coords="494,80,621,107"/>
+<area shape="rect" id="node9" href="$rmb_2message_8h.html" title="src/rmb/message.h" alt="" coords="936,155,1083,181"/>
+<area shape="rect" id="node12" href="$utilmessage_8h.html" title="src/utils/utilmessage.h" alt="" coords="645,80,811,107"/>
+<area shape="rect" id="node14" href="$utils_8c.html" title="src/utils/utils.c" alt="" coords="1157,80,1269,107"/>
+<area shape="rect" id="node3" href="$identity_8c.html" title="src/msgserv/identity.c" alt="" coords="5,229,168,256"/>
+<area shape="rect" id="node6" href="$msgserv_2message_8c.html" title="src/msgserv/message.c" alt="" coords="193,229,367,256"/>
+<area shape="rect" id="node11" href="$server_8c.html" title="src/utils/server.c" alt="" coords="443,155,570,181"/>
+<area shape="rect" id="node10" href="$rmb_2message_8c.html" title="src/rmb/message.c" alt="" coords="1014,229,1159,256"/>
+<area shape="rect" id="node13" href="$utilmessage_8c.html" title="src/utils/utilmessage.c" alt="" coords="747,155,911,181"/>
+</map>

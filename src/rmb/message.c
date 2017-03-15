@@ -1,40 +1,38 @@
 #include "message.h"
-#include "utilmessage.h"
 
 #define PUBLISH "PUBLISH"
 #define ASK "GET_MESSAGES"
 
+// select_server returns a pointer to a random server in $(server_list).
 server *select_server(list *server_list) {
     node *head = get_head(server_list);
     if (NULL == head) {
         return NULL;
     }
 
-    int r = rand() % get_list_size(server_list);
-    int i = 0;
+    uint_fast16_t r = rand() % get_list_size(server_list);
 
-    for (i = 0; i < r; i ++) {
+    for (uint_fast16_t i = 0; i < r; i ++) {
         head = get_next_node(head);
     }
 
     return (server *)get_node_item(head);
 }
 
+// publish sends a $(msg) with 140 characters max to $(sel_server).
 int publish(int fd, server *sel_server, char *msg) {
     ssize_t n = 0;
-    int exit_code = 0;
-    struct sockaddr_in server_addr;
+
+    struct sockaddr_in server_addr = { 0 };
     socklen_t addr_len;
-    char msg_to_send[RESPONSE_SIZE];
+    char msg_to_send[STRING_SIZE];
 
     sprintf(msg_to_send, "%s %s", PUBLISH, msg);
-
-    memset((void*)&server_addr, (int)'\0',
-            sizeof(server_addr));
 
     server_addr.sin_family = AF_INET;
     if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
         fprintf(stderr, KYEL "unable to convert %s to address\n" KNRM, get_ip_address(sel_server));
+        return 1;
     }
 
     server_addr.sin_port = htons(get_udp_port(sel_server));
@@ -45,38 +43,26 @@ int publish(int fd, server *sel_server, char *msg) {
 
     if (-1 == n) {
         fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
-        exit_code = 1;
+        return 1;
     }
 
-    return exit_code;
+    return 0;
 }
 
-list *get_latest_messages(int fd, server *sel_server, int num) {
-    struct timeval timeout={3,0}; //set timeout for 2 seconds
-    ssize_t   n = 0;
-    struct    sockaddr_in server_addr;
+// ask_for_messages sends a UDP request to $(sel_server) for the last $(num) messages.
+int ask_for_messages(int fd, server *sel_server, int num) {
+    ssize_t n = 0;
+
     socklen_t addr_len;
-    list      *message_list;
-
-    char *response = (char *)malloc(STRING_SIZE * (num+1));
-    if (NULL == response) {
-        memory_error("failed to allocate error buffer");
-    }
-    memset(response, '\0', sizeof(char));
-
-    char *msg_to_send = (char *)malloc(RESPONSE_SIZE);
-    if (NULL == msg_to_send) {
-        memory_error("failed to allocate error buffer");
-    }
+    struct    sockaddr_in server_addr = { 0 };
+    char msg_to_send[STRING_SIZE];
 
     sprintf(msg_to_send, "%s %d", ASK, num);
-
-    memset((void*)&server_addr, (int)'\0',
-            sizeof(server_addr));
 
     server_addr.sin_family = AF_INET;
     if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
         fprintf(stderr, KYEL "unable to convert \"%s\" to address\n" KNRM, get_ip_address(sel_server));
+        return 1;
     }
 
     server_addr.sin_port = htons(get_udp_port(sel_server));
@@ -87,22 +73,7 @@ list *get_latest_messages(int fd, server *sel_server, int num) {
 
     if (0 > n) {
         fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
-        return NULL;
+        return 1;
     }
-
-    setsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char*)&timeout,sizeof(struct timeval));
-
-    n = recvfrom(fd, response, RESPONSE_SIZE, 0,
-            (struct sockaddr*)&server_addr,
-            &addr_len);
-
-    if (0 > n) {
-        fprintf(stderr, KYEL "unable to receive\n" KNRM);
-    } else {
-        message_list = parse_messages(response);
-    }
-
-    free(response);
-    free(msg_to_send);
-    return message_list;
+    return 0;
 }
