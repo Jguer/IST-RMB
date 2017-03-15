@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/types.h>
 
 #ifndef DEBUG	//Verbose is not an option
 #define _VERBOSE_TEST false
@@ -10,7 +11,7 @@
 #define _VERBOSE_OPT_SHOW ""
 #define _VERBOSE_OPT_INFO ""
 #else			//Verbose working
-#define _VERBOSE_TEST ( (true) == (is_verbose()) ) 
+#define _VERBOSE_TEST ( (true) == (is_verbose()) )
 #define _VERBOSE_OPT_CHECK verbose( (true) ); break;
 #define _VERBOSE_OPT_SHOW "[-v]"
 #define _VERBOSE_OPT_INFO "\t-v\t\t[verbose]\n"

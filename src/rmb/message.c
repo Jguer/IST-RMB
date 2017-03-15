@@ -54,9 +54,8 @@ int ask_for_messages(int fd, server *sel_server, int num) {
     ssize_t n = 0;
 
     socklen_t addr_len;
-    struct    sockaddr_in server_addr = { 0 };
+    struct sockaddr_in server_addr = { 0 };
     char msg_to_send[STRING_SIZE];
-
     sprintf(msg_to_send, "%s %d", ASK, num);
 
     server_addr.sin_family = AF_INET;

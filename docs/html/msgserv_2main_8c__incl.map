@@ -1,7 +1,7 @@
 <map id="src/msgserv/main.c" name="src/msgserv/main.c">
-<area shape="rect" id="node15" href="$identity_8h.html" title="identity.h" alt="" coords="964,80,1044,107"/>
-<area shape="rect" id="node17" href="$server_8h.html" title="server.h" alt="" coords="456,155,531,181"/>
-<area shape="rect" id="node19" href="$utils_8h.html" title="utils.h" alt="" coords="988,229,1048,256"/>
-<area shape="rect" id="node20" href="$utilmessage_8h.html" title="utilmessage.h" alt="" coords="1158,155,1270,181"/>
-<area shape="rect" id="node21" href="$msgserv_2message_8h.html" title="message.h" alt="" coords="847,80,940,107"/>
+<area shape="rect" id="node15" href="$identity_8h.html" title="identity.h" alt="" coords="446,80,526,107"/>
+<area shape="rect" id="node17" href="$server_8h.html" title="server.h" alt="" coords="185,155,259,181"/>
+<area shape="rect" id="node18" href="$utils_8h.html" title="utils.h" alt="" coords="423,229,483,256"/>
+<area shape="rect" id="node20" href="$utilmessage_8h.html" title="utilmessage.h" alt="" coords="283,155,395,181"/>
+<area shape="rect" id="node21" href="$msgserv_2message_8h.html" title="message.h" alt="" coords="583,80,677,107"/>
 </map>

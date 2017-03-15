@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['new_5fmessage',['new_message',['../utilmessage_8c.html#ade65f9b198173995fd0dce37dab08bda',1,'new_message(int lc, char *src):&#160;utilmessage.c'],['../utilmessage_8h.html#ade65f9b198173995fd0dce37dab08bda',1,'new_message(int lc, char *src):&#160;utilmessage.c']]],
-  ['new_5fserver',['new_server',['../server_8c.html#a1fd2ed3d15d30f861fcfcb40ad4d7991',1,'new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port):&#160;server.c'],['../server_8h.html#adb3003bebfe5374708634d356336d5a8',1,'new_server(char *name, char *ip_address, u_short udp_port, u_short tcp_port):&#160;server.c']]]
+  ['main',['main',['../msgserv_2main_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;main.c'],['../rmb_2main_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;main.c']]],
+  ['memory_5ferror',['memory_error',['../utils_8c.html#a2bee3ad7d4beb19e9fe94c85d49c6465',1,'memory_error(char *msg):&#160;utils.c'],['../utils_8h.html#a2bee3ad7d4beb19e9fe94c85d49c6465',1,'memory_error(char *msg):&#160;utils.c']]],
+  ['merge_5flists',['merge_lists',['../utils_8c.html#a35f9c2b3ef782109cf2d7ce468a2d772',1,'merge_lists(list *list_a, list *list_b):&#160;utils.c'],['../utils_8h.html#a35f9c2b3ef782109cf2d7ce468a2d772',1,'merge_lists(list *list_a, list *list_b):&#160;utils.c']]]
 ];

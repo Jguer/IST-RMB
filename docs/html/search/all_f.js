@@ -1,6 +1,7 @@
 var searchData=
 [
   ['select_5fserver',['select_server',['../rmb_2message_8c.html#a78fad15cf4c99e1a1571ee8d738e29f3',1,'select_server(list *server_list):&#160;message.c'],['../rmb_2message_8h.html#a8ca7a4c530312bfc3248aa5a786911f7',1,'select_server(list *server_list):&#160;message.c']]],
+  ['send_5finitial_5fcomm',['send_initial_comm',['../identity_8c.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c'],['../identity_8h.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c']]],
   ['server',['server',['../server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce',1,'server.h']]],
   ['server_2ec',['server.c',['../server_8c.html',1,'']]],
   ['server_2eh',['server.h',['../server_8h.html',1,'']]],

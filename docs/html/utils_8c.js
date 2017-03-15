@@ -13,6 +13,7 @@ var utils_8c =
     [ "get_list_size", "utils_8c.html#a9c30475487d055627cbc2e0ebc0bf9e7", null ],
     [ "get_next_node", "utils_8c.html#ae72cff23c48ab3b0c770e8a33b58b9e7", null ],
     [ "get_node_item", "utils_8c.html#a9583c173eb02b0ac8e5570af2f44c1ce", null ],
+    [ "is_verbose", "utils_8c.html#a323aba01db0eccbb36fce697164fae2e", null ],
     [ "memory_error", "utils_8c.html#a2bee3ad7d4beb19e9fe94c85d49c6465", null ],
     [ "merge_lists", "utils_8c.html#a35f9c2b3ef782109cf2d7ce468a2d772", null ],
     [ "print_list", "utils_8c.html#a52e15ec62ed3c4541e1e1c081afb4eee", null ],
@@ -20,5 +21,6 @@ var utils_8c =
     [ "push_node_to_list", "utils_8c.html#a9d4e3501aa0572d2bfbf121e6887848c", null ],
     [ "remove_first_node", "utils_8c.html#ab9d0a09eb9a69c804d39314fae11a0b5", null ],
     [ "remove_next_node", "utils_8c.html#ab3d387b195976bec29f6ce2ca2bca47a", null ],
-    [ "set_head", "utils_8c.html#a107f9b01a0cb779a25428a7cc0328fc1", null ]
+    [ "set_head", "utils_8c.html#a107f9b01a0cb779a25428a7cc0328fc1", null ],
+    [ "verbose", "utils_8c.html#a677e8eddb73d7fe8329721adb80ad9cf", null ]
 ];

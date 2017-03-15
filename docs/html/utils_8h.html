@@ -91,10 +91,14 @@ $(document).ready(function(){initNavTree('utils_8h.html','');});
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for utils.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="utils_8h__incl.png" border="0" usemap="#src_2utils_2utils_8h" alt=""/></div>
+<map name="src_2utils_2utils_8h" id="src_2utils_2utils_8h">
+</map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -121,6 +125,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:ad72427f8a9e27c93ee2d48cd8378be07"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#ad72427f8a9e27c93ee2d48cd8378be07">_VERBOSE_TEST</a>&#160;&#160;&#160;false</td></tr>
+<tr class="separator:ad72427f8a9e27c93ee2d48cd8378be07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a643040279f254a2f5dae2a13f93f6728"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a643040279f254a2f5dae2a13f93f6728">_VERBOSE_OPT_CHECK</a></td></tr>
+<tr class="separator:a643040279f254a2f5dae2a13f93f6728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf8008860e2b9676e79b6598931406cc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#acf8008860e2b9676e79b6598931406cc">_VERBOSE_OPT_SHOW</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
+<tr class="separator:acf8008860e2b9676e79b6598931406cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7aa8ea1bf2fc132d8835859901db90e3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a7aa8ea1bf2fc132d8835859901db90e3">_VERBOSE_OPT_INFO</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
+<tr class="separator:a7aa8ea1bf2fc132d8835859901db90e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a137aa83ec74421d226a90c92ec032ac9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>&#160;&#160;&#160;&quot;\x1B[0m&quot;</td></tr>
 <tr class="separator:a137aa83ec74421d226a90c92ec032ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66290957baed5df3930ada4cb8caccf1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a>&#160;&#160;&#160;&quot;\x1B[31m&quot;</td></tr>
@@ -191,8 +203,76 @@ Functions</h2></td></tr>
 <tr class="separator:ade08684e0dfbe333c81695494dee604f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bee3ad7d4beb19e9fe94c85d49c6465"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a2bee3ad7d4beb19e9fe94c85d49c6465">memory_error</a> (char *msg)</td></tr>
 <tr class="separator:a2bee3ad7d4beb19e9fe94c85d49c6465"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a677e8eddb73d7fe8329721adb80ad9cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a677e8eddb73d7fe8329721adb80ad9cf">verbose</a> (bool verbosity)</td></tr>
+<tr class="separator:a677e8eddb73d7fe8329721adb80ad9cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a323aba01db0eccbb36fce697164fae2e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a323aba01db0eccbb36fce697164fae2e">is_verbose</a> ()</td></tr>
+<tr class="separator:a323aba01db0eccbb36fce697164fae2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a643040279f254a2f5dae2a13f93f6728"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a643040279f254a2f5dae2a13f93f6728">&#9670;&nbsp;</a></span>_VERBOSE_OPT_CHECK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _VERBOSE_OPT_CHECK</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00010">10</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+
+</div>
+</div>
+<a id="a7aa8ea1bf2fc132d8835859901db90e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7aa8ea1bf2fc132d8835859901db90e3">&#9670;&nbsp;</a></span>_VERBOSE_OPT_INFO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _VERBOSE_OPT_INFO&#160;&#160;&#160;&quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00012">12</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+
+</div>
+</div>
+<a id="acf8008860e2b9676e79b6598931406cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf8008860e2b9676e79b6598931406cc">&#9670;&nbsp;</a></span>_VERBOSE_OPT_SHOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _VERBOSE_OPT_SHOW&#160;&#160;&#160;&quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00011">11</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+
+</div>
+</div>
+<a id="ad72427f8a9e27c93ee2d48cd8378be07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad72427f8a9e27c93ee2d48cd8378be07">&#9670;&nbsp;</a></span>_VERBOSE_TEST</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _VERBOSE_TEST&#160;&#160;&#160;false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00009">9</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+
+</div>
+</div>
 <a id="a3f838f2fc3a9a3b434be606fc908964b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f838f2fc3a9a3b434be606fc908964b">&#9670;&nbsp;</a></span>KBLU</h2>
 
@@ -205,7 +285,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00010">10</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00024">24</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -221,7 +301,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00012">12</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00026">26</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -237,7 +317,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00008">8</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00022">22</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -253,7 +333,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00011">11</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00025">25</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -269,7 +349,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00006">6</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00020">20</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -285,7 +365,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00007">7</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00021">21</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -301,7 +381,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00013">13</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00027">27</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -317,7 +397,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00009">9</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00023">23</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -333,7 +413,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00014">14</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00028">28</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -349,7 +429,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00016">16</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00030">30</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -365,7 +445,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00015">15</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00029">29</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -382,7 +462,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00018">18</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00032">32</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -398,7 +478,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00019">19</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00033">33</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -414,7 +494,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00021">21</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00035">35</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -430,7 +510,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00020">20</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00034">34</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
 
 </div>
 </div>
@@ -450,7 +530,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00022">22</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00032">32</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -480,7 +560,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00113">113</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00123">123</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -500,7 +580,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00106">106</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00116">116</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -530,7 +610,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00147">147</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00157">157</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -560,7 +640,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00090">90</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00100">100</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -590,7 +670,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00137">137</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00147">147</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -610,7 +690,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00039">39</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00049">49</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -630,7 +710,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00068">68</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00078">78</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -650,7 +730,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00133">133</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00143">143</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -670,7 +750,26 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00129">129</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00139">139</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+
+</div>
+</div>
+<a id="a323aba01db0eccbb36fce697164fae2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a323aba01db0eccbb36fce697164fae2e">&#9670;&nbsp;</a></span>is_verbose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_verbose </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00027">27</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -690,7 +789,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00013">13</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00015">15</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -720,7 +819,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00179">179</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00189">189</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -750,7 +849,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00072">72</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00082">82</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -780,7 +879,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00048">48</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00058">58</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -810,7 +909,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00058">58</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00068">68</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -840,7 +939,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00160">160</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00170">170</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
@@ -876,7 +975,27 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00172">172</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00182">182</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
+
+</div>
+</div>
+<a id="a677e8eddb73d7fe8329721adb80ad9cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a677e8eddb73d7fe8329721adb80ad9cf">&#9670;&nbsp;</a></span>verbose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void verbose </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>verbosity</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8c_source.html#l00023">23</a> of file <a class="el" href="utils_8c_source.html">utils.c</a>.</p>
 
 </div>
 </div>
