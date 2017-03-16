@@ -1,5 +1,5 @@
 <map id="src/msgserv/message.c" name="src/msgserv/message.c">
-<area shape="rect" id="node2" href="$msgserv_2message_8h.html" title="message.h" alt="" coords="155,80,248,107"/>
-<area shape="rect" id="node7" href="$server_8h.html" title="server.h" alt="" coords="299,155,373,181"/>
-<area shape="rect" id="node11" href="$utils_8h.html" title="utils.h" alt="" coords="511,229,571,256"/>
+<area shape="rect" id="node2" href="$msgserv_2message_8h.html" title="message.h" alt="" coords="201,80,294,107"/>
+<area shape="rect" id="node3" href="$server_8h.html" title="../utils/server.h" alt="" coords="189,155,305,181"/>
+<area shape="rect" id="node9" href="$utils_8h.html" title="utils.h" alt="" coords="460,229,520,256"/>
 </map>

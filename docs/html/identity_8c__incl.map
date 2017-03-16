@@ -1,5 +1,5 @@
 <map id="src/msgserv/identity.c" name="src/msgserv/identity.c">
-<area shape="rect" id="node2" href="$identity_8h.html" title="identity.h" alt="" coords="245,80,325,107"/>
-<area shape="rect" id="node4" href="$server_8h.html" title="server.h" alt="" coords="247,155,322,181"/>
+<area shape="rect" id="node2" href="$identity_8h.html" title="identity.h" alt="" coords="149,80,229,107"/>
+<area shape="rect" id="node4" href="$server_8h.html" title="../utils/server.h" alt="" coords="189,155,305,181"/>
 <area shape="rect" id="node10" href="$utils_8h.html" title="utils.h" alt="" coords="460,229,520,256"/>
 </map>
