@@ -260,7 +260,7 @@ void tcp_fd_handle( list *servers_list,list *messages_list, fd_set *rfds, int (*
     char input_buffer[RESPONSE_SIZE];
     char op[STRING_SIZE];
 
-    if(NULL != servers_list){ //TCP sockets already connected handling
+    if (NULL != servers_list){ //TCP sockets already connected handling
         node *aux_node;
         for ( aux_node = get_head(servers_list);
                 aux_node != NULL ;

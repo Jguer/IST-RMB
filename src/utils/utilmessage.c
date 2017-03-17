@@ -47,21 +47,6 @@ void print_message(item got_item) {
     return;
 }
 
-char *get_first_n_messages(list *msg_list, int n) {
-    node *aux_node = get_head(msg_list);
-    if (aux_node == NULL) {
-        return NULL;
-    }
-    char *to_return = (char*)malloc(sizeof(char) * STRING_SIZE * n);
-    for (int i = 0; i < n; i++) {
-        if (aux_node == NULL) {
-            break;
-        }
-        strncat(to_return, get_string(get_node_item(aux_node)), STRING_SIZE * n);
-        aux_node = get_next_node(aux_node);
-    }
-    return to_return;
-}
 
 list *parse_messages(char *buffer) {
     list *message_list = create_list();

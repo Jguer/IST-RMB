@@ -40,8 +40,6 @@ int main(int argc, char *argv[]) {
 
     int m = 200;
     int r = 10;
-    uint_fast32_t to_alloc;
-
     bool is_join_complete = false;
 
     fd_set rfds;
@@ -54,9 +52,6 @@ int main(int argc, char *argv[]) {
     uint_fast8_t exit_code = EXIT_SUCCESS;
 
     char buffer[STRING_SIZE];
-    char op[STRING_SIZE];
-    char input_buffer[STRING_SIZE];
-    char *response_buffer;
 
     int read_size;
     int err = 1;
@@ -150,8 +145,6 @@ int main(int argc, char *argv[]) {
 
     // Processing Loop
     while(true) {
-        int addrlen;
-
         //Clear the set
         FD_ZERO(&rfds);
 
@@ -166,10 +159,10 @@ int main(int argc, char *argv[]) {
 
 
         //Removes the bad servers and sets the good in fd_set rfds.
-        max_fd = remove_bad_servers( msgservers_lst, host, max_fd, &rfds, put_fd_set);
+        max_fd = remove_bad_servers(msgservers_lst, host, max_fd, &rfds, put_fd_set);
 
         //wait for one of the descriptors is ready
-        int activity = select( max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
+        int activity = select(max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
             if ( _VERBOSE_TEST ) printf("error on select\n%d\n", errno);
             exit_code = EXIT_FAILURE;
@@ -206,13 +199,15 @@ int main(int argc, char *argv[]) {
                     id_server = reg_server(&udp_register_fd, host, id_server_ip, id_server_port);
                     if(id_server == NULL) {
                         if ( _VERBOSE_TEST ) printf( KYEL "error registing on id_server\n" KNRM);
-                        return EXIT_FAILURE;
+                        exit_code = EXIT_FAILURE;
+                        goto PROGRAM_EXIT;
                     }
 
                     err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
                     if (-1 == err) {
                         if ( _VERBOSE_TEST ) printf(KRED "Unable to set timer\n" KNRM);
-                        return EXIT_FAILURE;
+                        exit_code = EXIT_FAILURE;
+                        goto PROGRAM_EXIT;
                     }
 
                     //Get the message servers list
@@ -224,7 +219,8 @@ int main(int argc, char *argv[]) {
                     }
 
                     if (0 != join_to_old_servers(msgservers_lst, host)) {
-                        return EXIT_FAILURE;
+                        exit_code = EXIT_FAILURE;
+                        goto PROGRAM_EXIT;
                     }
 
                     is_join_complete = true;
@@ -249,61 +245,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
-            struct sockaddr_in udpaddr;
-
-            addrlen = sizeof(udpaddr);
-
-            memset(buffer, '\0', sizeof(char) * STRING_SIZE);
-            read_size = recvfrom(udp_global_fd, buffer, sizeof(buffer), 0,
-                    (struct sockaddr *)&udpaddr, (socklen_t*)&addrlen);
-
-            if (-1 == read_size) {
-                if ( _VERBOSE_TEST ) printf("udp receive error\n");
-                return EXIT_FAILURE;
-            }
-            buffer[read_size]='\0';
-            sscanf(buffer, "%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
-            fprintf(stdout, "%s\n", buffer);
-
-            if (0 == strcmp("PUBLISH", op)) {
-                push_item_to_list(message_lst, new_message(get_list_size(message_lst), input_buffer));
-            } else if (0 == strcmp("GET_MESSAGES", op)) {
-                int num = atoi(input_buffer);
-                if (m < num || 1 > num) {
-                    num = m;
-                }
-                char *to_append;
-                if(to_alloc < 1 + get_list_size(message_lst)) {
-                    to_alloc = 1 + get_list_size(message_lst);
-                    response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * to_alloc);
-                }
-                to_append = get_first_n_messages(message_lst, num);
-                if (to_append != NULL) {
-                    snprintf(response_buffer, STRING_SIZE * to_alloc, "%s\n%s", "MESSAGES", to_append);
-                    read_size = sendto(udp_global_fd, response_buffer, strlen(response_buffer) + 1, 0,
-                            (struct sockaddr*)&udpaddr, addrlen);
-
-                    free(to_append);
-                    if (-1 == read_size) {
-                        if (_VERBOSE_TEST) printf("error sending communication UDP\n");
-                        exit_code = EXIT_FAILURE;
-                        goto PROGRAM_EXIT;
-                    }
-                }
-            }
-#if 0
-            if (_VERBOSE_TEST) printf( "UDP -> echoing: %s to %s:%hu\n", buffer, inet_ntoa(udpaddr.sin_addr),
-                ntohs(udpaddr.sin_port) );
-
-            read_size = sendto(udp_global_fd, buffer, strlen(buffer)+1, 0,
-                (struct sockaddr*)&udpaddr, addrlen);
-
-            if (-1 == read_size) {
-                if (_VERBOSE_TEST) printf("error sending communication UDP\n");
-                return EXIT_FAILURE;
-            }
-#endif
-
+            handle_client_comms(udp_global_fd, m, message_lst);
             fprintf(stdout, KGRN "Prompt > " KNRM);
             fflush(stdout);
         }
