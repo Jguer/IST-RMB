@@ -1,7 +1,6 @@
 #include "message.h"
 
 uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, matrix msg_matrix, char *input_buffer, int m) {
-    uint_fast32_t to_alloc = 0;
     uint_fast8_t exit_code = 0;
     char *response_buffer;
     char *to_append;
@@ -17,11 +16,12 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
     to_append = get_first_n_messages(msg_matrix, num);
 
+    printf("to append:%s", to_append);
+    fflush(stdout);
     if (NULL != to_append) {
         char * message_code = "MESSAGES";
-        message_code[strlen(message_code)] = '\n';
-        snprintf(response_buffer, STRING_SIZE * to_alloc, "%s\n%s", message_code, to_append);
-        int read_size = sendto(fd, response_buffer, strlen(response_buffer) + 1, 0,
+        snprintf(response_buffer, STRING_SIZE * num, "%s\n%s", message_code, to_append);
+        int read_size = sendto(fd, response_buffer, strlen(response_buffer), 0,
                 address, addrlen);
 
         free(to_append);
@@ -50,6 +50,8 @@ uint_fast8_t handle_client_comms(int fd, int m, matrix msg_matrix) {
     uint_fast16_t addrlen = sizeof(receive_address);
 
     memset(buffer, '\0', sizeof(char) * STRING_SIZE);
+    memset(op, '\0', sizeof(char) * STRING_SIZE);
+    memset(input_buffer, '\0', sizeof(char) * STRING_SIZE);
 
     int_fast16_t read_size = recvfrom(fd, buffer, sizeof(buffer), 0,
             (struct sockaddr *)&receive_address, (socklen_t*)&addrlen);
@@ -59,9 +61,11 @@ uint_fast8_t handle_client_comms(int fd, int m, matrix msg_matrix) {
         return 1;
     }
 
-    buffer[read_size]='\0';
     sscanf(buffer, "%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
     fprintf(stdout, KBLU "\n %s Received from %s\n" KBLU, buffer, inet_ntoa(receive_address.sin_addr));
+    input_buffer[strlen(input_buffer)]='\n';
+    input_buffer[strlen(input_buffer) + 1] = '\0';
+    fflush(stdout);
 
     if (0 == strcmp("PUBLISH", op)) {
         err = handle_publish(msg_matrix, input_buffer);

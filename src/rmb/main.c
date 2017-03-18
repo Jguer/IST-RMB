@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
             memset(response_buffer, '\0', sizeof(char) * to_alloc);
 
             
-            read_size = recvfrom(binded_fd, response_buffer, sizeof(response_buffer), 0,
+            read_size = recvfrom(binded_fd, response_buffer, sizeof(char)*to_alloc, 0,
                     (struct sockaddr *)&server_addr, &addr_len);
 
             if (-1 == read_size) {
@@ -146,6 +146,7 @@ int main(int argc, char *argv[]) {
                 goto UDP_END;
             }
             puts(response_buffer);
+            fflush(stdout);
 UDP_END:
             fprintf(stdout, KGRN "Prompt > " KNRM);
             fflush(stdout);

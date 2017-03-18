@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
                     node *head = get_head(msgservers_lst);
                     if (NULL == head) {
                         if ( _VERBOSE_TEST ) printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
-/*>>>>>>>>>>>>>>>>>>*/  return EXIT_FAILURE; //Change with try again option
+                        return EXIT_FAILURE;
                     }
 
                     if (0 != join_to_old_servers(msgservers_lst, host)) {

@@ -26,7 +26,7 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 #define RESET "\033[0m"
-#define STRING_SIZE 141
+#define STRING_SIZE 512
 #define RESPONSE_SIZE 512
 
 typedef void *item;
