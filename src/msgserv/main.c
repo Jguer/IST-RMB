@@ -190,7 +190,7 @@ int main(int argc, char *argv[]) {
 
             //User options input: show_servers, exit, publish message, show_latest_messages n;
             //User options input: show_servers, exit, publish message, show_latest_messages n;
-            if (strcmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
+            if (strcasecmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
                 if (false == is_join_complete) {
                     //Register on idServer
                     id_server = reg_server(&udp_register_fd, host, id_server_ip, id_server_port);
@@ -225,12 +225,12 @@ int main(int argc, char *argv[]) {
                 else {
                     printf(KGRN "Already joined!\n" KNRM);
                 }
-            } else if (0 == strcmp("show_servers", buffer) || 0 == strcmp("1", buffer)) {
+            } else if (0 == strcasecmp("show_servers", buffer) || 0 == strcmp("1", buffer)) {
                 if (msgservers_lst != NULL && 0 != get_list_size(msgservers_lst)) print_list(msgservers_lst, print_server);
                 else printf("No registred servers\n");
-            } else if (0 == strcmp("show_messages", buffer) || 0 == strcmp("2", buffer)) {
+            } else if (0 == strcasecmp("show_messages", buffer) || 0 == strcmp("2", buffer)) {
                 print_matrix(msg_matrix, print_message);
-            } else if (0 == strcmp("exit", buffer) || 0 == strcmp("3", buffer)) {
+            } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
                 return EXIT_SUCCESS;
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
@@ -242,8 +242,6 @@ int main(int argc, char *argv[]) {
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
             handle_client_comms(udp_global_fd, m, msg_matrix);
-            fprintf(stdout, KGRN "Prompt > " KNRM);
-            fflush(stdout);
         }
         tcp_fd_handle( msgservers_lst, msg_matrix, &rfds, is_fd_set ); //TCP already started comunications handling
     }

@@ -16,26 +16,39 @@ int get_lc(message this) {
 
 char *get_first_n_messages(matrix msg_matrix, int n) {
     char *to_return = (char*)malloc(sizeof(char) * STRING_SIZE * n);
+    memset(to_return, '\0',sizeof(char) * STRING_SIZE * n);
     if (!to_return) {
         return to_return;
     }
+    int list_size = (int)get_size(msg_matrix);
+    int i = list_size - n;
 
-    int i = get_size(msg_matrix) - n - 1;
-    if (i < 0 && get_overflow(msg_matrix)) {
-        for (uint_fast32_t j = get_capacity(msg_matrix) + i; j < get_capacity(msg_matrix); j++) {
-            if (!get_element(msg_matrix, j)) {
-                break;
-            }
-            strncat(to_return, get_string(get_element(msg_matrix, j)), STRING_SIZE * n);
-        }
+    if (i < 0) {
+    	if (get_overflow(msg_matrix)){
+			for (uint_fast32_t j = get_capacity(msg_matrix) + i; j < get_capacity(msg_matrix); j++) {
+				if (!get_element(msg_matrix, j)) {
+					break;
+				}
+				strncat(to_return, get_string(get_element(msg_matrix, j)), STRING_SIZE * n);
+			}
+    	}
+
+        for (i = 0; i < list_size; i++) {
+			if (!get_element(msg_matrix, i)) {
+				break;
+			}
+            strncat(to_return, get_string(get_element(msg_matrix, i)), STRING_SIZE * n);
+		}
+    }
+    else{
+    	for (; i < list_size; i++) {
+			if (!get_element(msg_matrix, i)) {
+				break;
+			}
+			strncat(to_return, get_string(get_element(msg_matrix, i)), STRING_SIZE * n);
+		}
     }
 
-    for (i = n + i; i < n; i++) {
-        if (!get_element(msg_matrix, i)) {
-            break;
-        }
-        strncat(to_return, get_string(get_element(msg_matrix, i)), STRING_SIZE * n);
-    }
     return to_return;
 }
 

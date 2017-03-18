@@ -16,8 +16,6 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
     to_append = get_first_n_messages(msg_matrix, num);
 
-    printf("to append:%s", to_append);
-    fflush(stdout);
     if (NULL != to_append) {
         char * message_code = "MESSAGES";
         snprintf(response_buffer, STRING_SIZE * num, "%s\n%s", message_code, to_append);
@@ -62,10 +60,10 @@ uint_fast8_t handle_client_comms(int fd, int m, matrix msg_matrix) {
     }
 
     sscanf(buffer, "%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
-    fprintf(stdout, KBLU "\n %s Received from %s\n" KBLU, buffer, inet_ntoa(receive_address.sin_addr));
     input_buffer[strlen(input_buffer)]='\n';
     input_buffer[strlen(input_buffer) + 1] = '\0';
-    fflush(stdout);
+
+    if (_VERBOSE_TEST) puts(buffer);
 
     if (0 == strcmp("PUBLISH", op)) {
         err = handle_publish(msg_matrix, input_buffer);

@@ -31,7 +31,7 @@ int publish(int fd, server *sel_server, char *msg) {
 
     server_addr.sin_family = AF_INET;
     if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
-        fprintf(stderr, KYEL "unable to convert %s to address\n" KNRM, get_ip_address(sel_server));
+        if (_VERBOSE_TEST) fprintf(stderr, KYEL "unable to convert %s to address\n" KNRM, get_ip_address(sel_server));
         return 1;
     }
 
@@ -42,7 +42,7 @@ int publish(int fd, server *sel_server, char *msg) {
             (struct sockaddr*)&server_addr, addr_len);
 
     if (-1 == n) {
-        fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
+        if (_VERBOSE_TEST) fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
         return 1;
     }
 
@@ -60,7 +60,7 @@ int ask_for_messages(int fd, server *sel_server, int num) {
 
     server_addr.sin_family = AF_INET;
     if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
-        fprintf(stderr, KYEL "unable to convert \"%s\" to address\n" KNRM, get_ip_address(sel_server));
+        if (_VERBOSE_TEST) fprintf(stderr, KYEL "unable to convert \"%s\" to address\n" KNRM, get_ip_address(sel_server));
         return 1;
     }
 
@@ -71,7 +71,7 @@ int ask_for_messages(int fd, server *sel_server, int num) {
             (struct sockaddr*)&server_addr, addr_len);
 
     if (0 > n) {
-        fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
+        if (_VERBOSE_TEST) fprintf(stderr, KYEL "unable to send to %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
         return 1;
     }
     return 0;

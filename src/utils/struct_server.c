@@ -218,10 +218,8 @@ void print_server(item got_item) {
             KYEL "Server name:" RESET " %s "
             KYEL "Server IP:" RESET " %s "
             KYEL "UDP Port:" RESET " %hu "
-            KYEL "TCP Port:" RESET " %hu "
-            KYEL "Connected:" RESET " %d "
-            KYEL "fd:" RESET " %d ",
-            this->name, this->ip_addr, this->udp_port, this->tcp_port, this->connected, this->fd);
+            KYEL "TCP Port:" RESET " %hu ",
+            this->name, this->ip_addr, this->udp_port, this->tcp_port);
     }
     else{
         fprintf(stdout, KCYN "Server to remove: invalid" KNRM);
