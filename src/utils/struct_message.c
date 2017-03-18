@@ -1,4 +1,4 @@
-#include "utilmessage.h"
+#include "struct_message.h"
 
 struct _message {
     int lc;

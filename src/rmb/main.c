@@ -1,8 +1,6 @@
 #include <time.h>
 #include <errno.h>
 
-#include "../utils/utils.h"
-#include "../utils/server.h"
 #include "message.h"
 
 void usage(char* name) {

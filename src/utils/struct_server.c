@@ -1,4 +1,4 @@
-#include "server.h"
+#include "struct_server.h"
 
 #define REQUEST "GET_SERVERS"
 

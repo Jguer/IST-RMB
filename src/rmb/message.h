@@ -3,7 +3,7 @@
  */
 
 #include "../utils/utils.h"
-#include "../utils/server.h"
+#include "../utils/struct_server.h"
 
 /*! \fn server *select_server(list *server_list);
   \brief select_server returns a pointer to a random server in server_list.

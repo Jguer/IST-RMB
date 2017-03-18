@@ -1,6 +1,6 @@
 #pragma once
 #include <signal.h>
-#include "../utils/server.h"
+#include "../utils/struct_server.h"
 
 #define JOIN_STRING "REG"
 #define MAX_PENDING 5

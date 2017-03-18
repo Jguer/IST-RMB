@@ -2,8 +2,6 @@
 #include <sys/timerfd.h>
 
 #include "identity.h"
-#include "../utils/server.h"
-#include "../utils/utilmessage.h"
 #include "message.h"
 
 void usage(char* name) {
