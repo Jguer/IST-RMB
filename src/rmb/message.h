@@ -1,4 +1,4 @@
-/*! \file message.h
+/*! \file rmb/message.h
  * \brief Outbound communication with message server.
  */
 

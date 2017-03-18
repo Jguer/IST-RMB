@@ -1,3 +1,6 @@
+/*! \file util_matrix.h
+ * \brief Matrix structure definition 
+*/
 #include "utils.h"
 
 /*! \var typedef struct _matrix *matrix
@@ -47,20 +50,20 @@ matrix create_matrix(size_t capacity);
     \param this Matrix selected.
     \param index Index selected.
     \param to_add Item to add to matrix.
-    \param (*free_item)(item) Free item function.
+    \param free_item Free item function.
 */
 void add_element(matrix this, uint_fast32_t index, item to_add, void (*free_item)(item));
 
-/*! \fn item get_element(matrix this, uint_fast32_t index);
+/*! \fn void print_matrix(matrix this, void (*print_item)(item));
     \brief Print full matrix.
     \param this Matrix selected.
-    \param (*print_item)(item) Print item function.
+    \param print_item Print item function.
 */
 void print_matrix(matrix this, void (*print_item)(item));
 
-/*! \fn item get_element(matrix this, uint_fast32_t index);
+/*! \fn void free_matrix(matrix this, void (*free_item)(item));
     \brief Frees matrix and all it's elements.
     \param this Matrix selected.
-    \param (*free_item)(item) Free item function.
+    \param free_item Free item function.
 */
 void free_matrix(matrix this, void (*free_item)(item));
