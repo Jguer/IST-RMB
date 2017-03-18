@@ -136,23 +136,23 @@ UDP_END:
             scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
 
             //User options input: show_servers, exit, publish message, show_latest_messages n;
-            if (0 == strcmp("show_servers", op)) {
+            if (0 == strcmp("show_servers", op) || 0 == strcmp("0", op)) {
                 print_list(msgservers_lst, print_server);
-            } else if (0 == strcmp("exit", op)) {
-                exit_code = EXIT_SUCCESS;
-                goto PROGRAM_EXIT;
-            } else if (0 == strcmp("publish", op)) {
+            } else if (0 == strcmp("publish", op) || 0 == strcmp("1", op)) {
                 if (0 == strlen(input_buffer)) {
                     continue;
                 }
                 err = publish(fd, sel_server, input_buffer);
-            } else if (0 == strcmp("show_latest_messages", op)) {
+            } else if (0 == strcmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 msg_num = msg_num > (unsigned int)atoi(input_buffer) ? msg_num : (unsigned int)atoi(input_buffer);
                 if (!msg_num) {
                     fprintf(stderr, KRED "%s is an invalid number\n" KNRM, input_buffer);
                     continue;
                 }
                 err = ask_for_messages(fd, sel_server, msg_num);
+            } else if (0 == strcmp("exit", op) || 0 == strcmp("3", op)) {
+                exit_code = EXIT_SUCCESS;
+                goto PROGRAM_EXIT;
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
             }
