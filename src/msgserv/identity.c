@@ -111,7 +111,7 @@ int update_reg(int fd, struct addrinfo* id_server_info) {
 }
 
 int send_initial_comm( int processing_fd ){
-    
+
     int status = 1;
     if( (unsigned int)send(processing_fd, "SGET_MESSAGES\n", strlen("SGET_MESSAGES\n"), 0) != strlen("SGET_MESSAGES\n") ) {
 
@@ -123,14 +123,14 @@ int send_initial_comm( int processing_fd ){
 }
 
 int connect_to_old_server( server *old_server, bool is_comm_sent ){
-    
+
     int processing_fd;
     int status = 1; //false
 
 
     if ( -2 == get_fd( old_server ) ){
         // create new comunication
-        processing_fd = socket(AF_INET, SOCK_STREAM, 0); 
+        processing_fd = socket(AF_INET, SOCK_STREAM, 0);
         if ( -1 == processing_fd ){
             if ( _VERBOSE_TEST ) printf( KRED "error creating socket\n" KNRM );
             status = -1; //fatal error
@@ -143,7 +143,7 @@ int connect_to_old_server( server *old_server, bool is_comm_sent ){
             status = -1; //fatal error
             return status;
         }
-        struct addrinfo *res = get_server_address_tcp( get_ip_address(old_server), 
+        struct addrinfo *res = get_server_address_tcp( get_ip_address(old_server),
             portitoa);
         if( res == NULL ){
             processing_fd = -1;
@@ -179,16 +179,16 @@ int connect_to_old_server( server *old_server, bool is_comm_sent ){
 }
 
 int join_to_old_servers( list *msgservers_list , server *host ){
-    
+
     bool is_comm_sent = false;
     node *aux_node = NULL;
-    
+
     for ( aux_node = get_head(msgservers_list); //Initialize comms with one new server
     aux_node != NULL;
     aux_node = get_next_node(aux_node)) {
 
         if ( 0 != comp_servers( (server *)get_node_item(aux_node), host ) ){
-        
+
             int status_check = connect_to_old_server( (server *)get_node_item(aux_node), is_comm_sent );
             if (0 == status_check) is_comm_sent = true;
             else if (1 == status_check) is_comm_sent = false;
@@ -208,19 +208,18 @@ int join_to_old_servers( list *msgservers_list , server *host ){
 
 
 int remove_bad_servers( list *servers_list, server *host, int max_fd, fd_set *rfds, void (*SET_FD)(int, fd_set *) ){
-
     if(servers_list != NULL){ //Add child sockets to the socket set
         node *aux_node;
         if ( NULL != (aux_node = get_head( servers_list ) ) ){
 
             if ( -1 == get_fd((server *)get_node_item(aux_node)) ){ //1 node erasement
-                
+
                 remove_first_node(servers_list, free_server);
             }else if ( 0 == comp_servers((server *)get_node_item(aux_node),host) ){
 
                 remove_first_node(servers_list, free_server);
-            }              
-            
+            }
+
             for ( aux_node = get_head(servers_list);
             aux_node != NULL ;
             aux_node = get_next_node(aux_node)) {
@@ -228,7 +227,7 @@ int remove_bad_servers( list *servers_list, server *host, int max_fd, fd_set *rf
                 int processing_fd;
                 node *next_node;
 
-                if ( NULL != ( next_node = get_next_node(aux_node) ) ){     
+                if ( NULL != ( next_node = get_next_node(aux_node) ) ){
                     if ( -1 == get_fd( (server *)get_node_item(next_node) ) ){
                         //Delete next node
                         remove_next_node(aux_node, next_node, free_server);
@@ -254,8 +253,7 @@ int remove_bad_servers( list *servers_list, server *host, int max_fd, fd_set *rf
 }
 
 
-void tcp_fd_handle( list *servers_list,list *messages_list, fd_set *rfds, int (*STAT_FD)(int, fd_set *)){
-
+void tcp_fd_handle( list *servers_list,matrix msg_matrix, fd_set *rfds, int (*STAT_FD)(int, fd_set *)) {
     char buffer[RESPONSE_SIZE] = "";
     char input_buffer[RESPONSE_SIZE];
     char op[STRING_SIZE];
@@ -283,7 +281,7 @@ void tcp_fd_handle( list *servers_list,list *messages_list, fd_set *rfds, int (*
 
                 }
                 else{
-                    //Echo back the message that came in 
+                    //Echo back the message that came in
                     // INPLEMENT DATA TREATMENT
                     memset((void*)&op, (int)'\0', //Makes the program safer
                         sizeof(op));
@@ -316,7 +314,7 @@ void tcp_fd_handle( list *servers_list,list *messages_list, fd_set *rfds, int (*
                         if ( _VERBOSE_TEST ) printf("error sending communication TCP\n");
                         close(processing_fd);
                         set_fd( (server *)get_node_item(aux_node), -1 );
-                        set_connected((server *)get_node_item(aux_node), 0);                            
+                        set_connected((server *)get_node_item(aux_node), 0);
                     }
                     */
                 }
@@ -328,8 +326,6 @@ void tcp_fd_handle( list *servers_list,list *messages_list, fd_set *rfds, int (*
 
 
 int tcp_new_comm( list *servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(int, fd_set *) ){
-
-
     if ( (*STAT_FD)( listen_fd, rfds ) ) { //if something happens on tcp_listen_fd create and allocate new socket
 
         struct sockaddr_in newserv_info;

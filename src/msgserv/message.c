@@ -1,28 +1,6 @@
 #include "message.h"
 
-char *get_first_n_messages(list *msg_list, int n) {
-    node *aux_node = get_head(msg_list);
-
-    if (aux_node == NULL) {
-        return NULL;
-    }
-
-    char *to_return = (char*)malloc(sizeof(char) * STRING_SIZE * n);
-    if (!to_return) {
-        return to_return;
-    }
-
-    for (int i = 0; i < n; i++) {
-        if (aux_node == NULL) {
-            break;
-        }
-        strncat(to_return, get_string(get_node_item(aux_node)), STRING_SIZE * n);
-        aux_node = get_next_node(aux_node);
-    }
-    return to_return;
-}
-
-uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, list *msg_list, char *input_buffer, int m) {
+uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, matrix msg_matrix, char *input_buffer, int m) {
     uint_fast32_t to_alloc = 0;
     uint_fast8_t exit_code = 0;
     char *response_buffer;
@@ -34,10 +12,10 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     }
 
     num = (uint_fast32_t)m < num ? (uint_fast32_t)m : num;
-    num = get_list_size(msg_list) < num ? get_list_size(msg_list) : num;
+    num = get_size(msg_matrix) < num ? get_size(msg_matrix) : num;
 
     response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
-    to_append = get_first_n_messages(msg_list, num);
+    to_append = get_first_n_messages(msg_matrix, num);
 
     if (NULL != to_append) {
         snprintf(response_buffer, STRING_SIZE * to_alloc, "%s\n%s", "MESSAGES", to_append);
@@ -55,12 +33,12 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     return exit_code;
 }
 
-uint_fast8_t handle_publish(list *msg_list, char *input_buffer) {
-    push_item_to_list(msg_list, new_message(get_list_size(msg_list), input_buffer));
+uint_fast8_t handle_publish(matrix msg_matrix, char *input_buffer) {
+    add_element(msg_matrix, get_size(msg_matrix), (item)new_message(get_size(msg_matrix), input_buffer), free_message);
     return 0;
 }
 
-uint_fast8_t handle_client_comms(int fd, int m, list *msg_list) {
+uint_fast8_t handle_client_comms(int fd, int m, matrix msg_matrix) {
     char buffer[STRING_SIZE];
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
@@ -84,10 +62,10 @@ uint_fast8_t handle_client_comms(int fd, int m, list *msg_list) {
     fprintf(stdout, KBLU "\n %s Received from %s\n" KBLU, buffer, inet_ntoa(receive_address.sin_addr));
 
     if (0 == strcmp("PUBLISH", op)) {
-        err = handle_publish(msg_list, input_buffer);
+        err = handle_publish(msg_matrix, input_buffer);
     } else if (0 == strcmp("GET_MESSAGES", op)) {
         err = handle_get_messages(fd, (struct sockaddr *)&receive_address,
-                addrlen, msg_list, input_buffer, m);
+                addrlen, msg_matrix, input_buffer, m);
     }
     return err;
 }

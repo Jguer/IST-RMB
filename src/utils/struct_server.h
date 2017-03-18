@@ -6,6 +6,7 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include "utils.h"
+#include "util_list.h"
 
 typedef struct _server server;
 

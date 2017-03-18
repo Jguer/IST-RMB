@@ -54,8 +54,7 @@ int main(int argc, char *argv[]) {
     int read_size;
     int err = 1;
     list *msgservers_lst = NULL;
-
-    struct addrinfo * id_server;
+    struct addrinfo *id_server;
 
     srand(time(NULL));
     // Treat options
@@ -133,7 +132,7 @@ int main(int argc, char *argv[]) {
         exit_code = EXIT_FAILURE;
         goto PROGRAM_EXIT;
     }
-    list *message_lst = create_list();
+    matrix msg_matrix = create_matrix(m);
 
     fprintf(stdout, KBLU "Server Parameters:" KNRM " %s:%s:%d:%d\n"
             KBLU "Identity Server:" KNRM " %s:%s\n"
@@ -233,7 +232,7 @@ int main(int argc, char *argv[]) {
                 if (msgservers_lst != NULL && 0 != get_list_size(msgservers_lst)) print_list(msgservers_lst, print_server);
                 else printf("No registred servers\n");
             } else if (0 == strcmp("show_messages", buffer)) {
-                print_list(message_lst, print_message);
+                print_matrix(msg_matrix, print_message);
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
@@ -243,11 +242,11 @@ int main(int argc, char *argv[]) {
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
-            handle_client_comms(udp_global_fd, m, message_lst);
+            handle_client_comms(udp_global_fd, m, msg_matrix);
             fprintf(stdout, KGRN "Prompt > " KNRM);
             fflush(stdout);
         }
-        tcp_fd_handle( msgservers_lst, message_lst, &rfds, is_fd_set ); //TCP already started comunications handling
+        tcp_fd_handle( msgservers_lst, msg_matrix, &rfds, is_fd_set ); //TCP already started comunications handling
     }
 
 PROGRAM_EXIT:

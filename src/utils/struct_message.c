@@ -1,12 +1,53 @@
 #include "struct_message.h"
 
 struct _message {
-    int lc;
+    uint_fast32_t lc;
     char *content;
 };
 
-message *new_message(int lc, char *src) {
-    message *new_msg = (message *)malloc(sizeof(message));
+// Gets
+char *get_string(message this) {
+    return this->content;
+}
+
+int get_lc(message this) {
+    return this->lc;
+}
+
+char *get_first_n_messages(matrix msg_matrix, int n) {
+    char *to_return = (char*)malloc(sizeof(char) * STRING_SIZE * n);
+    if (!to_return) {
+        return to_return;
+    }
+
+    int i = get_size(msg_matrix) - n - 1;
+    if (i < 0 && get_overflow(msg_matrix)) {
+        for (uint_fast32_t j = get_capacity(msg_matrix) + i; j < get_capacity(msg_matrix); j++) {
+            if (!get_element(msg_matrix, j)) {
+                break;
+            }
+            strncat(to_return, get_string(get_element(msg_matrix, j)), STRING_SIZE * n);
+        }
+    }
+
+    for (i = n + i; i < n; i++) {
+        if (!get_element(msg_matrix, i)) {
+            break;
+        }
+        strncat(to_return, get_string(get_element(msg_matrix, i)), STRING_SIZE * n);
+    }
+    return to_return;
+}
+
+// Sets
+void set_lc(message this, uint_fast32_t new_lc) {
+    this->lc = new_lc;
+    return;
+}
+
+// Methods
+message new_message(uint_fast32_t lc, char *src) {
+    message new_msg = (message)malloc(sizeof(struct _message));
     new_msg->content = (char *)malloc(sizeof(char)*STRING_SIZE);
 
     new_msg->lc = lc;
@@ -16,21 +57,39 @@ message *new_message(int lc, char *src) {
     return new_msg;
 }
 
-char *get_string(message *this) {
-    return this->content;
-}
+matrix parse_messages(char *buffer, uint_fast32_t m) {
+    matrix msg_matrix = create_matrix(m);
 
-int get_lc(message *this) {
-    return this->lc;
-}
+    char msg[STRING_SIZE];
+    char *separated_info;
+    int sscanf_state = 0;
+    uint_fast32_t i = 0;
 
-void set_lc(message *this, int new_lc) {
-    this->lc = new_lc;
-    return;
+    strtok(buffer, "\n"); //Gets the first info, stoping at newline
+    separated_info = strtok(NULL, "\n");
+
+    while (separated_info) { //Proceeds getting info and treating
+        sscanf_state = sscanf(separated_info, "%[^\n]", msg); //Separates info and saves it in variables
+
+        if (1 != sscanf_state) {
+             if (_VERBOSE_TEST) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
+             break;
+        }
+
+        add_element(msg_matrix, get_size(msg_matrix), (item)new_message(i, msg), free_message);
+
+        separated_info = strtok(NULL, "\n");//Gets new info
+        i++;
+    }
+
+    return msg_matrix;
 }
 
 void free_message(item got_item) {
-    message *this = (message *)got_item;
+    if (!got_item) {
+        return;
+    }
+    message this = (message)got_item;
 
     free(this->content);
     free(this);
@@ -38,39 +97,16 @@ void free_message(item got_item) {
 }
 
 void print_message(item got_item) {
-    message *this = (message *)got_item;
+    if (!got_item) {
+        return;
+    }
+    message this = (message)got_item;
 
     fprintf(stdout,
-            KBLU "LC:" RESET " %d "
-            KBLU "Server IP:" RESET " %s ",
+            KBLU "LC:" RESET " %zu "
+            KBLU "Message:" RESET " %s\n",
             this->lc, this->content);
     return;
 }
 
 
-list *parse_messages(char *buffer) {
-    list *message_list = create_list();
-    char msg[STRING_SIZE];
-    char *separated_info;
-    int  i = 0;
-
-    separated_info = strtok(buffer, "\n"); //Gets the first info, stoping at newline
-    separated_info = strtok(NULL, "\n");
-
-    while ( separated_info != NULL ) { //Proceeds getting info and treating
-        int sscanf_state = 0;
-        sscanf_state = sscanf(separated_info, "%[^\n]", msg); //Separates info and saves it in variables
-
-        if ( 1 != sscanf_state ) {
-             if ( true == is_verbose() ) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
-             break;
-        }
-
-        push_item_to_list(message_list, (item)new_message(i, msg)); //Pushes to list
-
-        separated_info = strtok(NULL, "\n");//Gets new info
-        i++;
-    }
-
-    return message_list;
-}
