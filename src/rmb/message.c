@@ -25,7 +25,7 @@ int publish(int fd, server *sel_server, char *msg) {
 
     struct sockaddr_in server_addr = { 0 };
     socklen_t addr_len;
-    char msg_to_send[STRING_SIZE];
+    char msg_to_send[RESPONSE_SIZE];
 
     sprintf(msg_to_send, "%s %s\n", PUBLISH, msg);
 

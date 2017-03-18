@@ -51,16 +51,34 @@ int main(int argc, char *argv[]) {
     uint_fast8_t exit_code = EXIT_SUCCESS;
     uint_fast8_t err = EXIT_SUCCESS;
 
-    int_fast32_t fd = socket(AF_INET, SOCK_DGRAM, 0);
-    struct timeval timeout={3,0}; //set timeout for 3 seconds
-    setsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char*)&timeout,sizeof(struct timeval));
-    if (-1 == fd) {
+    int_fast32_t outgoing_fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (-1 == outgoing_fd) {
         fprintf(stderr, KRED "Unable to create socket\n" KNRM);
         freeaddrinfo(id_server);
         return EXIT_FAILURE;
     }
 
-    uint_fast8_t max_fd = fd; // Max fd number.
+    int_fast32_t binded_fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (-1 == outgoing_fd) {
+        fprintf(stderr, KRED "Unable to create socket\n" KNRM);
+        freeaddrinfo(id_server);
+        return EXIT_FAILURE;
+    }
+
+    struct sockaddr_in serveraddr;
+    memset((void*)&serveraddr,(int)'\0',
+    sizeof(serveraddr));
+    serveraddr.sin_family= AF_INET;
+    serveraddr.sin_addr.s_addr= htonl(INADDR_ANY);
+    serveraddr.sin_port= htons((u_short)0);    
+
+    if (-1 == bind(binded_fd,(struct sockaddr*)&serveraddr,sizeof(serveraddr))){
+        fprintf(stderr, KRED "Unable to create socket\n" KNRM);
+        freeaddrinfo(id_server);
+        goto PROGRAM_EXIT;
+    }
+
+    uint_fast8_t max_fd = binded_fd; // Max fd number.
     uint_fast16_t msg_num = 0; // Number of messages asked
     int_fast32_t read_size = 0; // UDP receive size
     char *response_buffer = (char *)malloc(sizeof(char) * RESPONSE_SIZE);
@@ -74,7 +92,7 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in server_addr = { 0 };
     socklen_t addr_len;
 
-    list *msgservers_lst = fetch_servers(fd, id_server);
+    list *msgservers_lst = fetch_servers(outgoing_fd, id_server);
     server *sel_server = select_server(msgservers_lst);
     if (sel_server != NULL) {
         fprintf(stdout, KGRN "Prompt > " KNRM);
@@ -85,14 +103,14 @@ int main(int argc, char *argv[]) {
     while (true) {
         FD_ZERO(&rfds);
         FD_SET(STDIN_FILENO, &rfds);
-        FD_SET(fd, &rfds);
+        FD_SET(binded_fd, &rfds);
 
         if (NULL == sel_server || err ) {
             fprintf(stderr, KYEL "No servers available. Sleeping 3s\n" KNRM);
             sleep(3);
 
             free_list(msgservers_lst, free_server);
-            msgservers_lst = fetch_servers(fd, id_server);
+            msgservers_lst = fetch_servers(outgoing_fd, id_server);
             sel_server = select_server(msgservers_lst);
             if (sel_server != NULL) {
                 fprintf(stdout, KGRN "Prompt > " KNRM);
@@ -108,7 +126,7 @@ int main(int argc, char *argv[]) {
             goto PROGRAM_EXIT;
         }
 
-        if (FD_ISSET(fd, &rfds)) { //UDP receive
+        if (FD_ISSET(binded_fd, &rfds)) { //UDP receive
             addr_len = sizeof(server_addr);
             if ((msg_num +1) * RESPONSE_SIZE > to_alloc) {
                 to_alloc = (msg_num + 1) * RESPONSE_SIZE;
@@ -120,13 +138,14 @@ int main(int argc, char *argv[]) {
             memset(response_buffer, '\0', sizeof(char) * to_alloc);
 
             
-            read_size = recvfrom(fd, response_buffer, sizeof(response_buffer), 0,
+            read_size = recvfrom(binded_fd, response_buffer, sizeof(response_buffer), 0,
                     (struct sockaddr *)&server_addr, &addr_len);
 
             if (-1 == read_size) {
                 fprintf(stderr, KRED "Failed UPD receive from %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
                 goto UDP_END;
             }
+            puts(response_buffer);
 UDP_END:
             fprintf(stdout, KGRN "Prompt > " KNRM);
             fflush(stdout);
@@ -142,11 +161,11 @@ UDP_END:
                 if (0 == strlen(input_buffer)) {
                     continue;
                 }
-                err = publish(fd, sel_server, input_buffer);
+                err = publish(binded_fd, sel_server, input_buffer);
             } else if (0 == strcmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 msg_num = atoi(input_buffer);
                 if( 0 < msg_num){
-                    err = ask_for_messages(fd, sel_server, msg_num);
+                    err = ask_for_messages(binded_fd, sel_server, msg_num);
                 }
                 else{
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
@@ -170,6 +189,7 @@ PROGRAM_EXIT:
     freeaddrinfo(id_server);
     free(response_buffer);
     free_list(msgservers_lst, free_server);
-    close(fd);
+    close(outgoing_fd);
+    close(binded_fd);
     return exit_code;
 }
