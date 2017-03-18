@@ -1,0 +1,10 @@
+<map id="src/utils/util_matrix.h" name="src/utils/util_matrix.h">
+<area shape="rect" id="node2" href="$struct__message_8h.html" title="src/utils/struct_message.h" alt="" coords="270,80,461,107"/>
+<area shape="rect" id="node9" href="$util__matrix_8c.html" title="src/utils/util_matrix.c" alt="" coords="485,80,640,107"/>
+<area shape="rect" id="node3" href="$identity_8h.html" title="src/msgserv/identity.h" alt="" coords="91,155,253,181"/>
+<area shape="rect" id="node6" href="$msgserv_2message_8h.html" title="src/msgserv/message.h" alt="" coords="277,155,453,181"/>
+<area shape="rect" id="node8" href="$struct__message_8c.html" title="src/utils/struct_message.c" alt="" coords="477,155,667,181"/>
+<area shape="rect" id="node4" href="$identity_8c.html" title="src/msgserv/identity.c" alt="" coords="5,229,168,256"/>
+<area shape="rect" id="node5" href="$msgserv_2main_8c.html" title="src/msgserv/main.c" alt="" coords="193,229,341,256"/>
+<area shape="rect" id="node7" href="$msgserv_2message_8c.html" title="src/msgserv/message.c" alt="" coords="365,229,539,256"/>
+</map>
