@@ -18,7 +18,9 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     to_append = get_first_n_messages(msg_matrix, num);
 
     if (NULL != to_append) {
-        snprintf(response_buffer, STRING_SIZE * to_alloc, "%s\n%s", "MESSAGES", to_append);
+        char * message_code = "MESSAGES";
+        message_code[strlen(message_code)] = '\n';
+        snprintf(response_buffer, STRING_SIZE * to_alloc, "%s\n%s", message_code, to_append);
         int read_size = sendto(fd, response_buffer, strlen(response_buffer) + 1, 0,
                 address, addrlen);
 

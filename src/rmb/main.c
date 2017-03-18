@@ -63,16 +63,13 @@ int main(int argc, char *argv[]) {
     uint_fast8_t max_fd = fd; // Max fd number.
     uint_fast16_t msg_num = 0; // Number of messages asked
     int_fast32_t read_size = 0; // UDP receive size
-    char *response_buffer = NULL;
+    char *response_buffer = (char *)malloc(sizeof(char) * RESPONSE_SIZE);
     uint_fast16_t to_alloc = RESPONSE_SIZE;
-    if (NULL == realloc(response_buffer, sizeof(char) * to_alloc)) {
+    if (NULL == response_buffer) {
         memory_error("Unable to malloc buffer\n");
     }
 
     fd_set rfds;
-    FD_ZERO(&rfds);
-    FD_SET(STDIN_FILENO, &rfds);
-    FD_SET(fd, &rfds);
 
     struct sockaddr_in server_addr = { 0 };
     socklen_t addr_len;
@@ -86,6 +83,10 @@ int main(int argc, char *argv[]) {
 
     // Interactive loop
     while (true) {
+        FD_ZERO(&rfds);
+        FD_SET(STDIN_FILENO, &rfds);
+        FD_SET(fd, &rfds);
+
         if (NULL == sel_server || err ) {
             fprintf(stderr, KYEL "No servers available. Sleeping 3s\n" KNRM);
             sleep(3);
@@ -109,14 +110,16 @@ int main(int argc, char *argv[]) {
 
         if (FD_ISSET(fd, &rfds)) { //UDP receive
             addr_len = sizeof(server_addr);
-            if (msg_num * RESPONSE_SIZE > to_alloc) {
-                to_alloc = msg_num;
-                if (NULL == realloc(response_buffer, sizeof(char) * to_alloc)) {
+            if ((msg_num +1) * RESPONSE_SIZE > to_alloc) {
+                to_alloc = (msg_num + 1) * RESPONSE_SIZE;
+                response_buffer = (char*)realloc(response_buffer, sizeof(char) * to_alloc);
+                if (NULL == response_buffer) {
                     memory_error("Unable to realloc buffer\n");
                 }
             }
             memset(response_buffer, '\0', sizeof(char) * to_alloc);
 
+            
             read_size = recvfrom(fd, response_buffer, sizeof(response_buffer), 0,
                     (struct sockaddr *)&server_addr, &addr_len);
 
@@ -124,9 +127,6 @@ int main(int argc, char *argv[]) {
                 fprintf(stderr, KRED "Failed UPD receive from %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
                 goto UDP_END;
             }
-
-            response_buffer[read_size] = '\0';
-            puts(response_buffer);
 UDP_END:
             fprintf(stdout, KGRN "Prompt > " KNRM);
             fflush(stdout);
@@ -144,12 +144,13 @@ UDP_END:
                 }
                 err = publish(fd, sel_server, input_buffer);
             } else if (0 == strcmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
-                msg_num = msg_num > (unsigned int)atoi(input_buffer) ? msg_num : (unsigned int)atoi(input_buffer);
-                if (!msg_num) {
-                    fprintf(stderr, KRED "%s is an invalid number\n" KNRM, input_buffer);
-                    continue;
+                msg_num = atoi(input_buffer);
+                if( 0 < msg_num){
+                    err = ask_for_messages(fd, sel_server, msg_num);
                 }
-                err = ask_for_messages(fd, sel_server, msg_num);
+                else{
+                    printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
+                }
             } else if (0 == strcmp("exit", op) || 0 == strcmp("3", op)) {
                 exit_code = EXIT_SUCCESS;
                 goto PROGRAM_EXIT;

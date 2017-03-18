@@ -27,7 +27,7 @@ int publish(int fd, server *sel_server, char *msg) {
     socklen_t addr_len;
     char msg_to_send[STRING_SIZE];
 
-    sprintf(msg_to_send, "%s %s", PUBLISH, msg);
+    sprintf(msg_to_send, "%s %s\n", PUBLISH, msg);
 
     server_addr.sin_family = AF_INET;
     if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
