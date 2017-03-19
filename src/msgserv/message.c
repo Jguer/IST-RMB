@@ -16,8 +16,8 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     char *ptr = response_buffer;
     int nleft = nbytes;
     while(0 < nleft) {
-        nwritten=write(fd,ptr + nwritten, nleft - nwritten);
-        if(nwritten<=0) {//error
+        nwritten = write(fd,ptr + nwritten, nleft - nwritten);
+        if(nwritten <= 0) {//error
             exit_code = 1;
             break;
         }
@@ -105,7 +105,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
 
 uint_fast8_t handle_publish(matrix msg_matrix, char *input_buffer) {
     add_element(msg_matrix, get_size(msg_matrix),
-            (item)new_message(get_size(msg_matrix), input_buffer), free_message);
+            (item)new_message(g_lc, input_buffer), free_message);
     g_lc++;
     return 2;
 }
@@ -146,3 +146,103 @@ uint_fast8_t handle_client_comms(int fd, int m, matrix msg_matrix) {
     return err;
 }
 
+uint_fast8_t parse_messages(char *buffer, matrix msg_matrix) {
+    char msg[STRING_SIZE];
+    char lc_buffer[6];
+    uint_fast32_t lc;
+    char *separated_info;
+    int sscanf_state = 0;
+
+    strtok(buffer, "\n"); //Gets the first info, stoping at newline
+    separated_info = strtok(NULL, "\n");
+
+    while (separated_info) { //Proceeds getting info and treating
+        sscanf_state = sscanf(separated_info, "%[^;];%140[^\n]",lc_buffer, msg); //Separates info and saves it in variables
+
+        if (2 != sscanf_state) {
+             if (_VERBOSE_TEST) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
+             continue;
+        }
+        lc = atoi(lc_buffer);
+        if (lc > g_lc) {
+            g_lc = lc ++;
+        }
+        add_element(msg_matrix, get_size(msg_matrix), (item)new_message(lc, msg), free_message);
+
+        separated_info = strtok(NULL, "\n");//Gets new info
+    }
+
+    return 0;
+}
+
+uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, int (*STAT_FD)(int, fd_set *)) {
+    char *buffer;
+    char op[STRING_SIZE];
+    char *p;
+    int nread = 0;
+    uint_fast8_t err = 0;
+
+    buffer = (char *)malloc(STRING_SIZE * (get_capacity(msg_matrix) + 5));
+    if (!buffer) {
+        memory_error("tcp_fd_handle");
+        return 1;
+    }
+
+    if (NULL != servers_list) { //TCP sockets already connected handling
+        node *aux_node;
+        for (aux_node = get_head(servers_list);
+                aux_node != NULL ;
+                aux_node = get_next_node(aux_node)) {
+
+            int processing_fd;
+
+            processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+
+            if ((*STAT_FD)(processing_fd, rfds)) {
+
+                while (nread != 0) {
+                    nread = recv(processing_fd,buffer,RESPONSE_SIZE - 1, MSG_WAITALL);
+                    if (-1 == nread) {
+                        close(processing_fd);
+                        set_fd( (server *)get_node_item(aux_node), -1 );
+                        set_connected((server *)get_node_item(aux_node), 0);
+                        return 1;
+                    }
+                    printf("JUST To know he sent %s\n", buffer);
+                }
+                p = strtok(buffer, "\n");
+                strncpy(op, p, STRING_SIZE);
+
+                if (0 == strcmp("SGET_MESSAGES", op)) {
+                    printf( KGRN "JUST To know he sent %s\n" KNRM, op);
+                    err = handle_sget_messages(processing_fd, msg_matrix);
+                    fflush( stdout );
+                    if (err) {
+                        close(processing_fd);
+                        set_fd( (server *)get_node_item(aux_node), -1 );
+                        set_connected((server *)get_node_item(aux_node), 0);
+                    }
+                    //Send all my messages
+
+                } else if (0 == strcmp("SMESSAGES", op) ) {
+                    printf("JUST To know he sent %s, with %s\n", op, buffer);
+                    fflush( stdout );
+
+                    err = parse_messages(buffer, msg_matrix);
+                    if (err) {
+                        close(processing_fd);
+                        set_fd( (server *)get_node_item(aux_node), -1 );
+                        set_connected((server *)get_node_item(aux_node), 0);
+                    }
+
+                    //save all messages from him, which are valid
+                } else {
+                    if ( _VERBOSE_TEST ) fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
+                }
+            }
+        }
+    }
+
+    free(buffer);
+    return 0;
+}
