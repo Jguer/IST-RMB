@@ -5,7 +5,7 @@
 #include "message.h"
 
 void usage(char* name) {
-    fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–m m] [–r r] %s \n", name, _VERBOSE_OPT_SHOW );
+    fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–fir m] [–r r] %s \n", name, _VERBOSE_OPT_SHOW );
     fprintf(stdout, "Arguments:\n"
             "\t-n\t\tserver name\n"
             "\t-j\t\tserver ip\n"
@@ -147,13 +147,16 @@ int main(int argc, char *argv[]) {
 
         //Add tcp_listen_fd, udp_global_fd and stdio to the socket set
         FD_SET(STDIN_FILENO, &rfds);
-        FD_SET(timer_fd, &rfds);
-        FD_SET(udp_global_fd, &rfds);
-        FD_SET(tcp_listen_fd, &rfds);
-
-        max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd;
-        max_fd = timer_fd > max_fd ? timer_fd : max_fd;
-
+        if( is_join_complete ){
+            FD_SET(timer_fd, &rfds);
+            FD_SET(udp_global_fd, &rfds);
+            FD_SET(tcp_listen_fd, &rfds);
+            max_fd = 0;
+        }
+        else {
+            max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd;
+            max_fd = timer_fd > max_fd ? timer_fd : max_fd;
+        }
 
         //Removes the bad servers and sets the good in fd_set rfds.
         max_fd = remove_bad_servers(msgservers_lst, host, max_fd, &rfds, put_fd_set);
@@ -227,8 +230,9 @@ int main(int argc, char *argv[]) {
                 }
             } else if (0 == strcasecmp("show_servers", buffer) || 0 == strcmp("1", buffer)) {
                 if (msgservers_lst != NULL && 0 != get_list_size(msgservers_lst)) print_list(msgservers_lst, print_server);
-                else printf("No registred servers\n");
+                else printf("No registered servers\n");
             } else if (0 == strcasecmp("show_messages", buffer) || 0 == strcmp("2", buffer)) {
+                if (0 == get_size(msg_matrix) && false == get_overflow(msg_matrix)) printf("0 messages received\n");
                 print_matrix(msg_matrix, print_message);
             } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
                 return EXIT_SUCCESS;
@@ -241,8 +245,9 @@ int main(int argc, char *argv[]) {
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
-            handle_client_comms(udp_global_fd, m, msg_matrix);
+            handle_client_comms(udp_global_fd, msg_matrix);
         }
+
         tcp_fd_handle( msgservers_lst, msg_matrix, &rfds, is_fd_set ); //TCP already started comunications handling
     }
 

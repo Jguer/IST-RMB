@@ -23,6 +23,10 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
     int list_size = (int)get_size(msg_matrix);
     int i = list_size - n;
 
+    if (list_size == 0){
+        return NULL;
+    }
+
     if (i < 0) {
     	if (get_overflow(msg_matrix)){
 			for (uint_fast32_t j = get_capacity(msg_matrix) + i; j < get_capacity(msg_matrix); j++) {

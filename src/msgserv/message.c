@@ -1,6 +1,6 @@
 #include "message.h"
 
-uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, matrix msg_matrix, char *input_buffer, int m) {
+uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, matrix msg_matrix, char *input_buffer) {
     uint_fast8_t exit_code = 0;
     char *response_buffer;
     char *to_append;
@@ -10,7 +10,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
         return 1;
     }
 
-    num = (uint_fast32_t)m < num ? (uint_fast32_t)m : num;
+    num = get_capacity(msg_matrix) < num ? get_capacity(msg_matrix) : num;
     num = get_size(msg_matrix) < num ? get_size(msg_matrix) : num;
 
     to_append = get_first_n_messages(msg_matrix, num);
@@ -27,6 +27,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
             if (_VERBOSE_TEST) printf("error sending communication UDP\n");
             exit_code = 1;
         }
+        free(response_buffer);
     }
     else{
         int read_size = sendto(fd, "MESSAGES\n", strlen("MESSAGES\n"), 0,
@@ -38,7 +39,6 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
         }   
     }
 
-    free(response_buffer);
     return exit_code;
 }
 
@@ -47,7 +47,7 @@ uint_fast8_t handle_publish(matrix msg_matrix, char *input_buffer) {
     return 0;
 }
 
-uint_fast8_t handle_client_comms(int fd, int m, matrix msg_matrix) {
+uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
     char buffer[STRING_SIZE];
     char op[STRING_SIZE];
     char input_buffer[STRING_SIZE];
@@ -78,7 +78,7 @@ uint_fast8_t handle_client_comms(int fd, int m, matrix msg_matrix) {
         err = handle_publish(msg_matrix, input_buffer);
     } else if (0 == strcmp("GET_MESSAGES", op)) {
         err = handle_get_messages(fd, (struct sockaddr *)&receive_address,
-                addrlen, msg_matrix, input_buffer, m);
+                addrlen, msg_matrix, input_buffer);
     }
     return err;
 }

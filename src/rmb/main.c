@@ -3,6 +3,7 @@
 #include <sys/timerfd.h>
 
 #include "message.h"
+#include "identity.h"
 
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s [-i siip] [-p sipt] %s \n", name, _VERBOSE_OPT_SHOW);
@@ -41,82 +42,43 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
     fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%s\n", server_ip, server_port);
     struct addrinfo *id_server = get_server_address(server_ip, server_port);
     if (NULL == id_server) {
         fprintf(stderr, KRED "Unable to parse id server address from:\n %s:%s", server_ip, server_port);
         return EXIT_FAILURE;
-    }
-
-    char op[STRING_SIZE];
-    char input_buffer[STRING_SIZE];
-
-    uint_fast8_t exit_code = EXIT_SUCCESS;
-    uint_fast8_t err = EXIT_SUCCESS;
-
-    int_fast32_t outgoing_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (-1 == outgoing_fd) {
-        fprintf(stderr, KRED "Unable to create socket\n" KNRM);
-        freeaddrinfo(id_server);
-        return EXIT_FAILURE;
-    }
-
-    int_fast32_t binded_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (-1 == outgoing_fd) {
-        fprintf(stderr, KRED "Unable to create socket\n" KNRM);
-        freeaddrinfo(id_server);
-        return EXIT_FAILURE;
-    }
-
+    }    
+    int_fast32_t outgoing_fd = -1;
+    int_fast32_t binded_fd = -1;
     int_fast32_t timer_fd = -1;
-
-    struct sockaddr_in serveraddr;
-    memset((void*)&serveraddr,(int)'\0',
-    sizeof(serveraddr));
-    serveraddr.sin_family= AF_INET;
-    serveraddr.sin_addr.s_addr= htonl(INADDR_ANY);
-    serveraddr.sin_port= htons((u_short)0);    
-
-    if (-1 == bind(binded_fd,(struct sockaddr*)&serveraddr,sizeof(serveraddr))){
-        fprintf(stderr, KRED "Unable to create socket\n" KNRM);
-        freeaddrinfo(id_server);
-        goto PROGRAM_EXIT;
-    }
-
-    uint_fast8_t max_fd = binded_fd; // Max fd number.
-    uint_fast16_t msg_num = 0; // Number of messages asked
-
-    fd_set rfds;
-
-    list *msgservers_lst = fetch_servers(outgoing_fd, id_server);
-    server *sel_server = select_server(msgservers_lst);
-    if (sel_server != NULL) {
-        fprintf(stdout, KGRN "Prompt > " KNRM);
-        fflush(stdout);
-    }
-    
+    list *msgservers_lst;
+    server *sel_server;
     struct itimerspec new_timer = {
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC},   //Interval of time
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC}    //Stop time
         };
-    
-    /* Start Timer */
-    timer_fd = timerfd_create (CLOCK_MONOTONIC, TFD_NONBLOCK);
-    if (timer_fd == -1) {
-        printf(KRED "Unable to create timer.\n" KNRM);
-    }
 
-    int err_tm= timerfd_settime (timer_fd, 0, &new_timer, NULL);
-    if (-1 == err_tm) {
-        printf(KRED "Unable to set timer\n" KNRM);
-        exit_code = EXIT_FAILURE;
+    if (1 == init_program(id_server, &outgoing_fd,
+                &binded_fd, &msgservers_lst, &sel_server,
+                &new_timer, &timer_fd)){
         goto PROGRAM_EXIT;
     }
 
+    fd_set rfds;
+    uint_fast8_t err = EXIT_SUCCESS;
+    uint_fast8_t exit_code = EXIT_SUCCESS;
+    uint_fast8_t max_fd = -1; // Max fd number.    
     bool server_not_answering = false;
     server *old_server = NULL;
     uint_fast8_t ban_counter = 0;
+    uint_fast16_t msg_num = 0; // Number of messages asked
+    char op[STRING_SIZE];
+    char input_buffer[STRING_SIZE];
+
+    if (sel_server != NULL) {
+        fprintf(stdout, KGRN "Prompt > " KNRM);
+        fflush(stdout);
+    }
 
     // Interactive loop
     while (true) {
@@ -214,13 +176,15 @@ int main(int argc, char *argv[]) {
                 ask_server_test();
 
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
-                msg_num = atoi(input_buffer);
-                if( 0 < msg_num){
+                int msg_num_test = atoi(input_buffer);
+                if( 0 < msg_num_test){
+                    msg_num = msg_num_test;
                     err = ask_for_messages(binded_fd, sel_server, msg_num);
                     ask_server_test();
                 }
                 else{
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
+                    msg_num_test = 0;
                 }
             } else if (0 == strcasecmp("exit", op) || 0 == strcmp("3", op)) {
                 exit_code = EXIT_SUCCESS;

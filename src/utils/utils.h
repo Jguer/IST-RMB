@@ -30,7 +30,7 @@
 #define RESPONSE_SIZE 512
 
 #define SERVER_TEST_TIME_SEC 0
-#define SERVER_TEST_TIME_nSEC 1000*100
+#define SERVER_TEST_TIME_nSEC 1000*500
 #define SERVER_BAN_TIME 5
 
 typedef void *item;
