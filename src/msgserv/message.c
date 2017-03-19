@@ -13,12 +13,12 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     num = (uint_fast32_t)m < num ? (uint_fast32_t)m : num;
     num = get_size(msg_matrix) < num ? get_size(msg_matrix) : num;
 
-    response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
     to_append = get_first_n_messages(msg_matrix, num);
 
     if (NULL != to_append) {
-        char * message_code = "MESSAGES";
-        snprintf(response_buffer, STRING_SIZE * num, "%s\n%s", message_code, to_append);
+        response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
+        snprintf(response_buffer, STRING_SIZE * (num + 1), "%s\n%s", "MESSAGES", to_append);
+        
         int read_size = sendto(fd, response_buffer, strlen(response_buffer), 0,
                 address, addrlen);
 
@@ -27,6 +27,15 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
             if (_VERBOSE_TEST) printf("error sending communication UDP\n");
             exit_code = 1;
         }
+    }
+    else{
+        int read_size = sendto(fd, "MESSAGES\n", strlen("MESSAGES\n"), 0,
+                address, addrlen);
+
+        if (-1 == read_size) {
+            if (_VERBOSE_TEST) printf("error sending communication UDP\n");
+            exit_code = 1;
+        }   
     }
 
     free(response_buffer);

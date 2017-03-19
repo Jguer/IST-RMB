@@ -86,17 +86,8 @@ int main(int argc, char *argv[]) {
 
     uint_fast8_t max_fd = binded_fd; // Max fd number.
     uint_fast16_t msg_num = 0; // Number of messages asked
-    int_fast32_t read_size = 0; // UDP receive size
-    char *response_buffer = (char *)malloc(sizeof(char) * RESPONSE_SIZE);
-    uint_fast16_t to_alloc = RESPONSE_SIZE;
-    if (NULL == response_buffer) {
-        memory_error("Unable to malloc buffer\n");
-    }
 
     fd_set rfds;
-
-    struct sockaddr_in server_addr = { 0 };
-    socklen_t addr_len;
 
     list *msgservers_lst = fetch_servers(outgoing_fd, id_server);
     server *sel_server = select_server(msgservers_lst);
@@ -105,7 +96,10 @@ int main(int argc, char *argv[]) {
         fflush(stdout);
     }
     
-    struct itimerspec new_timer = {{SERVER_TEST_TIME,0}, {SERVER_TEST_TIME,0}};
+    struct itimerspec new_timer = {
+        {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC},   //Interval of time
+        {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC}    //Stop time
+        };
     
     /* Start Timer */
     timer_fd = timerfd_create (CLOCK_MONOTONIC, TFD_NONBLOCK);
@@ -113,15 +107,16 @@ int main(int argc, char *argv[]) {
         printf(KRED "Unable to create timer.\n" KNRM);
     }
 
-    err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
-    if (-1 == err) {
+    int err_tm= timerfd_settime (timer_fd, 0, &new_timer, NULL);
+    if (-1 == err_tm) {
         printf(KRED "Unable to set timer\n" KNRM);
         exit_code = EXIT_FAILURE;
         goto PROGRAM_EXIT;
     }
 
-    bool test_server = false;
-    bool last_test_server = false;
+    bool server_not_answering = false;
+    server *old_server = NULL;
+    uint_fast8_t ban_counter = 0;
 
     // Interactive loop
     while (true) {
@@ -133,17 +128,47 @@ int main(int argc, char *argv[]) {
         max_fd = binded_fd > max_fd ? binded_fd : max_fd;
         max_fd = timer_fd > max_fd ? timer_fd : max_fd;
 
-        if (NULL == sel_server || err ) {
-            fprintf(stderr, KYEL "No servers available. Sleeping 3s\n" KNRM);
+        if (NULL == sel_server || err || server_not_answering) {
+            fprintf(stderr, KYEL "Searching\n" KNRM);
             sleep(3);
+
+            if (SERVER_BAN_TIME < ban_counter){
+                if (sel_server != NULL) free_server(sel_server);
+                sel_server = NULL;
+                if (old_server != NULL) free_server(old_server);
+                old_server = NULL;
+                server_not_answering = false;
+                ban_counter = 0;
+                continue;
+            }
+
+            if (server_not_answering){
+            	if(sel_server != NULL) old_server = copy_server(old_server, sel_server);
+
+                if (old_server == NULL){
+                    goto PROGRAM_EXIT;
+                }
+            }
 
             free_list(msgservers_lst, free_server);
             msgservers_lst = fetch_servers(outgoing_fd, id_server);
+            if (server_not_answering){
+                rem_awol_server(msgservers_lst, old_server);
+            }
             sel_server = select_server(msgservers_lst);
             if (sel_server != NULL) {
+                fprintf(stderr, KGRN "Connected to new server\n" KNRM);
                 fprintf(stdout, KGRN "Prompt > " KNRM);
                 fflush(stdout);
+                server_not_answering = false;
+                ban_counter = 0;
+                if(old_server != NULL) free_server(old_server);
+            }else{
+                fprintf(stderr, KYEL "No servers available..." KNRM);
+                fflush(stdout);
             }
+
+            ban_counter ++;
             continue;
         }
 
@@ -155,65 +180,25 @@ int main(int argc, char *argv[]) {
         }
         
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
-            if( test_server && last_test_server){
-                sel_server = NULL;
-                test_server = false;
-                last_test_server = false;
-                printf(KYEL "Can't obtain answer from server\n" KNRM);
+            uint_fast8_t server_test_status = exec_server_test();
+            
+            if (1 == server_test_status){
+                printf(KYEL "Server not answering\n" KNRM);
                 fflush(stdout);
+                server_not_answering = true;
             }
-            else if ( test_server && !last_test_server ){
-                last_test_server = true;
-            }
+
             timerfd_settime (timer_fd, 0, &new_timer, NULL);
             continue;
         }
 
         if (FD_ISSET(binded_fd, &rfds)) { //UDP receive
-            addr_len = sizeof(server_addr);
-            if ((msg_num +1) * RESPONSE_SIZE > to_alloc) {
-                to_alloc = (msg_num + 1) * RESPONSE_SIZE;
-                response_buffer = (char*)realloc(response_buffer, sizeof(char) * to_alloc);
-                if (NULL == response_buffer) {
-                    memory_error("Unable to realloc buffer\n");
-                }
-            }
-            memset(response_buffer, '\0', sizeof(char) * to_alloc);
-
-            
-            read_size = recvfrom(binded_fd, response_buffer, sizeof(char)*to_alloc, 0,
-                    (struct sockaddr *)&server_addr, &addr_len);
-
-            if (-1 == read_size) {
-                if (_VERBOSE_TEST) fprintf(stderr, KRED "Failed UPD receive from %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
-                goto UDP_END;
-            }
-            if (_VERBOSE_TEST){ 
-                puts(response_buffer);
-                fflush(stdout);
-            }
-            sscanf(response_buffer, "%s\n" , op);
-            if(0 == strcmp(op, "MESSAGES")){
-                if( false == test_server ){
-                    printf("Last %d messages:\n", msg_num);
-                    printf("%s",&response_buffer[10]);
-                    fflush(stdout);
-                }
-                else{
-                    test_server = false;
-                    goto UDP_TEST_END;
-                }
-            }
-            else{
-                test_server = true;
-                sel_server = NULL;
-            }
-
-UDP_END:
-            fprintf(stdout, KGRN "Prompt > " KNRM);
-            fflush(stdout);
+            if (2 == handle_incoming_messages(binded_fd, msg_num)){
+                fprintf(stdout, KGRN "Prompt > " KNRM);
+                fflush(stdout);    
+            }        
         }
-UDP_TEST_END:
+
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
             scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
 
@@ -225,13 +210,14 @@ UDP_TEST_END:
                     continue;
                 }
                 err = publish(binded_fd, sel_server, input_buffer);
-                err = ask_for_messages(binded_fd, sel_server, 5);
-                test_server = true;
+                err = ask_for_messages(binded_fd, sel_server, 0);
+                ask_server_test();
 
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 msg_num = atoi(input_buffer);
                 if( 0 < msg_num){
                     err = ask_for_messages(binded_fd, sel_server, msg_num);
+                    ask_server_test();
                 }
                 else{
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
@@ -253,7 +239,7 @@ UDP_TEST_END:
 
 PROGRAM_EXIT:
     freeaddrinfo(id_server);
-    free(response_buffer);
+    free_incoming_messages();
     free_list(msgservers_lst, free_server);
     close(outgoing_fd);
     close(binded_fd);
