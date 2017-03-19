@@ -69,11 +69,12 @@ int main(int argc, char *argv[]) {
     }
 
     struct sockaddr_in serveraddr;
-    memset((void*)&serveraddr,(int)'\0',
+    bzero((void*)&serveraddr,
     sizeof(serveraddr));
+
     serveraddr.sin_family= AF_INET;
     serveraddr.sin_addr.s_addr= htonl(INADDR_ANY);
-    serveraddr.sin_port= htons((u_short)0);    
+    serveraddr.sin_port= htons((u_short)0);
 
     if (-1 == bind(binded_fd,(struct sockaddr*)&serveraddr,sizeof(serveraddr))){
         fprintf(stderr, KRED "Unable to create socket\n" KNRM);
@@ -138,9 +139,9 @@ int main(int argc, char *argv[]) {
                     memory_error("Unable to realloc buffer\n");
                 }
             }
-            memset(response_buffer, '\0', sizeof(char) * to_alloc);
 
-            
+            bzero(response_buffer, to_alloc);
+
             read_size = recvfrom(binded_fd, response_buffer, sizeof(char)*to_alloc, 0,
                     (struct sockaddr *)&server_addr, &addr_len);
 
@@ -148,13 +149,13 @@ int main(int argc, char *argv[]) {
                 if (_VERBOSE_TEST) fprintf(stderr, KRED "Failed UPD receive from %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
                 goto UDP_END;
             }
-            if (_VERBOSE_TEST){ 
+            if (_VERBOSE_TEST){
                 puts(response_buffer);
                 fflush(stdout);
             }
             sscanf(response_buffer, "%s\n" , op);
             if(0 == strcmp(op, "MESSAGES")){
-                printf("Last %d messages:\n", msg_num);
+                printf("Last %zu messages:\n", msg_num);
                 printf("%s",&response_buffer[10]);
                 fflush(stdout);
             }
@@ -193,8 +194,8 @@ UDP_END:
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
             }
 
-            memset(op, '\0', sizeof(char) * STRING_SIZE);
-            memset(input_buffer, '\0', sizeof(char) * STRING_SIZE);
+            bzero(op, STRING_SIZE);
+            bzero(input_buffer, STRING_SIZE);
 
             fprintf(stdout, KGRN "Prompt > " KNRM);
             fflush(stdout);

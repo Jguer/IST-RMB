@@ -16,10 +16,10 @@ int get_lc(message this) {
 
 char *get_first_n_messages(matrix msg_matrix, int n) {
     char *to_return = (char*)malloc(sizeof(char) * STRING_SIZE * n);
-    memset(to_return, '\0',sizeof(char) * STRING_SIZE * n);
     if (!to_return) {
         return to_return;
     }
+    bzero(to_return, STRING_SIZE * n);
     int list_size = (int)get_size(msg_matrix);
     int i = list_size - n;
 
@@ -30,6 +30,7 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
 					break;
 				}
 				strncat(to_return, get_string(get_element(msg_matrix, j)), STRING_SIZE * n);
+				strncat(to_return, "\n",STRING_SIZE * n);
 			}
     	}
 
@@ -38,14 +39,16 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
 				break;
 			}
             strncat(to_return, get_string(get_element(msg_matrix, i)), STRING_SIZE * n);
+            strncat(to_return, "\n",STRING_SIZE * n);
 		}
     }
-    else{
+    else {
     	for (; i < list_size; i++) {
 			if (!get_element(msg_matrix, i)) {
 				break;
 			}
 			strncat(to_return, get_string(get_element(msg_matrix, i)), STRING_SIZE * n);
+            strncat(to_return, "\n",STRING_SIZE * n);
 		}
     }
 

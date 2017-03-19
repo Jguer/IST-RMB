@@ -241,9 +241,12 @@ int main(int argc, char *argv[]) {
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
-            handle_client_comms(udp_global_fd, m, msg_matrix);
+            err = handle_client_comms(udp_global_fd, m, msg_matrix);
+            if (2 == err) {
+                share_last_message(msgservers_lst, msg_matrix);
+            }
         }
-        tcp_fd_handle( msgservers_lst, msg_matrix, &rfds, is_fd_set ); //TCP already started comunications handling
+        tcp_fd_handle(msgservers_lst, msg_matrix, &rfds, is_fd_set); //TCP already started comunications handling
     }
 
 PROGRAM_EXIT:
