@@ -22,5 +22,8 @@ client: $(wildcard src/rmb/*.c)
 server: $(wildcard src/msgserv/*.c)
 	$(CC) $(CFLAGS) -I$(UTILS_DIR) $(wildcard wildcard src/utils/*.c) $(wildcard src/msgserv/*.c) -o bin/$(SERVER)
 
+tests:
+	$(CC) $(CFLAGS) -I$(UTILS_DIR) -Isrc/msgserv $(wildcard wildcard src/utils/*.c) src/msgserv/message.c $(wildcard src/testing/*.c) -o bin/test
+	$(./bin/test)
 clean:
 	rm $(wildcard bin/*)

@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
     char *ip = NULL;
     u_short udp_port = 0;
     u_short tcp_port = 0;
+    g_lc = 0;
 
     char id_server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
     char id_server_port[STRING_SIZE] = "59000";

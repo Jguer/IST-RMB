@@ -5,6 +5,8 @@ struct _message {
     char *content;
 };
 
+int g_lc;
+
 // Gets
 char *get_string(message this) {
     return this->content;
@@ -73,29 +75,25 @@ message new_message(uint_fast32_t lc, char *src) {
     return new_msg;
 }
 
-matrix parse_messages(char *buffer, uint_fast32_t m) {
-    matrix msg_matrix = create_matrix(m);
-
+matrix parse_messages(char *buffer, matrix msg_matrix) {
     char msg[STRING_SIZE];
+    char lc[6];
     char *separated_info;
     int sscanf_state = 0;
-    uint_fast32_t i = 0;
 
     strtok(buffer, "\n"); //Gets the first info, stoping at newline
     separated_info = strtok(NULL, "\n");
 
     while (separated_info) { //Proceeds getting info and treating
-        sscanf_state = sscanf(separated_info, "%[^\n]", msg); //Separates info and saves it in variables
+        sscanf_state = sscanf(separated_info, "%[^;];%140[^\n]",lc, msg); //Separates info and saves it in variables
 
         if (1 != sscanf_state) {
              if (_VERBOSE_TEST) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
-             break;
         }
 
-        add_element(msg_matrix, get_size(msg_matrix), (item)new_message(i, msg), free_message);
+        add_element(msg_matrix, get_size(msg_matrix), (item)new_message(atoi(lc), msg), free_message);
 
         separated_info = strtok(NULL, "\n");//Gets new info
-        i++;
     }
 
     return msg_matrix;
@@ -109,6 +107,18 @@ void free_message(item got_item) {
 
     free(this->content);
     free(this);
+    return;
+}
+
+void print_message_plain(item got_item) {
+    if (!got_item) {
+        return;
+    }
+    message this = (message)got_item;
+
+    fprintf(stdout,
+            "LC: %zu Message: %s\n",
+            this->lc, this->content);
     return;
 }
 

@@ -2,28 +2,28 @@
 
 uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     uint_fast8_t exit_code = 0;
-    char *response_buffer;
-    char *to_append;
-    char *response_buffer, *ptr;
+    int nwritten = 0;
 
-    int nbytes, nleft, nwritten, nread;
-
-    response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * get_capacity(msg_matrix));
+    char *response_buffer = (char *)malloc(STRING_SIZE * (get_capacity(msg_matrix) + 1));
     if (!response_buffer) {
         memory_error("unable to allocate response while sharing last message");
     }
 
-    nbytes=7;
-    nleft=nbytes;
-    while(nleft>0){nwritten=write(fd,ptr,nleft);
-        if(nwritten<=0)exit(1);//error
-        nleft-=nwritten;
-        ptr+=nwritten;}
-    nleft=nbytes; ptr=buffer;
+    char* to_append = get_first_n_messages(msg_matrix, get_capacity(msg_matrix));
+    int nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n%s", MESSAGE_CODE, to_append);
+    free(to_append);
 
-    close(fd);
-    write(1,"echo: ",6);//stdout
-    write(1,buffer,nread);
+    char *ptr = response_buffer;
+    int nleft = nbytes;
+    while(0 < nleft) {
+        nwritten=write(fd,ptr + nwritten, nleft - nwritten);
+        if(nwritten<=0) {//error
+            exit_code = 1;
+            break;
+        }
+    }
+
+    free(response_buffer);
     return exit_code;
 }
 
@@ -31,14 +31,15 @@ uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
     node *aux_node;
     int processing_fd;
     uint_fast8_t exit_code = 0;
-    char *response_buffer, *ptr;
-    int_fast16_t nleft, nwritten;
+    char *response_buffer, *ptr = NULL;
+    int_fast16_t nleft, nwritten = 0;
 
     printf(KCYN "\n Sharing last message %s \n" KNRM, get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
-    response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * 2);
-    if (!response_buffer) {
+    response_buffer = (char *)calloc(2, STRING_SIZE);
+    if (NULL == response_buffer) {
         memory_error("unable to allocate response while sharing last message");
+        return EXIT_FAILURE;
     }
     snprintf(response_buffer, STRING_SIZE * 2, "%s\n%d;%s\n",
             SMESSAGE_CODE, get_lc(get_element(msg_matrix, get_size(msg_matrix) - 1)),
@@ -52,13 +53,13 @@ uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
             processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
 
             ptr = response_buffer;
-            nleft = strlen(response_buffer);
+            nleft = strlen(ptr);
             while(0 < nleft) {
                 nwritten = write(processing_fd,ptr + nwritten ,nleft - nwritten);
-                if(0 > nwritten) {
+                if(0 >= nwritten) {
                     if ( _VERBOSE_TEST ) printf("error sending communication TCP\n");
                     close(processing_fd);
-                    set_fd( (server *)get_node_item(aux_node), -1 );
+                    set_fd((server *)get_node_item(aux_node), -1 );
                     set_connected((server *)get_node_item(aux_node), 0);
                 } //error
             }
@@ -105,6 +106,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
 uint_fast8_t handle_publish(matrix msg_matrix, char *input_buffer) {
     add_element(msg_matrix, get_size(msg_matrix),
             (item)new_message(get_size(msg_matrix), input_buffer), free_message);
+    g_lc++;
     return 2;
 }
 

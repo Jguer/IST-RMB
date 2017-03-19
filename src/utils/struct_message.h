@@ -1,8 +1,10 @@
+#pragma once
 #include "utils.h"
 #include "string.h"
 #include "../utils/util_matrix.h"
 
 typedef struct _message *message;
+extern int g_lc;
 
 // Gets
 char    *get_string(message this);
@@ -12,6 +14,8 @@ char    *get_first_n_messages(matrix msg_matrix, int n);
 void    set_lc(message this, uint_fast32_t new_lc);
 // Methods
 message new_message(uint_fast32_t lc, char *src);
-matrix  parse_messages(char *buffer, uint_fast32_t m);
+matrix parse_messages(char *buffer, matrix msg_matrix);
 void    free_message(item got_item);
 void    print_message(item got_item);
+void    print_message_plain(item got_item);
+
