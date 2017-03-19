@@ -141,7 +141,8 @@ int handle_incoming_messages(int fd, uint num){
 
     char op[RESPONSE_SIZE] = {'0'};
 
-    sscanf(_response_buffer, "%s\n" , op);
+    int size_of_read = 0;
+    sscanf(_response_buffer, "%s\n%n" , op, &size_of_read);
     if(0 == strcmp(op, "MESSAGES")){
         if( true == _testing_with_results ){
             printf("Last %d messages:\n", num);

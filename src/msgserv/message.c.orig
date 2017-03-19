@@ -1,5 +1,6 @@
 #include "message.h"
 
+<<<<<<< HEAD
 uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     uint_fast8_t exit_code = 0;
     int nwritten = 0;
@@ -74,7 +75,10 @@ uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
 }
 
 
+uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, matrix msg_matrix, char *input_buffer, int m) {
+=======
 uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, matrix msg_matrix, char *input_buffer) {
+>>>>>>> House-Keeping: Guatemala
     uint_fast8_t exit_code = 0;
     char *response_buffer;
     char *to_append;
