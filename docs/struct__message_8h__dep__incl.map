@@ -1,8 +1,11 @@
 <map id="src/utils/struct_message.h" name="src/utils/struct_message.h">
-<area shape="rect" id="node2" href="$identity_8h.html" title="src/msgserv/identity.h" alt="" coords="91,80,253,107"/>
-<area shape="rect" id="node5" href="$msgserv_2message_8h.html" title="src/msgserv/message.h" alt="" coords="277,80,453,107"/>
-<area shape="rect" id="node7" href="$struct__message_8c.html" title="src/utils/struct_message.c" alt="" coords="477,80,667,107"/>
-<area shape="rect" id="node3" href="$identity_8c.html" title="src/msgserv/identity.c" alt="" coords="5,155,168,181"/>
-<area shape="rect" id="node4" href="$msgserv_2main_8c.html" title="src/msgserv/main.c" alt="" coords="193,155,341,181"/>
-<area shape="rect" id="node6" href="$msgserv_2message_8c.html" title="src/msgserv/message.c" alt="" coords="365,155,539,181"/>
+<area shape="rect" id="node2" href="$msgserv_2identity_8h.html" title="src/msgserv/identity.h" alt="" coords="166,80,316,107"/>
+<area shape="rect" id="node5" href="$msgserv_2message_8h.html" title="src/msgserv/message.h" alt="" coords="341,80,504,107"/>
+<area shape="rect" id="node7" href="$rmb_2identity_8h.html" title="src/rmb/identity.h" alt="" coords="528,80,651,107"/>
+<area shape="rect" id="node10" href="$struct__message_8c.html" title="src/utils/struct_message.c" alt="" coords="675,80,851,107"/>
+<area shape="rect" id="node3" href="$msgserv_2identity_8c.html" title="src/msgserv/identity.c" alt="" coords="5,155,155,181"/>
+<area shape="rect" id="node4" href="$msgserv_2main_8c.html" title="src/msgserv/main.c" alt="" coords="179,155,316,181"/>
+<area shape="rect" id="node6" href="$msgserv_2message_8c.html" title="src/msgserv/message.c" alt="" coords="341,155,504,181"/>
+<area shape="rect" id="node8" href="$rmb_2identity_8c.html" title="src/rmb/identity.c" alt="" coords="528,155,651,181"/>
+<area shape="rect" id="node9" href="$rmb_2main_8c.html" title="src/rmb/main.c" alt="" coords="675,155,784,181"/>
 </map>

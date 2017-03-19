@@ -1,4 +1,6 @@
 <map id="src/rmb/message.h" name="src/rmb/message.h">
-<area shape="rect" id="node2" href="$rmb_2main_8c.html" title="src/rmb/main.c" alt="" coords="5,80,124,107"/>
-<area shape="rect" id="node3" href="$rmb_2message_8c.html" title="src/rmb/message.c" alt="" coords="148,80,293,107"/>
+<area shape="rect" id="node2" href="$rmb_2identity_8h.html" title="src/rmb/identity.h" alt="" coords="47,80,169,107"/>
+<area shape="rect" id="node4" href="$rmb_2main_8c.html" title="src/rmb/main.c" alt="" coords="152,155,261,181"/>
+<area shape="rect" id="node5" href="$rmb_2message_8c.html" title="src/rmb/message.c" alt="" coords="245,80,379,107"/>
+<area shape="rect" id="node3" href="$rmb_2identity_8c.html" title="src/rmb/identity.c" alt="" coords="5,155,128,181"/>
 </map>

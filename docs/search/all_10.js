@@ -1,17 +1,11 @@
 var searchData=
 [
-  ['select_5fserver',['select_server',['../rmb_2message_8c.html#a78fad15cf4c99e1a1571ee8d738e29f3',1,'select_server(list *server_list):&#160;message.c'],['../rmb_2message_8h.html#a8ca7a4c530312bfc3248aa5a786911f7',1,'select_server(list *server_list):&#160;message.c']]],
-  ['send_5finitial_5fcomm',['send_initial_comm',['../identity_8c.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c'],['../identity_8h.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c']]],
-  ['server',['server',['../struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce',1,'struct_server.h']]],
-  ['set_5fconnected',['set_connected',['../struct__server_8c.html#a1d9e695f039d0473b3e88fc94bfd133e',1,'set_connected(server *this, bool connected):&#160;struct_server.c'],['../struct__server_8h.html#a1d9e695f039d0473b3e88fc94bfd133e',1,'set_connected(server *this, bool connected):&#160;struct_server.c']]],
-  ['set_5ffd',['set_fd',['../struct__server_8c.html#aa16dc83a86e1fb735faace51bbe2f59c',1,'set_fd(server *this, int fd):&#160;struct_server.c'],['../struct__server_8h.html#aa16dc83a86e1fb735faace51bbe2f59c',1,'set_fd(server *this, int fd):&#160;struct_server.c']]],
-  ['set_5fhead',['set_head',['../util__list_8c.html#a107f9b01a0cb779a25428a7cc0328fc1',1,'util_list.c']]],
-  ['set_5flc',['set_lc',['../struct__message_8c.html#ac481264dacd359391d43324a6cdc6b7a',1,'set_lc(message this, uint_fast32_t new_lc):&#160;struct_message.c'],['../struct__message_8h.html#ac481264dacd359391d43324a6cdc6b7a',1,'set_lc(message this, uint_fast32_t new_lc):&#160;struct_message.c']]],
-  ['size',['size',['../struct__stack.html#a854352f53b148adc24983a58a1866d66',1,'_stack::size()'],['../struct__matrix.html#a854352f53b148adc24983a58a1866d66',1,'_matrix::size()']]],
-  ['stack',['stack',['../util__list_8h.html#af889ec67595a24d91488339481831381',1,'util_list.h']]],
-  ['string_5fsize',['STRING_SIZE',['../utils_8h.html#ad78224efe1d3fb39b67ca74ad9d9eec7',1,'utils.h']]],
-  ['struct_5fmessage_2ec',['struct_message.c',['../struct__message_8c.html',1,'']]],
-  ['struct_5fmessage_2eh',['struct_message.h',['../struct__message_8h.html',1,'']]],
-  ['struct_5fserver_2ec',['struct_server.c',['../struct__server_8c.html',1,'']]],
-  ['struct_5fserver_2eh',['struct_server.h',['../struct__server_8h.html',1,'']]]
+  ['reg_5fserver',['reg_server',['../msgserv_2identity_8c.html#abaf9a9fefc1ff2fc86fd3e893ff23b88',1,'reg_server(int *fd, server *host, char *ip_name, char *udp_port):&#160;identity.c'],['../msgserv_2identity_8h.html#abaf9a9fefc1ff2fc86fd3e893ff23b88',1,'reg_server(int *fd, server *host, char *ip_name, char *udp_port):&#160;identity.c']]],
+  ['rem_5fawol_5fserver',['rem_awol_server',['../rmb_2message_8c.html#ae0c8566e8f9bcfc2edf971ed2e7c462a',1,'rem_awol_server(list *server_list, server *awol_server):&#160;message.c'],['../rmb_2message_8h.html#ae0c8566e8f9bcfc2edf971ed2e7c462a',1,'rem_awol_server(list *server_list, server *awol_server):&#160;message.c']]],
+  ['remove_5fbad_5fservers',['remove_bad_servers',['../msgserv_2identity_8c.html#af62436dc0f6183e7d862b0f1d2b6da77',1,'remove_bad_servers(list *servers_list, server *host, int max_fd, fd_set *rfds, void(*SET_FD)(int, fd_set *)):&#160;identity.c'],['../msgserv_2identity_8h.html#af62436dc0f6183e7d862b0f1d2b6da77',1,'remove_bad_servers(list *servers_list, server *host, int max_fd, fd_set *rfds, void(*SET_FD)(int, fd_set *)):&#160;identity.c']]],
+  ['remove_5ffirst_5fnode',['remove_first_node',['../util__list_8c.html#ab9d0a09eb9a69c804d39314fae11a0b5',1,'remove_first_node(list *got_list, void(*free_item)(item)):&#160;util_list.c'],['../util__list_8h.html#ab9d0a09eb9a69c804d39314fae11a0b5',1,'remove_first_node(list *got_list, void(*free_item)(item)):&#160;util_list.c']]],
+  ['remove_5fnext_5fnode',['remove_next_node',['../util__list_8c.html#ab3d387b195976bec29f6ce2ca2bca47a',1,'remove_next_node(node *cur_node, node *node_to_remove, void(*free_item)(item)):&#160;util_list.c'],['../util__list_8h.html#ade08684e0dfbe333c81695494dee604f',1,'remove_next_node(node *cur_node, node *next_node, void(*free_item)(item)):&#160;util_list.c']]],
+  ['request',['REQUEST',['../struct__server_8c.html#a6baece8be8f9ab55223d41b535511b6f',1,'struct_server.c']]],
+  ['reset',['RESET',['../utils_8h.html#ab702106cf3b3e96750b6845ded4e0299',1,'utils.h']]],
+  ['response_5fsize',['RESPONSE_SIZE',['../utils_8h.html#a48c115751f544f6dc2232111ecf30708',1,'utils.h']]]
 ];

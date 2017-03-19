@@ -11,7 +11,7 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix);
 uint_fast8_t tcp_fd_handle(list *servers_list,matrix msg_matrix, fd_set *rfds, int (*STAT_FD)(int, fd_set *));
 uint_fast8_t parse_messages(char *buffer, matrix msg_matrix);
 
-/* \fn handle_client_comms(int fd, int m, matrix msg_matrix)
+/*! \fn handle_client_comms(int fd, matrix msg_matrix)
 	\brief handle_client_comms receives the comunications via udp from the client.
 then interprets and sends back the requested info or saves the new message
 	\param fd File descriptor for udp comms
