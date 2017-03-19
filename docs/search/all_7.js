@@ -1,11 +1,8 @@
 var searchData=
 [
-  ['identity_2ec',['identity.c',['../identity_8c.html',1,'']]],
-  ['identity_2eh',['identity.h',['../identity_8h.html',1,'']]],
-  ['init_5ftcp',['init_tcp',['../identity_8c.html#acfad51541e9597a48825d09c306d915c',1,'init_tcp(server *host):&#160;identity.c'],['../identity_8h.html#acfad51541e9597a48825d09c306d915c',1,'init_tcp(server *host):&#160;identity.c']]],
-  ['init_5fudp',['init_udp',['../identity_8c.html#ae681132d957180d08902d5689471a96a',1,'init_udp(server *host):&#160;identity.c'],['../identity_8h.html#ae681132d957180d08902d5689471a96a',1,'init_udp(server *host):&#160;identity.c']]],
-  ['ip_5faddr',['ip_addr',['../struct__server.html#afe9487cd8022e4eb2ebdfb64557623e2',1,'_server']]],
-  ['is_5ffd_5fset',['is_fd_set',['../msgserv_2main_8c.html#a7b8038e7741299cd4383b3aa29db0ad5',1,'main.c']]],
-  ['is_5fverbose',['is_verbose',['../utils_8c.html#a323aba01db0eccbb36fce697164fae2e',1,'is_verbose():&#160;utils.c'],['../utils_8h.html#a323aba01db0eccbb36fce697164fae2e',1,'is_verbose():&#160;utils.c']]],
-  ['item',['item',['../utils_8h.html#a37ff604c52750a277af8b1f5c70e23bd',1,'utils.h']]]
+  ['handle_5fclient_5fcomms',['handle_client_comms',['../msgserv_2message_8c.html#a463526987af3832d070c82d43107fced',1,'handle_client_comms(int fd, matrix msg_matrix):&#160;message.c'],['../msgserv_2message_8h.html#a463526987af3832d070c82d43107fced',1,'handle_client_comms(int fd, matrix msg_matrix):&#160;message.c']]],
+  ['handle_5fget_5fmessages',['handle_get_messages',['../msgserv_2message_8c.html#a61e271c04351b8e1bd529a7672c84bed',1,'message.c']]],
+  ['handle_5fincoming_5fmessages',['handle_incoming_messages',['../rmb_2message_8c.html#ada7d7207bbd0380abfe0474d9d2b5ec5',1,'handle_incoming_messages(int fd, uint num):&#160;message.c'],['../rmb_2message_8h.html#ada7d7207bbd0380abfe0474d9d2b5ec5',1,'handle_incoming_messages(int fd, uint num):&#160;message.c']]],
+  ['handle_5fpublish',['handle_publish',['../msgserv_2message_8c.html#a4b7c92f083e6d84c625ed834420bf105',1,'message.c']]],
+  ['head',['head',['../struct__stack.html#a4bc3a90bae6b2a4949d3160c629879db',1,'_stack']]]
 ];

@@ -1,7 +1,21 @@
 var searchData=
 [
-  ['tcp_5ffd_5fhandle',['tcp_fd_handle',['../identity_8c.html#aa2c26a9ced3261ba5538ba4f56ae65a2',1,'tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, int(*STAT_FD)(int, fd_set *)):&#160;identity.c'],['../identity_8h.html#aa2c26a9ced3261ba5538ba4f56ae65a2',1,'tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, int(*STAT_FD)(int, fd_set *)):&#160;identity.c']]],
-  ['tcp_5fnew_5fcomm',['tcp_new_comm',['../identity_8c.html#a887dad1c689bb43cf0e52f67fce4f4a8',1,'tcp_new_comm(list *servers_list, int listen_fd, fd_set *rfds, int(*STAT_FD)(int, fd_set *)):&#160;identity.c'],['../identity_8h.html#a887dad1c689bb43cf0e52f67fce4f4a8',1,'tcp_new_comm(list *servers_list, int listen_fd, fd_set *rfds, int(*STAT_FD)(int, fd_set *)):&#160;identity.c']]],
-  ['tcp_5fport',['tcp_port',['../struct__server.html#ae204eaa28859387783738c0a3152e2d2',1,'_server']]],
-  ['this',['this',['../struct__node.html#a34cc8025b89f724001d190f8c36cc73d',1,'_node']]]
+  ['select_5fserver',['select_server',['../rmb_2message_8c.html#a78fad15cf4c99e1a1571ee8d738e29f3',1,'select_server(list *server_list):&#160;message.c'],['../rmb_2message_8h.html#a8ca7a4c530312bfc3248aa5a786911f7',1,'select_server(list *server_list):&#160;message.c']]],
+  ['send_5finitial_5fcomm',['send_initial_comm',['../msgserv_2identity_8c.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c'],['../msgserv_2identity_8h.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c']]],
+  ['server',['server',['../struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce',1,'struct_server.h']]],
+  ['server_5fban_5ftime',['SERVER_BAN_TIME',['../utils_8h.html#a28fe5304f3f3f003a5d97e6395d12c12',1,'utils.h']]],
+  ['server_5ftest',['SERVER_TEST',['../rmb_2message_8c.html#a4edb5f64b14dcd1a23704d2c82f3f066',1,'message.c']]],
+  ['server_5ftest_5ftime_5fnsec',['SERVER_TEST_TIME_nSEC',['../utils_8h.html#ae410392f5199600ff29f936135535dfe',1,'utils.h']]],
+  ['server_5ftest_5ftime_5fsec',['SERVER_TEST_TIME_SEC',['../utils_8h.html#a4ce3901abfb0ff16b20f0393fb700b67',1,'utils.h']]],
+  ['set_5fconnected',['set_connected',['../struct__server_8c.html#a1d9e695f039d0473b3e88fc94bfd133e',1,'set_connected(server *this, bool connected):&#160;struct_server.c'],['../struct__server_8h.html#a1d9e695f039d0473b3e88fc94bfd133e',1,'set_connected(server *this, bool connected):&#160;struct_server.c']]],
+  ['set_5ffd',['set_fd',['../struct__server_8c.html#aa16dc83a86e1fb735faace51bbe2f59c',1,'set_fd(server *this, int fd):&#160;struct_server.c'],['../struct__server_8h.html#aa16dc83a86e1fb735faace51bbe2f59c',1,'set_fd(server *this, int fd):&#160;struct_server.c']]],
+  ['set_5fhead',['set_head',['../util__list_8c.html#a107f9b01a0cb779a25428a7cc0328fc1',1,'util_list.c']]],
+  ['set_5flc',['set_lc',['../struct__message_8c.html#ac481264dacd359391d43324a6cdc6b7a',1,'set_lc(message this, uint_fast32_t new_lc):&#160;struct_message.c'],['../struct__message_8h.html#ac481264dacd359391d43324a6cdc6b7a',1,'set_lc(message this, uint_fast32_t new_lc):&#160;struct_message.c']]],
+  ['size',['size',['../struct__stack.html#a854352f53b148adc24983a58a1866d66',1,'_stack::size()'],['../struct__matrix.html#a854352f53b148adc24983a58a1866d66',1,'_matrix::size()']]],
+  ['stack',['stack',['../util__list_8h.html#af889ec67595a24d91488339481831381',1,'util_list.h']]],
+  ['string_5fsize',['STRING_SIZE',['../utils_8h.html#ad78224efe1d3fb39b67ca74ad9d9eec7',1,'utils.h']]],
+  ['struct_5fmessage_2ec',['struct_message.c',['../struct__message_8c.html',1,'']]],
+  ['struct_5fmessage_2eh',['struct_message.h',['../struct__message_8h.html',1,'']]],
+  ['struct_5fserver_2ec',['struct_server.c',['../struct__server_8c.html',1,'']]],
+  ['struct_5fserver_2eh',['struct_server.h',['../struct__server_8h.html',1,'']]]
 ];

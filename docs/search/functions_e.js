@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['update_5freg',['update_reg',['../identity_8c.html#ae6ed4c442f04011ee72a01077ec6eadb',1,'update_reg(int fd, struct addrinfo *id_server_info):&#160;identity.c'],['../identity_8h.html#ae6ed4c442f04011ee72a01077ec6eadb',1,'update_reg(int fd, struct addrinfo *id_server_info):&#160;identity.c']]],
-  ['usage',['usage',['../msgserv_2main_8c.html#a1ad940455be56209415d328d78622715',1,'usage(char *name):&#160;main.c'],['../rmb_2main_8c.html#a1ad940455be56209415d328d78622715',1,'usage(char *name):&#160;main.c']]]
+  ['tcp_5ffd_5fhandle',['tcp_fd_handle',['../msgserv_2identity_8c.html#aa2c26a9ced3261ba5538ba4f56ae65a2',1,'tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, int(*STAT_FD)(int, fd_set *)):&#160;identity.c'],['../msgserv_2identity_8h.html#aa2c26a9ced3261ba5538ba4f56ae65a2',1,'tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, int(*STAT_FD)(int, fd_set *)):&#160;identity.c']]],
+  ['tcp_5fnew_5fcomm',['tcp_new_comm',['../msgserv_2identity_8c.html#a887dad1c689bb43cf0e52f67fce4f4a8',1,'tcp_new_comm(list *servers_list, int listen_fd, fd_set *rfds, int(*STAT_FD)(int, fd_set *)):&#160;identity.c'],['../msgserv_2identity_8h.html#a887dad1c689bb43cf0e52f67fce4f4a8',1,'tcp_new_comm(list *servers_list, int listen_fd, fd_set *rfds, int(*STAT_FD)(int, fd_set *)):&#160;identity.c']]]
 ];
