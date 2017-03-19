@@ -5,7 +5,7 @@
 #include "message.h"
 
 void usage(char* name) {
-    fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–fir m] [–r r] %s \n", name, _VERBOSE_OPT_SHOW );
+    fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–m m] [–r r] %s \n", name, _VERBOSE_OPT_SHOW );
     fprintf(stdout, "Arguments:\n"
             "\t-n\t\tserver name\n"
             "\t-j\t\tserver ip\n"
@@ -152,11 +152,11 @@ int main(int argc, char *argv[]) {
             FD_SET(timer_fd, &rfds);
             FD_SET(udp_global_fd, &rfds);
             FD_SET(tcp_listen_fd, &rfds);
-            max_fd = 0;
-        }
-        else {
             max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd;
             max_fd = timer_fd > max_fd ? timer_fd : max_fd;
+        }
+        else {
+            max_fd = STDIN_FILENO;
         }
 
         //Removes the bad servers and sets the good in fd_set rfds.
