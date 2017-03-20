@@ -56,7 +56,7 @@ void rem_awol_server(list *server_list, server* awol_server){
 int publish(int fd, server *sel_server, char *msg) {
     ssize_t n = 0;
 
-    struct sockaddr_in server_addr = { 0 };
+    struct sockaddr_in server_addr = { 0 , .sin_port = 0};
     socklen_t addr_len;
     char msg_to_send[RESPONSE_SIZE];
 
@@ -89,9 +89,9 @@ int ask_for_messages(int fd, server *sel_server, int num) {
     _testing_with_results = ( 0 != num ? true : false );
 
     socklen_t addr_len;
-    struct sockaddr_in server_addr = { 0 };
+    struct sockaddr_in server_addr = { 0 , .sin_port = 0};
     char msg_to_send[STRING_SIZE];
-    sprintf(msg_to_send, "%s %d", ASK, real_msg_num);
+    sprintf(msg_to_send, "%s %zu", ASK, real_msg_num);
 
     server_addr.sin_family = AF_INET;
     if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
@@ -114,9 +114,9 @@ int ask_for_messages(int fd, server *sel_server, int num) {
 
 
 int handle_incoming_messages(int fd, uint num){
-    struct sockaddr_in server_addr = {0};
+    struct sockaddr_in server_addr = { 0 , .sin_port = 0};
     socklen_t addr_len = sizeof(server_addr);
-    
+
     if ((num + 1) * RESPONSE_SIZE >= _size_to_alloc) {
         _size_to_alloc = (num + 1) * RESPONSE_SIZE;
         _response_buffer = (char*)realloc(_response_buffer, sizeof(char) * _size_to_alloc);
@@ -125,7 +125,7 @@ int handle_incoming_messages(int fd, uint num){
         }
     }
     memset(_response_buffer, '\0', sizeof(char) * _size_to_alloc);
-    
+
     int_fast16_t read_size = recvfrom(fd, _response_buffer, sizeof(char)*_size_to_alloc, 0,
             (struct sockaddr *)&server_addr, &addr_len);
 

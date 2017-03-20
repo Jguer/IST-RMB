@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     if (NULL == id_server) {
         fprintf(stderr, KRED "Unable to parse id server address from:\n %s:%s", server_ip, server_port);
         return EXIT_FAILURE;
-    }    
+    }
     int_fast32_t outgoing_fd = -1;
     int_fast32_t binded_fd = -1;
     int_fast32_t timer_fd = -1;
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     fd_set rfds;
     uint_fast8_t err = EXIT_SUCCESS;
     uint_fast8_t exit_code = EXIT_SUCCESS;
-    uint_fast8_t max_fd = -1; // Max fd number.    
+    uint_fast8_t max_fd = -1; // Max fd number.
     bool server_not_answering = false;
     server *old_server = NULL;
     uint_fast8_t ban_counter = 0;
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, KYEL "Searching\n" KNRM);
             sleep(3);
 
-            if (SERVER_BAN_TIME < ban_counter){
+            if (SERVER_BAN_TIME < ban_counter) {
                 if (sel_server != NULL) free_server(sel_server);
                 sel_server = NULL;
                 if (old_server != NULL) free_server(old_server);
@@ -104,17 +104,17 @@ int main(int argc, char *argv[]) {
                 continue;
             }
 
-            if (server_not_answering){
+            if (server_not_answering) {
             	if(sel_server != NULL) old_server = copy_server(old_server, sel_server);
 
-                if (old_server == NULL){
+                if (old_server == NULL) {
                     goto PROGRAM_EXIT;
                 }
             }
 
             free_list(msgservers_lst, free_server);
             msgservers_lst = fetch_servers(outgoing_fd, id_server);
-            if (server_not_answering){
+            if (server_not_answering) {
                 rem_awol_server(msgservers_lst, old_server);
             }
             sel_server = select_server(msgservers_lst);
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
                 server_not_answering = false;
                 ban_counter = 0;
                 if(old_server != NULL) free_server(old_server);
-            }else{
+            } else {
                 fprintf(stderr, KYEL "No servers available..." KNRM);
                 fflush(stdout);
             }
@@ -135,16 +135,16 @@ int main(int argc, char *argv[]) {
         }
 
         int activity = select(max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
-        if(0 > activity){
+        if (0 > activity) {
             printf("error on select\n%d\n", errno);
             exit_code = EXIT_FAILURE;
             goto PROGRAM_EXIT;
         }
-        
+
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             uint_fast8_t server_test_status = exec_server_test();
-            
-            if (1 == server_test_status){
+
+            if (1 == server_test_status) {
                 printf(KYEL "Server not answering\n" KNRM);
                 fflush(stdout);
                 server_not_answering = true;
@@ -155,10 +155,10 @@ int main(int argc, char *argv[]) {
         }
 
         if (FD_ISSET(binded_fd, &rfds)) { //UDP receive
-            if (2 == handle_incoming_messages(binded_fd, msg_num)){
+            if (2 == handle_incoming_messages(binded_fd, msg_num)) {
                 fprintf(stdout, KGRN "Prompt > " KNRM);
-                fflush(stdout);    
-            }        
+                fflush(stdout);
+            }
         }
 
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
@@ -177,12 +177,12 @@ int main(int argc, char *argv[]) {
 
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 int msg_num_test = atoi(input_buffer);
-                if( 0 < msg_num_test){
+                if( 0 < msg_num_test) {
                     msg_num = msg_num_test;
                     err = ask_for_messages(binded_fd, sel_server, msg_num);
                     ask_server_test();
                 }
-                else{
+                else {
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
                     msg_num_test = 0;
                 }
