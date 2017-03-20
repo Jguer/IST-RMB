@@ -47,96 +47,44 @@ int main(int argc, char *argv[]) {
     if (NULL == id_server) {
         fprintf(stderr, KRED "Unable to parse id server address from:\n %s:%s", server_ip, server_port);
         return EXIT_FAILURE;
+    }
 <<<<<<< HEAD
-    }
 
-    char op[STRING_SIZE];
-    char input_buffer[STRING_SIZE];
-
-    uint_fast8_t exit_code = EXIT_SUCCESS;
-    int_fast8_t err = EXIT_SUCCESS;
-
-    int_fast32_t outgoing_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (-1 == outgoing_fd) {
-        fprintf(stderr, KRED "Unable to create socket\n" KNRM);
-        freeaddrinfo(id_server);
-        return EXIT_FAILURE;
-    }
-
-    int_fast32_t binded_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (-1 == outgoing_fd) {
-        fprintf(stderr, KRED "Unable to create socket\n" KNRM);
-        freeaddrinfo(id_server);
-        return EXIT_FAILURE;
-    }
-
-    int_fast32_t timer_fd = -1;
-
-    struct sockaddr_in serveraddr;
-    bzero((void*)&serveraddr,
-    sizeof(serveraddr));
-
-    serveraddr.sin_family= AF_INET;
-    serveraddr.sin_addr.s_addr= htonl(INADDR_ANY);
-    serveraddr.sin_port= htons((u_short)0);
-
-    if (-1 == bind(binded_fd,(struct sockaddr*)&serveraddr,sizeof(serveraddr))){
-        fprintf(stderr, KRED "Unable to create socket\n" KNRM);
-        freeaddrinfo(id_server);
-        goto PROGRAM_EXIT;
-    }
-
-    uint_fast8_t max_fd = binded_fd; // Max fd number.
-    uint_fast16_t msg_num = 0; // Number of messages asked
-    int_fast32_t read_size = 0; // UDP receive size
-    char *response_buffer = (char *)malloc(sizeof(char) * RESPONSE_SIZE);
-    uint_fast16_t to_alloc = RESPONSE_SIZE;
-    if (NULL == response_buffer) {
-        memory_error("Unable to malloc buffer\n");
-    }
-
-    fd_set rfds;
-
-    struct sockaddr_in server_addr = { 0 };
-    socklen_t addr_len;
-
-    list *msgservers_lst = fetch_servers(outgoing_fd, id_server);
-    server *sel_server = select_server(msgservers_lst);
-    if (sel_server != NULL) {
-        fprintf(stdout, KGRN "Prompt > " KNRM);
-        fflush(stdout);
-    }
-    
 =======
-    }    
+>>>>>>> rmb rebased
     int_fast32_t outgoing_fd = -1;
     int_fast32_t binded_fd = -1;
     int_fast32_t timer_fd = -1;
     list *msgservers_lst;
     server *sel_server;
->>>>>>> House-Keeping: Guatemala
+
+    struct sockaddr_in server_addr = { 0 , .sin_port = 0};
+    socklen_t addr_len;
+    uint_fast32_t to_alloc;
+    int read_size;
     struct itimerspec new_timer = {
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC},   //Interval of time
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC}    //Stop time
         };
 
-<<<<<<< HEAD
-    err= timerfd_settime (timer_fd, 0, &new_timer, NULL);
-    if (-1 == err) {
-        printf(KRED "Unable to set timer\n" KNRM);
-        exit_code = EXIT_FAILURE;
-=======
+    uint_fast8_t exit_code = EXIT_SUCCESS;
+
     if (1 == init_program(id_server, &outgoing_fd,
                 &binded_fd, &msgservers_lst, &sel_server,
                 &new_timer, &timer_fd)){
->>>>>>> House-Keeping: Guatemala
-        goto PROGRAM_EXIT;
+        exit_code = EXIT_FAILURE;
+        goto PROGRAM_EXIT_INIT;
     }
 
+    char *response_buffer;
     fd_set rfds;
     uint_fast8_t err = EXIT_SUCCESS;
-    uint_fast8_t exit_code = EXIT_SUCCESS;
+<<<<<<< HEAD
     uint_fast8_t max_fd = -1; // Max fd number.    
+=======
+    uint_fast8_t exit_code = EXIT_SUCCESS;
+    uint_fast8_t max_fd = -1; // Max fd number.
+>>>>>>> rmb rebased
     bool server_not_answering = false;
     server *old_server = NULL;
     uint_fast8_t ban_counter = 0;
@@ -163,7 +111,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, KYEL "Searching\n" KNRM);
             sleep(3);
 
-            if (SERVER_BAN_TIME < ban_counter){
+            if (SERVER_BAN_TIME < ban_counter) {
                 if (sel_server != NULL) free_server(sel_server);
                 sel_server = NULL;
                 if (old_server != NULL) free_server(old_server);
@@ -173,17 +121,17 @@ int main(int argc, char *argv[]) {
                 continue;
             }
 
-            if (server_not_answering){
+            if (server_not_answering) {
             	if(sel_server != NULL) old_server = copy_server(old_server, sel_server);
 
-                if (old_server == NULL){
+                if (old_server == NULL) {
                     goto PROGRAM_EXIT;
                 }
             }
 
             free_list(msgservers_lst, free_server);
             msgservers_lst = fetch_servers(outgoing_fd, id_server);
-            if (server_not_answering){
+            if (server_not_answering) {
                 rem_awol_server(msgservers_lst, old_server);
             }
             sel_server = select_server(msgservers_lst);
@@ -194,7 +142,7 @@ int main(int argc, char *argv[]) {
                 server_not_answering = false;
                 ban_counter = 0;
                 if(old_server != NULL) free_server(old_server);
-            }else{
+            } else {
                 fprintf(stderr, KYEL "No servers available..." KNRM);
                 fflush(stdout);
             }
@@ -204,16 +152,16 @@ int main(int argc, char *argv[]) {
         }
 
         int activity = select(max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
-        if(0 > activity){
+        if (0 > activity) {
             printf("error on select\n%d\n", errno);
             exit_code = EXIT_FAILURE;
             goto PROGRAM_EXIT;
         }
-        
+
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             uint_fast8_t server_test_status = exec_server_test();
-            
-            if (1 == server_test_status){
+
+            if (1 == server_test_status) {
                 printf(KYEL "Server not answering\n" KNRM);
                 fflush(stdout);
                 server_not_answering = true;
@@ -224,6 +172,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (FD_ISSET(binded_fd, &rfds)) { //UDP receive
+<<<<<<< HEAD
             addr_len = sizeof(server_addr);
             if ((msg_num +1) * RESPONSE_SIZE > to_alloc) {
                 to_alloc = (msg_num + 1) * RESPONSE_SIZE;
@@ -266,6 +215,12 @@ int main(int argc, char *argv[]) {
 UDP_END:
             fprintf(stdout, KGRN "Prompt > " KNRM);
             fflush(stdout);
+=======
+            if (2 == handle_incoming_messages(binded_fd, msg_num)) {
+                fprintf(stdout, KGRN "Prompt > " KNRM);
+                fflush(stdout);
+            }
+>>>>>>> rmb rebased
         }
 UDP_TEST_END:
 
@@ -285,12 +240,12 @@ UDP_TEST_END:
 
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 int msg_num_test = atoi(input_buffer);
-                if( 0 < msg_num_test){
+                if( 0 < msg_num_test) {
                     msg_num = msg_num_test;
                     err = ask_for_messages(binded_fd, sel_server, msg_num);
                     ask_server_test();
                 }
-                else{
+                else {
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
                     msg_num_test = 0;
                 }
@@ -310,8 +265,9 @@ UDP_TEST_END:
     }
 
 PROGRAM_EXIT:
-    freeaddrinfo(id_server);
     free(response_buffer);
+PROGRAM_EXIT_INIT:
+    freeaddrinfo(id_server);
     free_incoming_messages();
     free_list(msgservers_lst, free_server);
     close(outgoing_fd);
