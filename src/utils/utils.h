@@ -29,7 +29,9 @@
 #define STRING_SIZE 512
 #define RESPONSE_SIZE 512
 
-#define SERVER_TEST_TIME 3
+#define SERVER_TEST_TIME_SEC 0
+#define SERVER_TEST_TIME_nSEC 1000*100
+#define SERVER_BAN_TIME 5
 
 typedef void *item;
 
@@ -37,4 +39,3 @@ typedef void *item;
 void memory_error(char *msg);
 void verbose(bool verbosity);
 bool is_verbose();
-

@@ -176,6 +176,29 @@ int comp_servers(server *serv1, server *serv2){
     return 1;
 }
 
+server *copy_server(server *serv1, server *serv2){
+    server *serv_new = NULL;
+
+    if(serv1 == NULL){
+        serv_new = new_server(serv2->name, serv2->ip_addr, serv2->udp_port, serv2->tcp_port);
+    } 
+    else{
+        if ( NULL == memcpy(serv1->name, serv2->name, strlen(serv2->name)+1) ){
+            if ( true == is_verbose() ) printf( KRED "error copying name to server struct" KNRM );
+            return NULL; //EXIT_FAILURE
+        }
+        if ( NULL == memcpy(serv1->ip_addr, serv2->ip_addr, strlen(serv2->ip_addr)+1) ){
+            if ( true == is_verbose() ) printf( KRED "error copying ip address to server struct" KNRM );
+            return NULL; //EXIT_FAILURE
+        }
+        serv1->udp_port = serv2->udp_port;
+        serv1->tcp_port = serv2->tcp_port;
+        serv_new = serv1;
+    }
+    
+    return serv_new; //EXIT
+}
+
 char *get_name(server *this) {
     return this->name;
 }
