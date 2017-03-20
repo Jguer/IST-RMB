@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
     fd_set rfds;
     uint_fast8_t err = EXIT_SUCCESS;
     uint_fast8_t max_fd = -1; // Max fd number.    
+
     bool server_not_answering = false;
     server *old_server = NULL;
     uint_fast8_t ban_counter = 0;

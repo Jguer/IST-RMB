@@ -256,8 +256,6 @@ uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, 
                         set_fd( (server *)get_node_item(aux_node), -1 );
                         set_connected((server *)get_node_item(aux_node), 0);
                     }
-
-                    //save all messages from him, which are valid
                 }
             }
         }
