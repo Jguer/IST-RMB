@@ -1,5 +1,6 @@
 #include <time.h>
 #include <errno.h>
+#include <sys/timerfd.h>
 
 #include "message.h"
 
@@ -52,7 +53,7 @@ int main(int argc, char *argv[]) {
     char input_buffer[STRING_SIZE];
 
     uint_fast8_t exit_code = EXIT_SUCCESS;
-    uint_fast8_t err = EXIT_SUCCESS;
+    int_fast8_t err = EXIT_SUCCESS;
 
     int_fast32_t outgoing_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (-1 == outgoing_fd) {
@@ -67,6 +68,8 @@ int main(int argc, char *argv[]) {
         freeaddrinfo(id_server);
         return EXIT_FAILURE;
     }
+
+    int_fast32_t timer_fd = -1;
 
     struct sockaddr_in serveraddr;
     bzero((void*)&serveraddr,
@@ -102,12 +105,34 @@ int main(int argc, char *argv[]) {
         fprintf(stdout, KGRN "Prompt > " KNRM);
         fflush(stdout);
     }
+    
+    struct itimerspec new_timer = {{SERVER_TEST_TIME,0}, {SERVER_TEST_TIME,0}};
+    
+    /* Start Timer */
+    timer_fd = timerfd_create (CLOCK_MONOTONIC, TFD_NONBLOCK);
+    if (timer_fd == -1) {
+        printf(KRED "Unable to create timer.\n" KNRM);
+    }
+
+    err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
+    if (-1 == err) {
+        printf(KRED "Unable to set timer\n" KNRM);
+        exit_code = EXIT_FAILURE;
+        goto PROGRAM_EXIT;
+    }
+
+    bool test_server = false;
+    bool last_test_server = false;
 
     // Interactive loop
     while (true) {
         FD_ZERO(&rfds);
         FD_SET(STDIN_FILENO, &rfds);
         FD_SET(binded_fd, &rfds);
+        FD_SET(timer_fd, &rfds);
+
+        max_fd = binded_fd > max_fd ? binded_fd : max_fd;
+        max_fd = timer_fd > max_fd ? timer_fd : max_fd;
 
         if (NULL == sel_server || err ) {
             fprintf(stderr, KYEL "No servers available. Sleeping 3s\n" KNRM);
@@ -128,6 +153,21 @@ int main(int argc, char *argv[]) {
             printf("error on select\n%d\n", errno);
             exit_code = EXIT_FAILURE;
             goto PROGRAM_EXIT;
+        }
+        
+        if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
+            if( test_server && last_test_server){
+                sel_server = NULL;
+                test_server = false;
+                last_test_server = false;
+                printf(KYEL "Can't obtain answer from server\n" KNRM);
+                fflush(stdout);
+            }
+            else if ( test_server && !last_test_server ){
+                last_test_server = true;
+            }
+            timerfd_settime (timer_fd, 0, &new_timer, NULL);
+            continue;
         }
 
         if (FD_ISSET(binded_fd, &rfds)) { //UDP receive
@@ -155,11 +195,18 @@ int main(int argc, char *argv[]) {
             }
             sscanf(response_buffer, "%s\n" , op);
             if(0 == strcmp(op, "MESSAGES")){
-                printf("Last %zu messages:\n", msg_num);
-                printf("%s",&response_buffer[10]);
-                fflush(stdout);
+                if( false == test_server ){
+                    printf("Last %zu messages:\n", msg_num);
+                    printf("%s",&response_buffer[10]);
+                    fflush(stdout);
+                }
+                else{
+                    test_server = false;
+                    goto UDP_TEST_END;
+                }
             }
             else{
+                test_server = true;
                 sel_server = NULL;
             }
 
@@ -167,7 +214,7 @@ UDP_END:
             fprintf(stdout, KGRN "Prompt > " KNRM);
             fflush(stdout);
         }
-
+UDP_TEST_END:
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
             scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
 
@@ -179,6 +226,9 @@ UDP_END:
                     continue;
                 }
                 err = publish(binded_fd, sel_server, input_buffer);
+                err = ask_for_messages(binded_fd, sel_server, 5);
+                test_server = true;
+
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 msg_num = atoi(input_buffer);
                 if( 0 < msg_num){

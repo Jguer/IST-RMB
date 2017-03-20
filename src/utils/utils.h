@@ -29,6 +29,8 @@
 #define STRING_SIZE 512
 #define RESPONSE_SIZE 512
 
+#define SERVER_TEST_TIME 3
+
 typedef void *item;
 
 /* UTILS */

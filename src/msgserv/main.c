@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
 
                     err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
                     if (-1 == err) {
-                        if ( _VERBOSE_TEST ) printf(KRED "Unable to set timer\n" KNRM);
+                        printf(KRED "Unable to set timer\n" KNRM);
                         exit_code = EXIT_FAILURE;
                         goto PROGRAM_EXIT;
                     }
