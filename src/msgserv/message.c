@@ -42,7 +42,7 @@ uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
         memory_error("unable to allocate response while sharing last message");
         return EXIT_FAILURE;
     }
-    snprintf(response_buffer, STRING_SIZE * 2, "%s\n%d;%s\n",
+    snprintf(response_buffer, STRING_SIZE * 2, "%s\n%d;%s",
             SMESSAGE_CODE, get_lc(get_element(msg_matrix, get_size(msg_matrix) - 1)),
             get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
@@ -57,7 +57,8 @@ uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
             nleft = strlen(ptr);
             while(0 < nleft) {
                 nwritten = write(processing_fd,ptr + nwritten ,nleft - nwritten);
-                if(0 >= nwritten) {
+                nleft = nleft - nwritten;
+                if(-1 == nwritten) {
                     if ( _VERBOSE_TEST ) printf("error sending communication TCP\n");
                     close(processing_fd);
                     set_fd((server *)get_node_item(aux_node), -1 );
@@ -219,7 +220,10 @@ uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, 
                 }
 
                 p = strtok(buffer, "\n");
-                strncpy(op, p, STRING_SIZE);
+                if( NULL != p )strncpy(op, p, STRING_SIZE);
+                else{
+                	bzero(op, STRING_SIZE);
+                }
 
                 if (0 == strcmp("SGET_MESSAGES", op)) {
                     printf( KGRN "JUST To know he sent %s\n" KNRM, op);
