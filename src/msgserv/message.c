@@ -10,7 +10,7 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     }
 
     char* to_append = get_first_n_messages(msg_matrix, get_capacity(msg_matrix));
-    int nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n%s", MESSAGE_CODE, to_append);
+    int nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n%s", SMESSAGE_CODE, to_append);
     free(to_append);
 
     char *ptr = response_buffer;
@@ -62,6 +62,7 @@ uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
                     close(processing_fd);
                     set_fd((server *)get_node_item(aux_node), -1 );
                     set_connected((server *)get_node_item(aux_node), 0);
+                    return 1;
                 } //error
             }
         }
@@ -154,7 +155,7 @@ uint_fast8_t parse_messages(char *buffer, matrix msg_matrix) {
     char *separated_info;
     int sscanf_state = 0;
 
-    strtok(buffer, "\n"); //Gets the first info, stoping at newline
+    //strtok(buffer, "\n"); //Gets the first info, stoping at newline
     separated_info = strtok(NULL, "\n");
 
     while (separated_info) { //Proceeds getting info and treating
@@ -168,6 +169,7 @@ uint_fast8_t parse_messages(char *buffer, matrix msg_matrix) {
         if (lc > g_lc) {
             g_lc = lc ++;
         }
+        strncat(msg, "\n" ,STRING_SIZE);
         add_element(msg_matrix, get_size(msg_matrix), (item)new_message(lc, msg), free_message);
 
         separated_info = strtok(NULL, "\n");//Gets new info
@@ -183,7 +185,7 @@ uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, 
     int nread = 0;
     uint_fast8_t err = 0;
 
-    buffer = (char *)malloc(STRING_SIZE * (get_capacity(msg_matrix) + 5));
+    buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (get_capacity(msg_matrix) + 5));
     if (!buffer) {
         memory_error("tcp_fd_handle");
         return 1;
@@ -201,16 +203,21 @@ uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, 
 
             if ((*STAT_FD)(processing_fd, rfds)) {
 
+            	bzero(buffer,sizeof(char) * STRING_SIZE * (get_capacity(msg_matrix) + 5));
+
                 while (nread != -1) {
-                    nread = recv(processing_fd,buffer,RESPONSE_SIZE - 1, MSG_DONTWAIT);
+                	char micro_buffer[STRING_SIZE] = {'\0'};
+                	nread = recv(processing_fd,micro_buffer,RESPONSE_SIZE - 1, MSG_DONTWAIT);
                     if (0 == nread) {
                         close(processing_fd);
                         set_fd( (server *)get_node_item(aux_node), -1 );
                         set_connected((server *)get_node_item(aux_node), 0);
-                        return 1;
+                        break;
                     }
-                    printf("JUST To know he sent %s\n", buffer);
+					printf("JUST To know he sent %s\n", micro_buffer);
+					strncat(buffer, micro_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 5));
                 }
+
                 p = strtok(buffer, "\n");
                 strncpy(op, p, STRING_SIZE);
 
@@ -226,7 +233,7 @@ uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, 
                     //Send all my messages
 
                 } else if (0 == strcmp("SMESSAGES", op) ) {
-                    printf("JUST To know he sent %s, with %s\n", op, buffer);
+                    printf("JUST To know he sent %s\n", op);
                     fflush( stdout );
 
                     err = parse_messages(buffer, msg_matrix);
@@ -237,8 +244,6 @@ uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, 
                     }
 
                     //save all messages from him, which are valid
-                } else {
-                    if ( _VERBOSE_TEST ) fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
                 }
             }
         }

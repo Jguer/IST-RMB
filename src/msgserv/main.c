@@ -216,7 +216,7 @@ int main(int argc, char *argv[]) {
                         return EXIT_FAILURE;
                     }
 
-                    if (0 != join_to_old_servers(msgservers_lst, host, m)) {
+                    if (0 != join_to_old_servers(msgservers_lst, host)) {
                         exit_code = EXIT_FAILURE;
                         goto PROGRAM_EXIT;
                     }

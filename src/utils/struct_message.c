@@ -31,8 +31,10 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
 				if (!get_element(msg_matrix, j)) {
 					break;
 				}
-				strncat(to_return, get_string(get_element(msg_matrix, j)), STRING_SIZE * n);
-				strncat(to_return, "\n",STRING_SIZE * n);
+				char to_append[STRING_SIZE * 2] = {'\0'};
+				snprintf(to_append, STRING_SIZE * 2 ,"%d;%s",get_lc(get_element(msg_matrix, j)),
+						get_string(get_element(msg_matrix, j)) );
+				strncat(to_return, to_append, STRING_SIZE * n);
 			}
     	}
 
@@ -40,8 +42,10 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
 			if (!get_element(msg_matrix, i)) {
 				break;
 			}
-            strncat(to_return, get_string(get_element(msg_matrix, i)), STRING_SIZE * n);
-            strncat(to_return, "\n",STRING_SIZE * n);
+			char to_append[STRING_SIZE * 2] = {'\0'};
+			snprintf(to_append, STRING_SIZE * 2 ,"%d;%s",get_lc(get_element(msg_matrix, i)),
+					get_string(get_element(msg_matrix, i)) );
+			strncat(to_return, to_append, STRING_SIZE * n);
 		}
     }
     else {
@@ -49,8 +53,10 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
 			if (!get_element(msg_matrix, i)) {
 				break;
 			}
-			strncat(to_return, get_string(get_element(msg_matrix, i)), STRING_SIZE * n);
-            strncat(to_return, "\n",STRING_SIZE * n);
+			char to_append[STRING_SIZE * 2] = {'\0'};
+			snprintf(to_append, STRING_SIZE * 2 ,"%d;%s",get_lc(get_element(msg_matrix, i)),
+					get_string(get_element(msg_matrix, i)) );
+			strncat(to_return, to_append, STRING_SIZE * n);
 		}
     }
 
