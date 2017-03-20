@@ -110,18 +110,20 @@ int update_reg(int fd, struct addrinfo* id_server_info) {
 
 }
 
-int send_initial_comm(int processing_fd) {
+int send_initial_comm(int processing_fd, int m) {
     int status = 1;
-    if( (unsigned int)send(processing_fd, "SGET_MESSAGES\n", strlen("SGET_MESSAGES\n"), 0) != strlen("SGET_MESSAGES\n") ) {
+    char to_send[STRING_SIZE];
+    sprintf(to_send, "SGET_MESSAGES\n%d", m);
+    if( (unsigned int)send(processing_fd, to_send, strlen(to_send), 0) != strlen("SGET_MESSAGES\n") ) {
 
         if ( _VERBOSE_TEST ) printf("error sending initial communication\n");
         status = 0;
     }
 
-    return ( status ? processing_fd : (-1) );
+    return ( (0 == status) ? processing_fd : (-1) );
 }
 
-int connect_to_old_server( server *old_server, bool is_comm_sent ) {
+int connect_to_old_server( server *old_server, bool is_comm_sent, int m ) {
     int processing_fd;
     int status = 1; //false
 
@@ -159,7 +161,7 @@ int connect_to_old_server( server *old_server, bool is_comm_sent ) {
         else if ( false == is_comm_sent ) {                            //Connect returns success
             //Send message like SGET_MESSAGES to request messages
             printf(KGRN "Sending new connection to:"KNRM"%s\n", get_name( old_server ) );
-            processing_fd = send_initial_comm( processing_fd );
+            processing_fd = send_initial_comm( processing_fd , m);
             if ( processing_fd == -1) status = 1; //false
             else{
                 status = 0; //true
@@ -175,7 +177,7 @@ int connect_to_old_server( server *old_server, bool is_comm_sent ) {
 
 }
 
-int join_to_old_servers( list *msgservers_list , server *host ) {
+int join_to_old_servers( list *msgservers_list , server *host, int m ) {
     bool is_comm_sent = false;
     node *aux_node = NULL;
 
@@ -185,7 +187,7 @@ int join_to_old_servers( list *msgservers_list , server *host ) {
 
         if ( 0 != comp_servers( (server *)get_node_item(aux_node), host ) ){
 
-            int status_check = connect_to_old_server( (server *)get_node_item(aux_node), is_comm_sent );
+            int status_check = connect_to_old_server( (server *)get_node_item(aux_node), is_comm_sent, m );
             if (0 == status_check) is_comm_sent = true;
             else if (1 == status_check) is_comm_sent = false;
             else{

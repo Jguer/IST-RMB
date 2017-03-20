@@ -17,6 +17,7 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     int nleft = nbytes;
     while(0 < nleft) {
         nwritten = write(fd,ptr + nwritten, nleft - nwritten);
+        nleft = nleft - nwritten;
         if(nwritten <= 0) {//error
             exit_code = 1;
             break;
@@ -176,9 +177,9 @@ uint_fast8_t parse_messages(char *buffer, matrix msg_matrix) {
 }
 
 uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, int (*STAT_FD)(int, fd_set *)) {
-    char *buffer;
+    char *buffer = NULL;
     char op[STRING_SIZE];
-    char *p;
+    char *p = NULL;
     int nread = 0;
     uint_fast8_t err = 0;
 
@@ -200,9 +201,9 @@ uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, 
 
             if ((*STAT_FD)(processing_fd, rfds)) {
 
-                while (nread != 0) {
-                    nread = recv(processing_fd,buffer,RESPONSE_SIZE - 1, MSG_WAITALL);
-                    if (-1 == nread) {
+                while (nread != -1) {
+                    nread = recv(processing_fd,buffer,RESPONSE_SIZE - 1, MSG_DONTWAIT);
+                    if (0 == nread) {
                         close(processing_fd);
                         set_fd( (server *)get_node_item(aux_node), -1 );
                         set_connected((server *)get_node_item(aux_node), 0);

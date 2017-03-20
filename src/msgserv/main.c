@@ -216,7 +216,7 @@ int main(int argc, char *argv[]) {
                         return EXIT_FAILURE;
                     }
 
-                    if (0 != join_to_old_servers(msgservers_lst, host)) {
+                    if (0 != join_to_old_servers(msgservers_lst, host, m)) {
                         exit_code = EXIT_FAILURE;
                         goto PROGRAM_EXIT;
                     }
@@ -247,6 +247,7 @@ int main(int argc, char *argv[]) {
                 share_last_message(msgservers_lst, msg_matrix);
             }
         }
+
         tcp_fd_handle(msgservers_lst, msg_matrix, &rfds, is_fd_set); //TCP already started comunications handling
     }
 
