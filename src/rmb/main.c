@@ -44,27 +44,25 @@ int main(int argc, char *argv[]) {
 
     fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%s\n", server_ip, server_port);
     struct addrinfo *id_server = get_server_address(server_ip, server_port);
-    if (NULL == id_server) {
+    if (!id_server) {
         fprintf(stderr, KRED "Unable to parse id server address from:\n %s:%s", server_ip, server_port);
         return EXIT_FAILURE;
     }
 
-    int_fast32_t outgoing_fd = -1;
-    int_fast32_t binded_fd = -1;
-    int_fast32_t timer_fd = -1;
-    list *msgservers_lst;
+    struct sockaddr_in server_addr = { 0 , .sin_port = 0};
+    int_fast32_t outgoing_fd = -1, binded_fd = -1, timer_fd = -1, read_size = 0;
+    uint_fast32_t to_alloc = 0, msg_num = 0;
+
+    list msgservers_lst = NULL;
     server *sel_server;
 
-    struct sockaddr_in server_addr = { 0 , .sin_port = 0};
     socklen_t addr_len;
-    uint_fast32_t to_alloc;
-    int read_size;
     struct itimerspec new_timer = {
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC},   //Interval of time
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC}    //Stop time
         };
 
-    uint_fast8_t exit_code = EXIT_SUCCESS;
+    uint_fast8_t exit_code = EXIT_SUCCESS, err = EXIT_SUCCESS, max_fd = -1, ban_counter = 0;
 
     if (1 == init_program(id_server, &outgoing_fd,
                 &binded_fd, &msgservers_lst, &sel_server,
@@ -73,17 +71,10 @@ int main(int argc, char *argv[]) {
         goto PROGRAM_EXIT_INIT;
     }
 
-    char *response_buffer;
     fd_set rfds;
-    uint_fast8_t err = EXIT_SUCCESS;
-    uint_fast8_t max_fd = -1; // Max fd number.    
-
     bool server_not_answering = false;
     server *old_server = NULL;
-    uint_fast8_t ban_counter = 0;
-    uint_fast16_t msg_num = 0; // Number of messages asked
-    char op[STRING_SIZE];
-    char input_buffer[STRING_SIZE];
+    char op[STRING_SIZE], input_buffer[STRING_SIZE], *response_buffer = NULL;
 
     if (sel_server != NULL) {
         fprintf(stdout, KGRN "Prompt > " KNRM);
@@ -93,8 +84,8 @@ int main(int argc, char *argv[]) {
     // Interactive loop
     while (true) {
         FD_ZERO(&rfds);
-        FD_SET(STDIN_FILENO, &rfds);
         FD_SET(binded_fd, &rfds);
+        FD_SET(STDIN_FILENO, &rfds);
         FD_SET(timer_fd, &rfds);
 
         max_fd = binded_fd > max_fd ? binded_fd : max_fd;
@@ -174,7 +165,9 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            bzero(response_buffer, to_alloc);
+            if (response_buffer) {
+                bzero(response_buffer, to_alloc);
+            }
 
             read_size = recvfrom(binded_fd, response_buffer, sizeof(char)*to_alloc, 0,
                     (struct sockaddr *)&server_addr, &addr_len);
@@ -221,7 +214,13 @@ UDP_TEST_END:
                     continue;
                 }
                 err = publish(binded_fd, sel_server, input_buffer);
+                if (err) {
+                    fprintf(stderr, KRED "Publish error\n" KNRM);
+                }
                 err = ask_for_messages(binded_fd, sel_server, 0);
+                if (err) {
+                    fprintf(stderr, KRED "Ask for messages error\n" KNRM);
+                }
                 ask_server_test();
 
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
@@ -233,7 +232,6 @@ UDP_TEST_END:
                 }
                 else {
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
-                    msg_num_test = 0;
                 }
             } else if (0 == strcasecmp("exit", op) || 0 == strcmp("3", op)) {
                 exit_code = EXIT_SUCCESS;

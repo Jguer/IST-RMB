@@ -1,6 +1,5 @@
 #include <errno.h>
 #include <sys/timerfd.h>
-
 #include "identity.h"
 #include "message.h"
 
@@ -54,7 +53,7 @@ int main(int argc, char *argv[]) {
 
     int read_size;
     int err = 1;
-    list *msgservers_lst = NULL;
+    list msgservers_lst = NULL;
     struct addrinfo *id_server;
 
     srand(time(NULL));
@@ -62,11 +61,14 @@ int main(int argc, char *argv[]) {
     while ((oc = getopt(argc, argv, "n:j:u:t:i:p:m:r:h:v")) != -1) { //Command-line args parsing, 'i' and 'p' args required for both
         switch (oc) {
             case 'n':
-                name = (char *)malloc(strlen(optarg) + 1);
+                /* name = (char *)malloc(strlen(optarg) + 1); */
+                name = (char *)alloca(strlen(optarg) +1);
+
                 strncpy(name, optarg, strlen(optarg) + 1); //optarg has the string corresponding to oc value
                 break;
             case 'j':
-                ip = (char *)malloc(strlen(optarg) + 1);
+                /* ip = (char *)malloc(strlen(optarg) + 1); */
+                ip = (char *)alloca(strlen(optarg) +1);
                 strncpy(ip, optarg, strlen(optarg) + 1);
                 break;
             case 'u':
@@ -213,7 +215,7 @@ int main(int argc, char *argv[]) {
 
                     //Get the message servers list
                     msgservers_lst = fetch_servers(udp_register_fd, id_server);
-                    node *head = get_head(msgservers_lst);
+                    node head = get_head(msgservers_lst);
                     if (NULL == head) {
                         if ( _VERBOSE_TEST ) printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
                         return EXIT_FAILURE;
@@ -256,8 +258,6 @@ int main(int argc, char *argv[]) {
     }
 
 PROGRAM_EXIT:
-    free(name);
-    free(ip);
     return exit_code;
 }
 

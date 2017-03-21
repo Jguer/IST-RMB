@@ -28,8 +28,8 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     return exit_code;
 }
 
-uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
-    node *aux_node;
+uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
+    node aux_node;
     int processing_fd;
     uint_fast8_t exit_code = 0;
     char *response_buffer, *ptr = NULL;
@@ -37,7 +37,7 @@ uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
 
     printf(KCYN "\n Sharing last message %s \n" KNRM, get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
-    response_buffer = (char *)calloc(2, STRING_SIZE);
+    response_buffer = (char *)alloca(2 * STRING_SIZE);
     if (NULL == response_buffer) {
         memory_error("unable to allocate response while sharing last message");
         return EXIT_FAILURE;
@@ -69,7 +69,6 @@ uint_fast8_t share_last_message(list *servers_list, matrix msg_matrix) {
         }
     }
 
-    free(response_buffer);
     return exit_code;
 }
 
@@ -92,7 +91,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     if (NULL != to_append) {
         response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
         snprintf(response_buffer, STRING_SIZE * (num + 1), "%s\n%s", "MESSAGES", to_append);
-        
+
         int read_size = sendto(fd, response_buffer, strlen(response_buffer), 0,
                 address, addrlen);
 
@@ -110,7 +109,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
         if (-1 == read_size) {
             if (_VERBOSE_TEST) printf("error sending communication UDP\n");
             exit_code = 1;
-        }   
+        }
     }
 
     return exit_code;
@@ -129,7 +128,7 @@ uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
     char input_buffer[STRING_SIZE];
     uint_fast8_t err = 0;
 
-    struct sockaddr_in receive_address = { 0 };
+    struct sockaddr_in receive_address = { 0, .sin_port = 0 };
     uint_fast16_t addrlen = sizeof(receive_address);
 
     memset(buffer, '\0', sizeof(char) * STRING_SIZE);
@@ -189,7 +188,7 @@ uint_fast8_t parse_messages(char *buffer, matrix msg_matrix) {
     return 0;
 }
 
-uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, int (*STAT_FD)(int, fd_set *)) {
+uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, int (*STAT_FD)(int, fd_set *)) {
     char *buffer = NULL;
     char op[STRING_SIZE];
     char *p = NULL;
@@ -203,7 +202,7 @@ uint_fast8_t tcp_fd_handle(list *servers_list, matrix msg_matrix, fd_set *rfds, 
     }
 
     if (NULL != servers_list) { //TCP sockets already connected handling
-        node *aux_node;
+        node aux_node;
         for (aux_node = get_head(servers_list);
                 aux_node != NULL ;
                 aux_node = get_next_node(aux_node)) {

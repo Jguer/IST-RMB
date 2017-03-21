@@ -1,3 +1,4 @@
+#pragma once
 /*! \file rmb/message.h
  * \brief Outbound communication with message server.
  */
@@ -5,18 +6,18 @@
 #include "../utils/utils.h"
 #include "../utils/struct_server.h"
 
-/*! \fn server *select_server(list *server_list);
+/*! \fn server *select_server(list server_list);
   \brief select_server returns a pointer to a random server in server_list.
   \param server_list List containing server information.
   */
-server *select_server(list *server_list);
+server *select_server(list server_list);
 
-/*!\fn void rem_awol_server(list *server_list, server* awol_server);
+/*!\fn void rem_awol_server(list server_list, server* awol_server);
   \brief removes from the list the server on awol_server
   \param server_list List containing server information.
   \param awol_server Server that is disconnected
 */
-void rem_awol_server(list *server_list, server* awol_server);
+void rem_awol_server(list server_list, server* awol_server);
 
 /*!\fn publish(int fd, server *sel_server, char *msg)
   \brief publish sends a msg with 140 characters max to sel_server.

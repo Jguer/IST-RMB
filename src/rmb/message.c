@@ -6,14 +6,12 @@
 
 static uint_fast16_t _size_to_alloc = RESPONSE_SIZE;
 static char *_response_buffer = NULL;
-static bool _test_server = false;
-static bool _last_test_server = false;
-static bool _testing_with_results = true;
+static bool _test_server = false, _last_test_server = false, _testing_with_results = true;
 
 // select_server returns a pointer to a random server in $(server_list).
-server *select_server(list *server_list) {
-    node *head = get_head(server_list);
-    if (NULL == head) {
+server *select_server(list server_list) {
+    node head = get_head(server_list);
+    if (!head) {
         return NULL;
     }
 
@@ -26,26 +24,18 @@ server *select_server(list *server_list) {
     return (server *)get_node_item(head);
 }
 
-void rem_awol_server(list *server_list, server* awol_server){
-    if(server_list != NULL){ //Add child sockets to the socket set
-        node *aux_node;
-        if ( NULL != (aux_node = get_head( server_list ) ) ){
-
-            if ( 0 == comp_servers((server *)get_node_item(aux_node),awol_server) ){
-                remove_first_node(server_list, free_server);
+void rem_awol_server(list server_list, server* awol_server){
+    if(server_list) { //Add child sockets to the socket set
+        if ((get_head(server_list))){
+            if (!different_servers((server *)get_node_item(get_head(server_list)), awol_server)){
+                remove_head(server_list, free_server);
             }
 
-            for ( aux_node = get_head(server_list);
-            aux_node != NULL ;
-            aux_node = get_next_node(aux_node)) {
-
-                node *next_node;
-
-                if ( NULL != ( next_node = get_next_node(aux_node) ) ){
-                    if ( 0 == comp_servers((server *)get_node_item(next_node),awol_server) ){
-                        remove_next_node(aux_node, next_node, free_server);
-                        dec_size_list(server_list);
-                    }
+            for (node aux_node = get_head(server_list), next_node = get_next_node(get_head(server_list));
+            aux_node != NULL && next_node != NULL;
+            aux_node = next_node, next_node = get_next_node(next_node)) {
+                if (!different_servers((server *)get_node_item(next_node), awol_server)) {
+                    remove_next_node(server_list, aux_node, free_server);
                 }
             }
         }

@@ -177,27 +177,22 @@ int connect_to_old_server( server *old_server, bool is_comm_sent) {
 
 }
 
-int join_to_old_servers( list *msgservers_list , server *host) {
+int join_to_old_servers( list msgservers_list , server *host) {
     bool is_comm_sent = false;
-    node *aux_node = NULL;
+    node aux_node = NULL;
 
-    for ( aux_node = get_head(msgservers_list); //Initialize comms with one new server
+    for (aux_node = get_head(msgservers_list); //Initialize comms with one new server
     aux_node != NULL;
     aux_node = get_next_node(aux_node)) {
-
-        if ( 0 != comp_servers( (server *)get_node_item(aux_node), host ) ){
-
-            int status_check = connect_to_old_server( (server *)get_node_item(aux_node), is_comm_sent);
+        if (different_servers((server *)get_node_item(aux_node), host)) {
+            int status_check = connect_to_old_server((server *)get_node_item(aux_node), is_comm_sent);
             if (0 == status_check) is_comm_sent = true;
             else if (1 == status_check) is_comm_sent = false;
-            else{
-                return -1; //Fatal error
-            }
+            else return -1; //Fatal error
         }
     }
 
-    if (false == is_comm_sent)
-    {
+    if (!is_comm_sent) {
         printf(KYEL "No connectable servers present: " KGRN "Wait mode\n" KNRM );
     }
 
@@ -205,33 +200,31 @@ int join_to_old_servers( list *msgservers_list , server *host) {
 }
 
 
-int remove_bad_servers( list *servers_list, server *host, int max_fd, fd_set *rfds, void (*SET_FD)(int, fd_set *)) {
+int remove_bad_servers(list servers_list, server *host, int max_fd, fd_set *rfds, void (*SET_FD)(int, fd_set *)) {
     if(servers_list != NULL){ //Add child sockets to the socket set
-        node *aux_node;
+        node aux_node;
         if (NULL != (aux_node = get_head( servers_list ))) {
 
-            if (-1 == get_fd((server *)get_node_item(aux_node))){ //1 node erasement
-
-                remove_first_node(servers_list, free_server);
-            } else if (0 == comp_servers((server *)get_node_item(aux_node),host)){
-
-                remove_first_node(servers_list, free_server);
+            if (-1 == get_fd((server *)get_node_item(aux_node))) { //1 node erasement
+                remove_head(servers_list, free_server);
+            } else if (!different_servers((server *)get_node_item(aux_node),host)) {
+                remove_head(servers_list, free_server);
             }
 
-            for ( aux_node = get_head(servers_list);
+            for (aux_node = get_head(servers_list);
             aux_node != NULL ;
             aux_node = get_next_node(aux_node)) {
 
                 int processing_fd;
-                node *next_node;
+                node next_node;
 
-                if (NULL != ( next_node = get_next_node(aux_node))) {
-                    if (-1 == get_fd( (server *)get_node_item(next_node))) {
+                if (NULL != (next_node = get_next_node(aux_node))) {
+                    if (-1 == get_fd((server *)get_node_item(next_node))) {
                         //Delete next node
-                        remove_next_node(aux_node, next_node, free_server);
+                        remove_next_node(servers_list, aux_node, free_server);
                         dec_size_list(servers_list);
-                    } else if ( 0 == comp_servers((server *)get_node_item(next_node),host)) {
-                        remove_next_node(aux_node, next_node, free_server);
+                    } else if ( 0 == different_servers((server *)get_node_item(next_node),host)) {
+                        remove_next_node(servers_list, aux_node, free_server);
                         dec_size_list(servers_list);
                     }
                 }
@@ -250,7 +243,7 @@ int remove_bad_servers( list *servers_list, server *host, int max_fd, fd_set *rf
     return max_fd;
 }
 
-int tcp_new_comm( list *servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(int, fd_set *) ){
+int tcp_new_comm(list servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(int, fd_set *) ){
     if ( (*STAT_FD)( listen_fd, rfds ) ) { //if something happens on tcp_listen_fd create and allocate new socket
 
         struct sockaddr_in newserv_info;
@@ -267,10 +260,10 @@ int tcp_new_comm( list *servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD
         }
 
         //add new socket to list of sockets
-        server * newserv = new_server( "MSG Server",inet_ntoa( newserv_info.sin_addr ), 0, ntohs( newserv_info.sin_port ) );
-        set_fd( newserv, newserv_fd );
-        set_connected( newserv, 1 );
-        push_item_to_list( servers_list, newserv );
+        server *newserv = new_server( "MSG Server",inet_ntoa( newserv_info.sin_addr ), 0, ntohs( newserv_info.sin_port ) );
+        set_fd(newserv, newserv_fd);
+        set_connected(newserv, 1);
+        push_item_to_list(servers_list, newserv);
     }
 
     return 0;//everthing is good
