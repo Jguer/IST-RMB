@@ -9,7 +9,7 @@ static char *_response_buffer = NULL;
 static bool _test_server = false, _last_test_server = false, _testing_with_results = true;
 
 // select_server returns a pointer to a random server in $(server_list).
-server *select_server(list server_list) {
+server select_server(list server_list) {
     node head = get_head(server_list);
     if (!head) {
         return NULL;
@@ -21,21 +21,28 @@ server *select_server(list server_list) {
         head = get_next_node(head);
     }
 
-    return (server *)get_node_item(head);
+    return (server)get_node_item(head);
 }
 
-void rem_awol_server(list server_list, server* awol_server){
+void rem_awol_server(list server_list, server awol_server){
     if(server_list) { //Add child sockets to the socket set
-        if ((get_head(server_list))){
-            if (!different_servers((server *)get_node_item(get_head(server_list)), awol_server)){
+        if ((get_head(server_list))) {
+            if (!different_servers((server)get_node_item(get_head(server_list)), awol_server)) {
                 remove_head(server_list, free_server);
+                return;
             }
 
-            for (node aux_node = get_head(server_list), next_node = get_next_node(get_head(server_list));
+            node next_node = get_next_node(get_head(server_list));
+            if (!next_node) {
+                return;
+            }
+
+            for (node aux_node = get_head(server_list);
             aux_node != NULL && next_node != NULL;
             aux_node = next_node, next_node = get_next_node(next_node)) {
-                if (!different_servers((server *)get_node_item(next_node), awol_server)) {
+                if (!different_servers((server )get_node_item(next_node), awol_server)) {
                     remove_next_node(server_list, aux_node, free_server);
+                    return;
                 }
             }
         }
@@ -43,7 +50,7 @@ void rem_awol_server(list server_list, server* awol_server){
 }
 
 // publish sends a $(msg) with 140 characters max to $(sel_server).
-int publish(int fd, server *sel_server, char *msg) {
+int publish(int fd, server sel_server, char *msg) {
     ssize_t n = 0;
 
     struct sockaddr_in server_addr = { 0 , .sin_port = 0};
@@ -73,7 +80,7 @@ int publish(int fd, server *sel_server, char *msg) {
 }
 
 // ask_for_messages sends a UDP request to $(sel_server) for the last $(num) messages.
-int ask_for_messages(int fd, server *sel_server, int num) {
+int ask_for_messages(int fd, server sel_server, int num) {
     ssize_t n = 0;
     uint_fast16_t real_msg_num = ( 0 != num ? num : 1 ); //Exception for server test
     _testing_with_results = ( 0 != num ? true : false );
@@ -133,8 +140,8 @@ int handle_incoming_messages(int fd, uint num){
 
     int size_of_read = 0;
     sscanf(_response_buffer, "%s\n%n" , op, &size_of_read);
-    if(0 == strcmp(op, "MESSAGES")){
-        if( true == _testing_with_results ){
+    if (0 == strcmp(op, "MESSAGES")) {
+        if(true == _testing_with_results) {
             printf("Last %d messages:\n", num);
             printf("%s",&_response_buffer[9]);
             fflush(stdout);
@@ -153,29 +160,28 @@ int handle_incoming_messages(int fd, uint num){
 }
 
 
-void free_incoming_messages(){
-
-    if (NULL != _response_buffer){
+void free_incoming_messages() {
+    if (NULL != _response_buffer) {
         free(_response_buffer);
     }
     return;
 }
 
-void ask_server_test(){
+void ask_server_test() {
     _test_server = true;
 }
 
-int exec_server_test(){
-    if( _test_server && _last_test_server){
+int exec_server_test() {
+    if( _test_server && _last_test_server) {
     _test_server = false;
     _last_test_server = false;
     return 1;
     }
-    else if ( _test_server && !_last_test_server ){
+    else if (_test_server && !_last_test_server) {
         _last_test_server = true;
         return 2;
     }
-    else{
+    else {
         _test_server = false;
         _last_test_server = false;
         return 0;

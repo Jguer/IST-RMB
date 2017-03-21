@@ -2,15 +2,14 @@
 
 static char REG_MESSAGE[RESPONSE_SIZE];
 
-int init_tcp(server *host) {
+int init_tcp(server host) {
 	int master_fd;
 	struct sockaddr_in tcpaddr;
 	void (*old_handler)(int);   //interrupt handler
 
 	master_fd = socket(AF_INET, SOCK_STREAM, 0);  //Create master socket
-    if (master_fd==-1)
-	{
-		if ( _VERBOSE_TEST ) printf( KRED "error creating socket\n" KNRM );
+    if (master_fd == -1) {
+		if (_VERBOSE_TEST) printf( KRED "error creating socket\n" KNRM );
 		return -1;
 	}
 
@@ -21,21 +20,20 @@ int init_tcp(server *host) {
     tcpaddr.sin_addr.s_addr = inet_addr(get_ip_address(host));
     tcpaddr.sin_port = htons(get_tcp_port(host));
 
-    if ( 0 != bind(master_fd, (struct sockaddr*)&tcpaddr,
-            sizeof(tcpaddr)) ){ //Bind socket to the PORT_TCP defined
+    if (0 != bind(master_fd, (struct sockaddr*)&tcpaddr,
+            sizeof(tcpaddr))) { //Bind socket to the PORT_TCP defined
 
-        if ( _VERBOSE_TEST ) printf(KRED "error bind failed\n" KNRM);
+        if (_VERBOSE_TEST) printf(KRED "error bind failed\n" KNRM);
         return -1;
     }
 
-    if ( -1 == listen(master_fd, MAX_PENDING) ){ //Specify MAX_PENDING connections to master socket
-    	if ( _VERBOSE_TEST ) printf(KRED "error on setting listen\n" KNRM);
+    if (-1 == listen(master_fd, MAX_PENDING)) { //Specify MAX_PENDING connections to master socket
+    	if (_VERBOSE_TEST) printf(KRED "error on setting listen\n" KNRM);
     	return -1;
     }
 
-    if ( (old_handler=signal(SIGPIPE,SIG_IGN))==SIG_ERR ) {
-
-        if ( _VERBOSE_TEST ) printf(KRED "error protecting from SIGPIPE\n" KNRM);
+    if ((old_handler=signal(SIGPIPE,SIG_IGN)) == SIG_ERR) {
+        if (_VERBOSE_TEST) printf(KRED "error protecting from SIGPIPE\n" KNRM);
         return -1;
     }
 
@@ -43,12 +41,12 @@ int init_tcp(server *host) {
 
 }
 
-int init_udp(server *host) {
+int init_udp(server host) {
     int u_fd;
     struct sockaddr_in udpaddr;
 
     u_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (u_fd==-1){
+    if (u_fd==-1) {
 
         if ( _VERBOSE_TEST ) printf( KRED "error creating socket\n" KNRM);
         return -1;
@@ -61,8 +59,8 @@ int init_udp(server *host) {
     udpaddr.sin_addr.s_addr = inet_addr(get_ip_address(host));
     udpaddr.sin_port = htons(get_udp_port(host));
 
-    if ( 0 != bind(u_fd, (struct sockaddr*)&udpaddr,
-            sizeof(udpaddr)) ){
+    if (0 != bind(u_fd, (struct sockaddr*)&udpaddr,
+            sizeof(udpaddr))) {
 
         if ( _VERBOSE_TEST ) printf( KRED "error bind failed\n" KNRM);
         return -1;
@@ -71,14 +69,14 @@ int init_udp(server *host) {
     return u_fd;
 }
 
-struct addrinfo *reg_server(int *fd, server *host ,char *ip_name, char *udp_port) {
+struct addrinfo *reg_server(int *fd, server host ,char *ip_name, char *udp_port) {
     struct addrinfo *id_server_info = get_server_address(ip_name, udp_port);
     int n;
     int local_fd;
 
     if(id_server_info == NULL) return NULL;
 
-    local_fd = socket( AF_INET, SOCK_DGRAM, 0);
+    local_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if(local_fd <= 0){
         if ( _VERBOSE_TEST ) printf(KRED "error creating udp socket for registry\n" KNRM);
         return NULL;
@@ -123,10 +121,9 @@ int send_initial_comm(int processing_fd) {
     return ( (1 == status) ? processing_fd : (-1) );
 }
 
-int connect_to_old_server( server *old_server, bool is_comm_sent) {
+int connect_to_old_server( server old_server, bool is_comm_sent) {
     int processing_fd;
     int status = 1; //false
-
 
     if ( -2 == get_fd( old_server ) ){
         // create new comunication
@@ -177,15 +174,15 @@ int connect_to_old_server( server *old_server, bool is_comm_sent) {
 
 }
 
-int join_to_old_servers( list msgservers_list , server *host) {
+int join_to_old_servers( list msgservers_list , server host) {
     bool is_comm_sent = false;
     node aux_node = NULL;
 
     for (aux_node = get_head(msgservers_list); //Initialize comms with one new server
     aux_node != NULL;
     aux_node = get_next_node(aux_node)) {
-        if (different_servers((server *)get_node_item(aux_node), host)) {
-            int status_check = connect_to_old_server((server *)get_node_item(aux_node), is_comm_sent);
+        if (different_servers((server )get_node_item(aux_node), host)) {
+            int status_check = connect_to_old_server((server )get_node_item(aux_node), is_comm_sent);
             if (0 == status_check) is_comm_sent = true;
             else if (1 == status_check) is_comm_sent = false;
             else return -1; //Fatal error
@@ -200,14 +197,14 @@ int join_to_old_servers( list msgservers_list , server *host) {
 }
 
 
-int remove_bad_servers(list servers_list, server *host, int max_fd, fd_set *rfds, void (*SET_FD)(int, fd_set *)) {
+int remove_bad_servers(list servers_list, server host, int max_fd, fd_set *rfds, void (*SET_FD)(int, fd_set *)) {
     if(servers_list != NULL){ //Add child sockets to the socket set
         node aux_node;
         if (NULL != (aux_node = get_head( servers_list ))) {
 
-            if (-1 == get_fd((server *)get_node_item(aux_node))) { //1 node erasement
+            if (-1 == get_fd((server )get_node_item(aux_node))) { //1 node erasement
                 remove_head(servers_list, free_server);
-            } else if (!different_servers((server *)get_node_item(aux_node),host)) {
+            } else if (!different_servers((server )get_node_item(aux_node),host)) {
                 remove_head(servers_list, free_server);
             }
 
@@ -219,17 +216,17 @@ int remove_bad_servers(list servers_list, server *host, int max_fd, fd_set *rfds
                 node next_node;
 
                 if (NULL != (next_node = get_next_node(aux_node))) {
-                    if (-1 == get_fd((server *)get_node_item(next_node))) {
+                    if (-1 == get_fd((server )get_node_item(next_node))) {
                         //Delete next node
                         remove_next_node(servers_list, aux_node, free_server);
                         dec_size_list(servers_list);
-                    } else if ( 0 == different_servers((server *)get_node_item(next_node),host)) {
+                    } else if ( 0 == different_servers((server )get_node_item(next_node),host)) {
                         remove_next_node(servers_list, aux_node, free_server);
                         dec_size_list(servers_list);
                     }
                 }
 
-                processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+                processing_fd = get_fd((server )get_node_item(aux_node)); //file descriptor/socket
 
                 //if the socket is valid then add to the read list
                 if(0 < processing_fd) (*SET_FD)(processing_fd, rfds);
@@ -260,7 +257,7 @@ int tcp_new_comm(list servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(
         }
 
         //add new socket to list of sockets
-        server *newserv = new_server( "MSG Server",inet_ntoa( newserv_info.sin_addr ), 0, ntohs( newserv_info.sin_port ) );
+        server newserv = new_server( "MSG Server",inet_ntoa(newserv_info.sin_addr), 0, ntohs( newserv_info.sin_port ) );
         set_fd(newserv, newserv_fd);
         set_connected(newserv, 1);
         push_item_to_list(servers_list, newserv);

@@ -8,7 +8,7 @@
 #include "../utils/utils.h"
 
 /*!\fd int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd,
-	int_fast32_t *binded_fd, list *msgservers_lst,	server **sel_server,
+	int_fast32_t *binded_fd, list *msgservers_lst,	server *sel_server,
 	struct itimerspec *new_timer, int_fast32_t *timer_fd)
 
 	\brief Initiates the program variables
@@ -23,5 +23,5 @@
 
 */
 int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd,
-	int_fast32_t *binded_fd, list *msgservers_lst,	server **sel_server,
+	int_fast32_t *binded_fd, list *msgservers_lst,	server *sel_server,
 	struct itimerspec *new_timer, int_fast32_t *timer_fd);

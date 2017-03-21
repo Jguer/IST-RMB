@@ -162,7 +162,7 @@ void remove_head(list got_list, void (*free_item)(item)) {
     node aux_node = got_list->head;
     got_list->head = aux_node->next;
     free_node(aux_node, free_item);
-    (got_list->size)--;
+    got_list->size--;
     return;
 }
 
@@ -178,7 +178,7 @@ void remove_next_node(list got_list, node cur_node, void (*free_item)(item)){
 
     cur_node->next = aux_node->next;
     free_node(aux_node, free_item);
-    got_list->size --;
+    got_list->size--;
     return;
 }
 

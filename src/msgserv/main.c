@@ -17,15 +17,21 @@ void usage(char* name) {
             "%s", _VERBOSE_OPT_INFO);
 }
 
-void put_fd_set(int fd, fd_set *rfds){
+void put_fd_set(int fd, fd_set *rfds) {
     FD_SET(fd, rfds);
     return;
 }
-int is_fd_set(int fd, fd_set *rfds){
+int is_fd_set(int fd, fd_set *rfds) {
     return FD_ISSET(fd, rfds);
 }
 
+void handle_intsignal(int sig) {
+    signal(sig, SIG_IGN);
+    exit(EXIT_SUCCESS);
+}
+
 int main(int argc, char *argv[]) {
+    signal(SIGINT, handle_intsignal);
     int oc;
     char *name = NULL;
     char *ip = NULL;
@@ -55,15 +61,18 @@ int main(int argc, char *argv[]) {
     int err = 1;
     list msgservers_lst = NULL;
     struct addrinfo *id_server;
+    bool daemon_mode = false;
 
     srand(time(NULL));
     // Treat options
-    while ((oc = getopt(argc, argv, "n:j:u:t:i:p:m:r:h:v")) != -1) { //Command-line args parsing, 'i' and 'p' args required for both
+    while ((oc = getopt(argc, argv, "n:j:u:t:i:p:m:r:hvd")) != -1) { //Command-line args parsing, 'i' and 'p' args required for both
         switch (oc) {
+            case 'd':
+                daemon_mode = true;
+                break;
             case 'n':
                 /* name = (char *)malloc(strlen(optarg) + 1); */
                 name = (char *)alloca(strlen(optarg) +1);
-
                 strncpy(name, optarg, strlen(optarg) + 1); //optarg has the string corresponding to oc value
                 break;
             case 'j':
@@ -118,7 +127,7 @@ int main(int argc, char *argv[]) {
 
 
     struct itimerspec new_timer = {{r,0}, {r,0}};
-    server* host = new_server(name, ip, udp_port, tcp_port); //host parameters
+    server host = new_server(name, ip, udp_port, tcp_port); //host parameters
 
     /* Start Timer */
     timer_fd = timerfd_create (CLOCK_MONOTONIC, TFD_NONBLOCK);
@@ -150,7 +159,7 @@ int main(int argc, char *argv[]) {
 
         //Add tcp_listen_fd, udp_global_fd and stdio to the socket set
         FD_SET(STDIN_FILENO, &rfds);
-        if( is_join_complete ){
+        if (is_join_complete) {
             FD_SET(timer_fd, &rfds);
             FD_SET(udp_global_fd, &rfds);
             FD_SET(tcp_listen_fd, &rfds);
@@ -164,10 +173,13 @@ int main(int argc, char *argv[]) {
         //Removes the bad servers and sets the good in fd_set rfds.
         max_fd = remove_bad_servers(msgservers_lst, host, max_fd, &rfds, put_fd_set);
 
+        if (daemon_mode) {
+            goto JOIN;
+        }
         //wait for one of the descriptors is ready
         int activity = select(max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
-            if ( _VERBOSE_TEST ) printf("error on select\n%d\n", errno);
+            if (_VERBOSE_TEST) printf("error on select\n%d\n", errno);
             exit_code = EXIT_FAILURE;
             goto PROGRAM_EXIT;
         }
@@ -197,6 +209,7 @@ int main(int argc, char *argv[]) {
             //User options input: show_servers, exit, publish message, show_latest_messages n;
             //User options input: show_servers, exit, publish message, show_latest_messages n;
             if (strcasecmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
+JOIN:
                 if (false == is_join_complete) {
                     //Register on idServer
                     id_server = reg_server(&udp_register_fd, host, id_server_ip, id_server_port);
@@ -227,6 +240,7 @@ int main(int argc, char *argv[]) {
                     }
 
                     is_join_complete = true;
+                    daemon_mode = false;
                 }
                 else {
                     printf(KGRN "Already joined!\n" KNRM);

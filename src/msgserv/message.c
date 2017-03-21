@@ -51,7 +51,7 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
                 aux_node != NULL ;
                 aux_node = get_next_node(aux_node)) {
 
-            processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+            processing_fd = get_fd((server )get_node_item(aux_node)); //file descriptor/socket
 
             ptr = response_buffer;
             nleft = strlen(ptr);
@@ -61,8 +61,8 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
                 if(-1 == nwritten) {
                     if ( _VERBOSE_TEST ) printf("error sending communication TCP\n");
                     close(processing_fd);
-                    set_fd((server *)get_node_item(aux_node), -1 );
-                    set_connected((server *)get_node_item(aux_node), 0);
+                    set_fd((server )get_node_item(aux_node), -1 );
+                    set_connected((server )get_node_item(aux_node), 0);
                     return 1;
                 } //error
             }
@@ -209,7 +209,7 @@ uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, i
 
             int processing_fd;
 
-            processing_fd = get_fd((server *)get_node_item(aux_node)); //file descriptor/socket
+            processing_fd = get_fd((server )get_node_item(aux_node)); //file descriptor/socket
 
             if ((*STAT_FD)(processing_fd, rfds)) {
 
@@ -220,8 +220,8 @@ uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, i
                 	nread = recv(processing_fd,micro_buffer,RESPONSE_SIZE - 1, MSG_DONTWAIT);
                     if (0 == nread) {
                         close(processing_fd);
-                        set_fd( (server *)get_node_item(aux_node), -1 );
-                        set_connected((server *)get_node_item(aux_node), 0);
+                        set_fd( (server )get_node_item(aux_node), -1 );
+                        set_connected((server )get_node_item(aux_node), 0);
                         break;
                     }
 					printf("JUST To know he sent %s\n", micro_buffer);
@@ -240,20 +240,20 @@ uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, i
                     fflush( stdout );
                     if (err) {
                         close(processing_fd);
-                        set_fd( (server *)get_node_item(aux_node), -1 );
-                        set_connected((server *)get_node_item(aux_node), 0);
+                        set_fd( (server )get_node_item(aux_node), -1 );
+                        set_connected((server )get_node_item(aux_node), 0);
                     }
                     //Send all my messages
 
                 } else if (0 == strcmp("SMESSAGES", op) ) {
                     printf("JUST To know he sent %s\n", op);
-                    fflush( stdout );
+                    fflush(stdout);
 
                     err = parse_messages(buffer, msg_matrix);
                     if (err) {
                         close(processing_fd);
-                        set_fd( (server *)get_node_item(aux_node), -1 );
-                        set_connected((server *)get_node_item(aux_node), 0);
+                        set_fd((server)get_node_item(aux_node), -1 );
+                        set_connected((server)get_node_item(aux_node), 0);
                     }
                 }
             }

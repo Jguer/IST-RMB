@@ -12,27 +12,27 @@ struct _server {
 };
 
 // GETS {{{
-char *get_name(server *this) {
+char *get_name(server this) {
     return this->name;
 }
 
-char *get_ip_address(server *this) {
+char *get_ip_address(server this) {
     return this->ip_addr;
 }
 
-u_short get_udp_port(server *this) {
+u_short get_udp_port(server this) {
     return this->udp_port;
 }
 
-u_short get_tcp_port(server *this) {
+u_short get_tcp_port(server this) {
     return this->tcp_port;
 }
 
-bool get_connected(server *this) {
+bool get_connected(server this) {
     return this->connected;
 }
 
-int get_fd(server *this){
+int get_fd(server this) {
     return this->fd;
 }
 
@@ -82,14 +82,14 @@ struct addrinfo *get_server_address_tcp(char *server_ip, char *server_port) {
 */
 
 /* Server Functions */
-server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port) {
-	server *pserver_to_node = NULL;
+server new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port) {
+	server pserver_to_node = NULL;
 
-	pserver_to_node = (server *)malloc(sizeof(server));
+	pserver_to_node = (server)malloc(sizeof(struct _server));
     if(!pserver_to_node ) {
         memory_error("Unable to reserve server struct memory");
     }
-   	if(name){
+   	if(name) {
         pserver_to_node->name = (char *)malloc(STRING_SIZE);
         if (!pserver_to_node->name) {
             memory_error("Unable to reserve server name memory");
@@ -101,9 +101,9 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
        	}
     }
 
-	pserver_to_node->ip_addr = (char *)malloc( sizeof(char)*(strlen(ip_addr)+1) );
+	pserver_to_node->ip_addr = (char *)malloc(sizeof(char)*(strlen(ip_addr)+1));
    	if(pserver_to_node->ip_addr == NULL) memory_error("Unable to reserve server ip address memory");
-   	if ( NULL == memcpy(pserver_to_node->ip_addr, ip_addr, strlen(ip_addr)+1) ){
+   	if ( NULL == memcpy(pserver_to_node->ip_addr, ip_addr, strlen(ip_addr)+1)) {
    		if ( true == is_verbose() ) printf( KRED "error copying ip address to server struct" KNRM );
    		return NULL;
    	}
@@ -116,7 +116,7 @@ server *new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port
    	return pserver_to_node;
 }
 
-int different_servers(server *serv1, server *serv2) {
+int different_servers(server serv1, server serv2) {
     if (!strcmp(serv1->ip_addr,serv2->ip_addr)
         && serv1->udp_port == serv2->udp_port
         && serv1->tcp_port == serv2->tcp_port) {
@@ -125,17 +125,17 @@ int different_servers(server *serv1, server *serv2) {
     return 1;
 }
 
-server *copy_server(server *serv1, server *serv2){
-    server *serv_new = NULL;
+server copy_server(server serv1, server serv2) {
+    server serv_new = NULL;
 
     if(!serv1){
         serv_new = new_server(serv2->name, serv2->ip_addr, serv2->udp_port, serv2->tcp_port);
     } else {
-        if (!memcpy(serv1->name, serv2->name, strlen(serv2->name)+1)){
+        if (!strncpy(serv1->name, serv2->name, strlen(serv2->name)+1)){
             if ( true == is_verbose() ) printf( KRED "error copying name to server struct" KNRM );
             return NULL; //EXIT_FAILURE
         }
-        if (!memcpy(serv1->ip_addr, serv2->ip_addr, strlen(serv2->ip_addr)+1) ){
+        if (!strncpy(serv1->ip_addr, serv2->ip_addr, strlen(serv2->ip_addr)+1) ){
             if ( true == is_verbose() ) printf( KRED "error copying ip address to server struct" KNRM );
             return NULL; //EXIT_FAILURE
         }
@@ -148,19 +148,19 @@ server *copy_server(server *serv1, server *serv2){
 }
 
 
-void set_connected(server *this, bool connected) {
+void set_connected(server this, bool connected) {
     this->connected = connected;
     return;
 }
 
 
-void set_fd(server *this, int fd){
+void set_fd(server this, int fd){
     this->fd = fd;
     return;
 }
 
 void print_server(item got_item) {
-    server *this = (server *)got_item;
+    server this = (server)got_item;
 
     if (-1 != this->fd ){
         fprintf(stdout,
@@ -177,7 +177,7 @@ void print_server(item got_item) {
 }
 
 void free_server(item got_item) {
-    server *this = (server *)got_item;
+    server this = (server)got_item;
     if (this == NULL) {
         return;
     }
@@ -241,7 +241,7 @@ list parse_servers(char *id_serv_info) {
              return msgserv_list;
         }
 
-        server *alloc_server = new_server(step_mem_name ,
+        server alloc_server = new_server(step_mem_name ,
             step_mem_ip_addr, step_mem_udp_port, step_mem_tcp_port);
 
         set_fd(alloc_server, -2);

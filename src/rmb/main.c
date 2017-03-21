@@ -49,32 +49,30 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    struct sockaddr_in server_addr = { 0 , .sin_port = 0};
-    int_fast32_t outgoing_fd = -1, binded_fd = -1, timer_fd = -1, read_size = 0;
-    uint_fast32_t to_alloc = 0, msg_num = 0;
+    int_fast32_t outgoing_fd = -1, binded_fd = -1, timer_fd = -1;
+    uint_fast8_t exit_code = EXIT_SUCCESS, err = EXIT_SUCCESS, max_fd = -1, ban_counter = 0;
+    uint_fast32_t msg_num = 0;
 
     list msgservers_lst = NULL;
-    server *sel_server;
+    server sel_server;
 
-    socklen_t addr_len;
     struct itimerspec new_timer = {
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC},   //Interval of time
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC}    //Stop time
         };
 
-    uint_fast8_t exit_code = EXIT_SUCCESS, err = EXIT_SUCCESS, max_fd = -1, ban_counter = 0;
 
     if (1 == init_program(id_server, &outgoing_fd,
                 &binded_fd, &msgservers_lst, &sel_server,
                 &new_timer, &timer_fd)){
         exit_code = EXIT_FAILURE;
-        goto PROGRAM_EXIT_INIT;
+        goto PROGRAM_EXIT;
     }
 
     fd_set rfds;
     bool server_not_answering = false;
-    server *old_server = NULL;
-    char op[STRING_SIZE], input_buffer[STRING_SIZE], *response_buffer = NULL;
+    server old_server = NULL;
+    char op[STRING_SIZE], input_buffer[STRING_SIZE];
 
     if (sel_server != NULL) {
         fprintf(stdout, KGRN "Prompt > " KNRM);
@@ -125,7 +123,10 @@ int main(int argc, char *argv[]) {
                 fflush(stdout);
                 server_not_answering = false;
                 ban_counter = 0;
-                if(old_server != NULL) free_server(old_server);
+                if(old_server != NULL) {
+                    free_server(old_server);
+                    old_server = NULL;
+                }
             } else {
                 fprintf(stderr, KYEL "No servers available..." KNRM);
                 fflush(stdout);
@@ -156,52 +157,11 @@ int main(int argc, char *argv[]) {
         }
 
         if (FD_ISSET(binded_fd, &rfds)) { //UDP receive
-            addr_len = sizeof(server_addr);
-            if ((msg_num +1) * RESPONSE_SIZE > to_alloc) {
-                to_alloc = (msg_num + 1) * RESPONSE_SIZE;
-                response_buffer = (char*)realloc(response_buffer, sizeof(char) * to_alloc);
-                if (NULL == response_buffer) {
-                    memory_error("Unable to realloc buffer\n");
-                }
-            }
-
-            if (response_buffer) {
-                bzero(response_buffer, to_alloc);
-            }
-
-            read_size = recvfrom(binded_fd, response_buffer, sizeof(char)*to_alloc, 0,
-                    (struct sockaddr *)&server_addr, &addr_len);
-
-            if (-1 == read_size) {
-                if (_VERBOSE_TEST) fprintf(stderr, KRED "Failed UPD receive from %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
-                goto UDP_END;
-            }
-            if (_VERBOSE_TEST){
-                puts(response_buffer);
+            if (2 == handle_incoming_messages(binded_fd, msg_num)) {
+                fprintf(stdout, KGRN "Prompt > " KNRM);
                 fflush(stdout);
             }
-            sscanf(response_buffer, "%s\n" , op);
-            if(0 == strcmp(op, "MESSAGES")){
-                if( false == server_not_answering ){
-                    printf("Last %zu messages:\n", msg_num);
-                    printf("%s",&response_buffer[10]);
-                    fflush(stdout);
-                }
-                else{
-                    server_not_answering = false;
-                    goto UDP_TEST_END;
-                }
-            }
-            else{
-                server_not_answering = true;
-                sel_server = NULL;
-            }
-
-UDP_END:
-            fprintf(stdout, KGRN "Prompt > " KNRM);
-            fflush(stdout);
         }
-UDP_TEST_END:
 
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
             scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
@@ -249,8 +209,6 @@ UDP_TEST_END:
     }
 
 PROGRAM_EXIT:
-    free(response_buffer);
-PROGRAM_EXIT_INIT:
     freeaddrinfo(id_server);
     free_incoming_messages();
     free_list(msgservers_lst, free_server);
