@@ -2,7 +2,7 @@
 
 uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     uint_fast8_t exit_code = 0;
-    int nwritten = 0;
+    int_fast32_t nwritten = 0;
 
     char *response_buffer = (char *)malloc(STRING_SIZE * (get_capacity(msg_matrix) + 1));
     if (!response_buffer) {
@@ -10,11 +10,11 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     }
 
     char* to_append = get_first_n_messages(msg_matrix, get_capacity(msg_matrix));
-    int nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n%s", SMESSAGE_CODE, to_append);
+    int_fast32_t nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n%s", SMESSAGE_CODE, to_append);
     free(to_append);
 
     char *ptr = response_buffer;
-    int nleft = nbytes;
+    int_fast32_t nleft = nbytes;
     while(0 < nleft) {
         nwritten = write(fd,ptr + nwritten, nleft - nwritten);
         nleft = nleft - nwritten;
@@ -30,7 +30,7 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
 
 uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
     node aux_node;
-    int processing_fd;
+    int_fast16_t processing_fd;
     uint_fast8_t exit_code = 0;
     char *response_buffer, *ptr = NULL;
     int_fast16_t nleft, nwritten = 0;
@@ -103,10 +103,10 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
         free(response_buffer);
     }
     else{
-        int read_size = sendto(fd, "MESSAGES\n", strlen("MESSAGES\n"), 0,
+        int_fast8_t nwritten = sendto(fd, "MESSAGES\n", strlen("MESSAGES\n"), 0,
                 address, addrlen);
 
-        if (-1 == read_size) {
+        if (-1 == nwritten) {
             if (_VERBOSE_TEST) printf("error sending communication UDP\n");
             exit_code = 1;
         }
