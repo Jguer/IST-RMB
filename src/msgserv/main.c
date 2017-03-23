@@ -32,7 +32,7 @@ void handle_intsignal(int sig) {
 
 int main(int argc, char *argv[]) {
     signal(SIGINT, handle_intsignal);
-    int oc;
+    int_fast8_t oc;
     char *name = NULL;
     char *ip = NULL;
     u_short udp_port = 0;
@@ -42,17 +42,11 @@ int main(int argc, char *argv[]) {
     char id_server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
     char id_server_port[STRING_SIZE] = "59000";
 
-    int m = 200;
-    int r = 10;
+    int_fast16_t m = 200, r = 10;
     bool is_join_complete = false;
-
     fd_set rfds;
 
-    int tcp_listen_fd;   //TCP socket to accept connections
-    int udp_global_fd;   //UDP global socket
-    int udp_register_fd; //UDP socket for id server comms
-    int timer_fd;        //Timer socket for reregister
-    int max_fd;          //Max fd number.
+    int_fast16_t tcp_listen_fd, udp_global_fd, udp_register_fd, timer_fd, max_fd;
     uint_fast8_t exit_code = EXIT_SUCCESS;
 
     char buffer[STRING_SIZE];

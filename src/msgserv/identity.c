@@ -69,7 +69,7 @@ int init_udp(server host) {
     return u_fd;
 }
 
-struct addrinfo *reg_server(int *fd, server host ,char *ip_name, char *udp_port) {
+struct addrinfo *reg_server(int_fast16_t *fd, server host ,char *ip_name, char *udp_port) {
     struct addrinfo *id_server_info = get_server_address(ip_name, udp_port);
     int n;
     int local_fd;

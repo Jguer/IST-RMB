@@ -158,7 +158,7 @@ uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
     return err;
 }
 
-uint_fast8_t parse_messages(char *buffer, matrix msg_matrix) {
+uint_fast8_t parse_messages(matrix msg_matrix) {
     char msg[STRING_SIZE];
     char lc_buffer[6];
     uint_fast32_t lc;
@@ -249,7 +249,7 @@ uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, i
                     printf("JUST To know he sent %s\n", op);
                     fflush(stdout);
 
-                    err = parse_messages(buffer, msg_matrix);
+                    err = parse_messages(msg_matrix);
                     if (err) {
                         close(processing_fd);
                         set_fd((server)get_node_item(aux_node), -1 );

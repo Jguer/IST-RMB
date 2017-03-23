@@ -41,57 +41,7 @@ int main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
         }
     }
-
-    fprintf(stdout, KBLU "Identity Server:" KNRM " %s:%s\n", server_ip, server_port);
-    struct addrinfo *id_server = get_server_address(server_ip, server_port);
-    if (!id_server) {
-        fprintf(stderr, KRED "Unable to parse id server address from:\n %s:%s", server_ip, server_port);
-        return EXIT_FAILURE;
-    }
-
-    int_fast32_t outgoing_fd = -1, binded_fd = -1, timer_fd = -1;
-    uint_fast8_t exit_code = EXIT_SUCCESS, err = EXIT_SUCCESS, max_fd = -1, ban_counter = 0;
-    uint_fast32_t msg_num = 0;
-
-    list msgservers_lst = NULL;
-    server sel_server;
-
-    struct itimerspec new_timer = {
-        {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC},   //Interval of time
-        {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC}    //Stop time
-        };
-
-
-    if (1 == init_program(id_server, &outgoing_fd,
-                &binded_fd, &msgservers_lst, &sel_server,
-                &new_timer, &timer_fd)){
-        exit_code = EXIT_FAILURE;
-        goto PROGRAM_EXIT;
-    }
-
-    fd_set rfds;
-    bool server_not_answering = false;
-    server old_server = NULL;
-    char op[STRING_SIZE], input_buffer[STRING_SIZE];
-
-    if (sel_server != NULL) {
-        fprintf(stdout, KGRN "Prompt > " KNRM);
-        fflush(stdout);
-    }
-
-    // Interactive loop
-    while (true) {
-        FD_ZERO(&rfds);
-        FD_SET(binded_fd, &rfds);
-        FD_SET(STDIN_FILENO, &rfds);
-        FD_SET(timer_fd, &rfds);
-
-        max_fd = binded_fd > max_fd ? binded_fd : max_fd;
-        max_fd = timer_fd > max_fd ? timer_fd : max_fd;
-
-        if (NULL == sel_server || err || server_not_answering) {
-            fprintf(stderr, KYEL "Searching\n" KNRM);
-            sleep(3);
+           sleep(3);
 
             if (SERVER_BAN_TIME < ban_counter) {
                 if (sel_server != NULL) free_server(sel_server);

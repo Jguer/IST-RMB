@@ -6,7 +6,7 @@
 #define JOIN_STRING "REG"
 #define MAX_PENDING 5
 
-struct addrinfo *reg_server(int *fd, server host, char *ip_name, char *udp_port);
+struct addrinfo *reg_server(int_fast16_t *fd, server host, char *ip_name, char *udp_port);
 // INIT
 int init_tcp(server host);
 int init_udp(server host);
