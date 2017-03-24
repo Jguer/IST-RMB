@@ -216,10 +216,8 @@ int remove_bad_servers(list servers_list, server host, int max_fd, fd_set *rfds,
                     if (-1 == get_fd((server )get_node_item(next_node))) {
                         //Delete next node
                         remove_next_node(servers_list, aux_node, free_server);
-                        dec_size_list(servers_list);
                     } else if ( 0 == different_servers((server )get_node_item(next_node),host)) {
                         remove_next_node(servers_list, aux_node, free_server);
-                        dec_size_list(servers_list);
                     }
                 }
 
