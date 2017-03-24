@@ -4,6 +4,7 @@
 
 #include "message.h"
 #include "identity.h"
+#include "ban.h"
 
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s [-i siip] [-p sipt] %s \n", name, _VERBOSE_OPT_SHOW);
@@ -50,7 +51,7 @@ int main(int argc, char *argv[]) {
     }
 
     int_fast32_t outgoing_fd = -1, binded_fd = -1, timer_fd = -1;
-    uint_fast8_t exit_code = EXIT_SUCCESS, err = EXIT_SUCCESS, max_fd = -1, ban_counter = 0;
+    uint_fast8_t exit_code = EXIT_SUCCESS, err = EXIT_SUCCESS, max_fd = -1;
     uint_fast32_t msg_num = 0;
 
     list msgservers_lst = NULL;
@@ -71,8 +72,8 @@ int main(int argc, char *argv[]) {
 
     fd_set rfds;
     bool server_not_answering = false;
-    server old_server = NULL;
     char op[STRING_SIZE], input_buffer[STRING_SIZE];
+    list banservers_lst = create_list();
 
     if (sel_server != NULL) {
         fprintf(stdout, KGRN "Prompt > " KNRM);
@@ -93,46 +94,35 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, KYEL "Searching\n" KNRM);
             sleep(3);
 
-            if (SERVER_BAN_TIME < ban_counter) {
-                if (sel_server != NULL) free_server(sel_server);
-                sel_server = NULL;
-                if (old_server != NULL) free_server(old_server);
-                old_server = NULL;
-                server_not_answering = false;
-                ban_counter = 0;
-                continue;
-            }
-
-            if (server_not_answering) {
-            	if(sel_server != NULL) old_server = copy_server(old_server, sel_server);
-
-                if (old_server == NULL) {
-                    goto PROGRAM_EXIT;
+            if (server_not_answering) { //Sends to bans list
+            	if(sel_server != NULL){
+                    ban_server(banservers_lst, sel_server);
                 }
             }
 
-            free_list(msgservers_lst, free_server);
-            msgservers_lst = fetch_servers(outgoing_fd, id_server);
             if (server_not_answering) {
-                rem_awol_server(msgservers_lst, old_server);
+                rem_awol_server(msgservers_lst, sel_server);
             }
+            
             sel_server = select_server(msgservers_lst);
+            while (sel_server != NULL && is_banned(banservers_lst, sel_server)){
+                rem_awol_server(msgservers_lst, sel_server);
+                sel_server = select_server(msgservers_lst);
+            }
+
             if (sel_server != NULL) {
                 fprintf(stderr, KGRN "Connected to new server\n" KNRM);
                 fprintf(stdout, KGRN "Prompt > " KNRM);
                 fflush(stdout);
                 server_not_answering = false;
-                ban_counter = 0;
-                if(old_server != NULL) {
-                    free_server(old_server);
-                    old_server = NULL;
-                }
             } else {
                 fprintf(stderr, KYEL "No servers available..." KNRM);
                 fflush(stdout);
+                free_list(msgservers_lst, free_server); //Get new servers if the list is all run
+                msgservers_lst = fetch_servers(outgoing_fd, id_server);
+                sel_server = NULL;
+                server_not_answering = false;
             }
-
-            ban_counter ++;
             continue;
         }
 
@@ -193,7 +183,9 @@ int main(int argc, char *argv[]) {
                 else {
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
                 }
-            } else if (0 == strcasecmp("exit", op) || 0 == strcmp("3", op)) {
+            }else if (0 == strcasecmp("show_selected_server", op) || 0 == strcmp("s", op)) {
+                print_server(sel_server);
+            }else if (0 == strcasecmp("exit", op) || 0 == strcmp("3", op)) {
                 exit_code = EXIT_SUCCESS;
                 goto PROGRAM_EXIT;
             } else {
@@ -212,6 +204,7 @@ PROGRAM_EXIT:
     freeaddrinfo(id_server);
     free_incoming_messages();
     free_list(msgservers_lst, free_server);
+    if(banservers_lst) free_list(banservers_lst, free_server);
     close(outgoing_fd);
     close(binded_fd);
     return exit_code;
