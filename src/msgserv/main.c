@@ -195,7 +195,6 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             update_reg(udp_register_fd, id_server);
             timerfd_settime (timer_fd, 0, &new_timer, NULL);
-            printf("Timer\n");
         }
 
 

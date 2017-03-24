@@ -10,7 +10,12 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     }
 
     char* to_append = get_first_n_messages(msg_matrix, get_capacity(msg_matrix));
-    int_fast32_t nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n%s", SMESSAGE_CODE, to_append);
+    int_fast32_t nbytes = 0;
+    if(!to_append){
+        nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n\n", SMESSAGE_CODE);  
+    }else{
+        nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n%s\n", SMESSAGE_CODE, to_append);
+    }
     free(to_append);
 
     char *ptr = response_buffer;
@@ -90,7 +95,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
 
     if (NULL != to_append) {
         response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
-        snprintf(response_buffer, STRING_SIZE * (num + 1), "%s\n%s", "MESSAGES", to_append);
+        snprintf(response_buffer, STRING_SIZE * (num + 1), "%s\n%s\n", "MESSAGES", to_append);
 
         int read_size = sendto(fd, response_buffer, strlen(response_buffer), 0,
                 address, addrlen);
