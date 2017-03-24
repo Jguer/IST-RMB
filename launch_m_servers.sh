@@ -67,7 +67,7 @@ if [[ -z $M ]]; then
   exit 1
 fi
 
-IP=$(curl icanhazip.com)
+IP=$(curl -s icanhazip.com)
 UDP_PORT=58000
 TCP_PORT=57000
 
