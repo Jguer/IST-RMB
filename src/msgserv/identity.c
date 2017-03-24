@@ -5,7 +5,7 @@ struct addrinfo *id_server = NULL;
 
 int init_tcp(server host) {
 	int master_fd;
-	struct sockaddr_in tcpaddr;
+	struct sockaddr_in tcpaddr = {0 , .sin_port = 0};
 	void (*old_handler)(int);   //interrupt handler
 
 	master_fd = socket(AF_INET, SOCK_STREAM, 0);  //Create master socket
@@ -13,9 +13,6 @@ int init_tcp(server host) {
 		if (_VERBOSE_TEST) printf( KRED "error creating socket\n" KNRM );
 		return -1;
 	}
-
-    memset((void*)&tcpaddr, (int)'\0',
-            sizeof(tcpaddr));
 
     tcpaddr.sin_family = AF_INET;
     tcpaddr.sin_addr.s_addr = inet_addr(get_ip_address(host));
@@ -44,7 +41,7 @@ int init_tcp(server host) {
 
 int init_udp(server host) {
     int u_fd;
-    struct sockaddr_in udpaddr = {0};
+    struct sockaddr_in udpaddr = {0 , .sin_port = 0};
 
     u_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (u_fd==-1) {
