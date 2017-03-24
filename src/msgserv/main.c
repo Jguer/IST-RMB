@@ -64,7 +64,6 @@ int main(int argc, char *argv[]) {
     uint_fast8_t exit_code = EXIT_SUCCESS;
 
     int_fast32_t read_size;
-    list msgsrv_list = NULL;
     bool daemon_mode = false;
 
     srand(time(NULL));
@@ -146,7 +145,9 @@ int main(int argc, char *argv[]) {
         exit_code = EXIT_FAILURE;
         goto PROGRAM_EXIT;
     }
+
     matrix msg_matrix = create_matrix(m);
+    list msgsrv_list = create_list();
 
     fprintf(stdout, KBLU "Server Parameters:" KNRM " %s:%s:%d:%d\n"
             KBLU "Identity Server:" KNRM " %s:%s\n"

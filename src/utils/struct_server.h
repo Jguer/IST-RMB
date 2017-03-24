@@ -30,6 +30,3 @@ void print_server(item got_item);
 server copy_server(server serv1, server serv2);
 int different_servers(server serv1, server serv2);
 server new_server(char *name, char* ip_address, u_short udp_port, u_short tcp_port);
-
-/* PARSERS */
-list fetch_servers(int fd, struct addrinfo *id_server);
