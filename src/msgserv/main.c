@@ -32,7 +32,7 @@ void handle_intsignal(int sig) {
 
 int main(int argc, char *argv[]) {
     signal(SIGINT, handle_intsignal);
-    int_fast8_t oc;
+    int_fast8_t oc, err = 1;
     char *name = NULL;
     char *ip = NULL;
     u_short udp_port = 0;
@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
 
     char id_server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
     char id_server_port[STRING_SIZE] = "59000";
+    char buffer[STRING_SIZE];
 
     int_fast16_t m = 200, r = 10;
     bool is_join_complete = false;
@@ -49,12 +50,8 @@ int main(int argc, char *argv[]) {
     int_fast16_t tcp_listen_fd, udp_global_fd, udp_register_fd, timer_fd, max_fd;
     uint_fast8_t exit_code = EXIT_SUCCESS;
 
-    char buffer[STRING_SIZE];
-
-    int read_size;
-    int err = 1;
-    list msgservers_lst = NULL;
-    struct addrinfo *id_server;
+    int_fast32_t read_size;
+    list msgsrv_list = NULL;
     bool daemon_mode = false;
 
     srand(time(NULL));
@@ -65,12 +62,10 @@ int main(int argc, char *argv[]) {
                 daemon_mode = true;
                 break;
             case 'n':
-                /* name = (char *)malloc(strlen(optarg) + 1); */
                 name = (char *)alloca(strlen(optarg) +1);
                 strncpy(name, optarg, strlen(optarg) + 1); //optarg has the string corresponding to oc value
                 break;
             case 'j':
-                /* ip = (char *)malloc(strlen(optarg) + 1); */
                 ip = (char *)alloca(strlen(optarg) +1);
                 strncpy(ip, optarg, strlen(optarg) + 1);
                 break;
@@ -146,6 +141,14 @@ int main(int argc, char *argv[]) {
             ,name, ip, udp_port, tcp_port, id_server_ip, id_server_port);
     fflush(stdout);
 
+    if (daemon_mode) {
+        err = handle_join(msgsrv_list, &udp_register_fd, host, id_server_ip, id_server_port);
+        if (err) {
+            fprintf(stderr, KRED "Unable to join. Error code %d\n" KNRM, err);
+        } else {
+            is_join_complete = true;
+        }
+    }
     // Processing Loop
     while(true) {
         //Clear the set
@@ -165,11 +168,8 @@ int main(int argc, char *argv[]) {
         }
 
         //Removes the bad servers and sets the good in fd_set rfds.
-        max_fd = remove_bad_servers(msgservers_lst, host, max_fd, &rfds, put_fd_set);
+        max_fd = remove_bad_servers(msgsrv_list, host, max_fd, &rfds, put_fd_set);
 
-        if (daemon_mode) {
-            goto JOIN;
-        }
         //wait for one of the descriptors is ready
         int activity = select(max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
@@ -184,14 +184,14 @@ int main(int argc, char *argv[]) {
         }
 
 
-        if ( 0 != tcp_new_comm(msgservers_lst, tcp_listen_fd, &rfds, is_fd_set)) { //Starts connection for incoming requests
+        if ( 0 != tcp_new_comm(msgsrv_list, tcp_listen_fd, &rfds, is_fd_set)) { //Starts connection for incoming requests
             exit_code = EXIT_FAILURE;
             goto PROGRAM_EXIT;
         }
 
         //if something happened on other socket we must process it
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
-            read_size = read( 0, buffer, STRING_SIZE);
+            read_size = read(0, buffer, STRING_SIZE);
             if ( 0 == read_size ) {
                 if ( _VERBOSE_TEST ) printf("error reading from stdio\n");
                 exit_code = EXIT_FAILURE;
@@ -203,44 +203,19 @@ int main(int argc, char *argv[]) {
             //User options input: show_servers, exit, publish message, show_latest_messages n;
             //User options input: show_servers, exit, publish message, show_latest_messages n;
             if (strcasecmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
-JOIN:
-                if (false == is_join_complete) {
-                    //Register on idServer
-                    id_server = reg_server(&udp_register_fd, host, id_server_ip, id_server_port);
-                    if(id_server == NULL) {
-                        if ( _VERBOSE_TEST ) printf( KYEL "error registing on id_server\n" KNRM);
-                        exit_code = EXIT_FAILURE;
-                        goto PROGRAM_EXIT;
+                if (!is_join_complete) { //Register on idServer
+                    err = handle_join(msgsrv_list, &udp_register_fd, host, id_server_ip, id_server_port);
+                    if (err) {
+                        fprintf(stderr, KRED "Unable to join. Error code %d\n" KNRM, err);
+                    } else {
+                        is_join_complete = true;
                     }
-
-                    err = timerfd_settime (timer_fd, 0, &new_timer, NULL);
-                    if (-1 == err) {
-                        printf(KRED "Unable to set timer\n" KNRM);
-                        exit_code = EXIT_FAILURE;
-                        goto PROGRAM_EXIT;
-                    }
-
-                    //Get the message servers list
-                    msgservers_lst = fetch_servers(udp_register_fd, id_server);
-                    node head = get_head(msgservers_lst);
-                    if (NULL == head) {
-                        if ( _VERBOSE_TEST ) printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
-                        return EXIT_FAILURE;
-                    }
-
-                    if (0 != join_to_old_servers(msgservers_lst, host)) {
-                        exit_code = EXIT_FAILURE;
-                        goto PROGRAM_EXIT;
-                    }
-
-                    is_join_complete = true;
-                    daemon_mode = false;
                 }
                 else {
                     printf(KGRN "Already joined!\n" KNRM);
                 }
             } else if (0 == strcasecmp("show_servers", buffer) || 0 == strcmp("1", buffer)) {
-                if (msgservers_lst != NULL && 0 != get_list_size(msgservers_lst)) print_list(msgservers_lst, print_server);
+                if (msgsrv_list != NULL && 0 != get_list_size(msgsrv_list)) print_list(msgsrv_list, print_server);
                 else printf("No registered servers\n");
             } else if (0 == strcasecmp("show_messages", buffer) || 0 == strcmp("2", buffer)) {
                 if (0 == get_size(msg_matrix) && false == get_overflow(msg_matrix)) printf("0 messages received\n");
@@ -258,11 +233,11 @@ JOIN:
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
             err = handle_client_comms(udp_global_fd, msg_matrix);
             if (2 == err) {
-                share_last_message(msgservers_lst, msg_matrix);
+                share_last_message(msgsrv_list, msg_matrix);
             }
         }
 
-        tcp_fd_handle(msgservers_lst, msg_matrix, &rfds, is_fd_set); //TCP already started comunications handling
+        tcp_fd_handle(msgsrv_list, msg_matrix, &rfds, is_fd_set); //TCP already started comunications handling
     }
 
 PROGRAM_EXIT:

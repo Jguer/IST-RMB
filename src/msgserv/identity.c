@@ -1,6 +1,7 @@
 #include "identity.h"
 
 static char REG_MESSAGE[RESPONSE_SIZE];
+struct addrinfo *id_server = NULL;
 
 int init_tcp(server host) {
 	int master_fd;
@@ -71,25 +72,26 @@ int init_udp(server host) {
 
 struct addrinfo *reg_server(int_fast16_t *fd, server host ,char *ip_name, char *udp_port) {
     struct addrinfo *id_server_info = get_server_address(ip_name, udp_port);
-    int n;
-    int local_fd;
+    if (!id_server_info) {
+            return NULL;
+    }
+    int nwritten;
 
     if(id_server_info == NULL) return NULL;
 
-    local_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if(local_fd <= 0){
+    *fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if(*fd <= 0){
         if ( _VERBOSE_TEST ) printf(KRED "error creating udp socket for registry\n" KNRM);
         return NULL;
     }
-    *fd = local_fd;
 
     if ( 0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host),
-                get_ip_address(host), get_udp_port(host), get_tcp_port(host) ) ) return NULL;
+                get_ip_address(host), get_udp_port(host), get_tcp_port(host))) return NULL;
 
-    n = sendto(local_fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
+    nwritten = sendto(*fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
             id_server_info->ai_addr, id_server_info->ai_addrlen);
 
-    if (n == -1) {
+    if (nwritten == -1) {
         if ( _VERBOSE_TEST ) fprintf(stderr, KYEL "unable to register\n" KNRM);
     }
 
@@ -182,7 +184,7 @@ int join_to_old_servers( list msgservers_list , server host) {
     aux_node != NULL;
     aux_node = get_next_node(aux_node)) {
         if (different_servers((server )get_node_item(aux_node), host)) {
-            int status_check = connect_to_old_server((server )get_node_item(aux_node), is_comm_sent);
+            int status_check = connect_to_old_server((server)get_node_item(aux_node), is_comm_sent);
             if (0 == status_check) is_comm_sent = true;
             else if (1 == status_check) is_comm_sent = false;
             else return -1; //Fatal error
@@ -264,5 +266,25 @@ int tcp_new_comm(list servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(
     }
 
     return 0;//everthing is good
+}
 
+uint_fast8_t handle_join(list msgsrv_list, int_fast16_t *udp_register_fd, server host, char *id_server_ip, char *id_server_port) {
+    id_server = reg_server(udp_register_fd, host, id_server_ip, id_server_port);
+    if(id_server == NULL) {
+        if ( _VERBOSE_TEST ) printf( KYEL "error registering on id_server\n" KNRM);
+        return EXIT_FAILURE;
+    }
+
+    //Get the message servers list
+    msgsrv_list = fetch_servers(*udp_register_fd, id_server);
+    if (!get_head(msgsrv_list)) {
+        if ( _VERBOSE_TEST ) printf( KRED "error fetching servers, information not present or invalid\n" KNRM);
+        return EXIT_FAILURE;
+    }
+
+    if (0 != join_to_old_servers(msgsrv_list, host)) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
