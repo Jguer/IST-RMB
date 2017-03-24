@@ -44,7 +44,7 @@ int init_tcp(server host) {
 
 int init_udp(server host) {
     int u_fd;
-    struct sockaddr_in udpaddr;
+    struct sockaddr_in udpaddr = {0};
 
     u_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (u_fd==-1) {
@@ -52,9 +52,6 @@ int init_udp(server host) {
         if ( _VERBOSE_TEST ) printf( KRED "error creating socket\n" KNRM);
         return -1;
     }
-
-    memset((void*)&udpaddr, (int)'\0',
-            sizeof(udpaddr));
 
     udpaddr.sin_family = AF_INET;
     udpaddr.sin_addr.s_addr = inet_addr(get_ip_address(host));

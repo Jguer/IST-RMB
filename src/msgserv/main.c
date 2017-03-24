@@ -3,6 +3,8 @@
 #include "identity.h"
 #include "message.h"
 
+uint_fast8_t g_exit = 0;
+
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–m m] [–r r] %s \n", name, _VERBOSE_OPT_SHOW );
     fprintf(stdout, "Arguments:\n"
@@ -25,13 +27,24 @@ int is_fd_set(int fd, fd_set *rfds) {
     return FD_ISSET(fd, rfds);
 }
 
+void ignore_sigpipe()
+{
+    struct sigaction act;
+    memset(&act, 0, sizeof(act));
+    act.sa_handler = SIG_IGN;
+    act.sa_flags = SA_RESTART;
+    sigaction(SIGPIPE, &act, NULL);
+}
+
 void handle_intsignal(int sig) {
+    g_exit = 1;
     signal(sig, SIG_IGN);
-    exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[]) {
     signal(SIGINT, handle_intsignal);
+    ignore_sigpipe();
+
     int_fast8_t oc, err = 1;
     char *name = NULL;
     char *ip = NULL;
@@ -150,7 +163,7 @@ int main(int argc, char *argv[]) {
         }
     }
     // Processing Loop
-    while(true) {
+    while(!g_exit) {
         //Clear the set
         FD_ZERO(&rfds);
 
@@ -221,7 +234,7 @@ int main(int argc, char *argv[]) {
                 if (0 == get_size(msg_matrix) && false == get_overflow(msg_matrix)) printf("0 messages received\n");
                 print_matrix(msg_matrix, print_message);
             } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
-                return EXIT_SUCCESS;
+                g_exit = 1;
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
@@ -240,6 +253,12 @@ int main(int argc, char *argv[]) {
         tcp_fd_handle(msgsrv_list, msg_matrix, &rfds, is_fd_set); //TCP already started comunications handling
     }
 
+free_matrix(msg_matrix, free_message);
+free_list(msgsrv_list, free_server);
+close(tcp_listen_fd);
+close(udp_global_fd);
+close(udp_register_fd);
+close(timer_fd);
 PROGRAM_EXIT:
     return exit_code;
 }
