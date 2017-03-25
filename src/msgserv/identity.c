@@ -6,7 +6,7 @@ struct addrinfo *id_server = NULL;
 
 int init_tcp(server host) {
     int master_fd;
-    struct sockaddr_in tcpaddr = {0 , .sin_port = 0};
+    struct sockaddr_in tcpaddr = {0, .sin_port = 0};
     void (*old_handler)(int);   //interrupt handler
 
     master_fd = socket(AF_INET, SOCK_STREAM, 0);  //Create master socket
@@ -31,7 +31,7 @@ int init_tcp(server host) {
         return -1;
     }
 
-    if ((old_handler=signal(SIGPIPE,SIG_IGN)) == SIG_ERR) {
+    if ((old_handler = signal(SIGPIPE,SIG_IGN)) == SIG_ERR) {
         if (_VERBOSE_TEST) printf(KRED "error protecting from SIGPIPE\n" KNRM);
         return -1;
     }
@@ -46,8 +46,7 @@ int init_udp(server host) {
 
     u_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (u_fd==-1) {
-
-        if ( _VERBOSE_TEST ) printf( KRED "error creating socket\n" KNRM);
+        if (_VERBOSE_TEST) printf( KRED "error creating socket\n" KNRM);
         return -1;
     }
 
@@ -58,7 +57,7 @@ int init_udp(server host) {
     if (0 != bind(u_fd, (struct sockaddr*)&udpaddr,
             sizeof(udpaddr))) {
 
-        if ( _VERBOSE_TEST ) printf( KRED "error bind failed\n" KNRM);
+        if (_VERBOSE_TEST) printf( KRED "error bind failed\n" KNRM);
         return -1;
     }
 
@@ -72,15 +71,15 @@ struct addrinfo *reg_server(int_fast16_t *fd, server host ,char *ip_name, char *
     }
     int nwritten;
 
-    if(id_server_info == NULL) return NULL;
+    if (!id_server_info) return NULL;
 
     *fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if(*fd <= 0){
-        if ( _VERBOSE_TEST ) printf(KRED "error creating udp socket for registry\n" KNRM);
+    if (*fd <= 0) {
+        if (_VERBOSE_TEST) printf(KRED "error creating udp socket for registry\n" KNRM);
         return NULL;
     }
 
-    if ( 0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host),
+    if (0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host),
                 get_ip_address(host), get_udp_port(host), get_tcp_port(host))) return NULL;
 
     nwritten = sendto(*fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
@@ -98,7 +97,7 @@ int update_reg(int fd, struct addrinfo* id_server_info) {
             id_server_info->ai_addr, id_server_info->ai_addrlen);
 
     if (n == -1) {
-        if ( _VERBOSE_TEST ) fprintf(stderr, KYEL "unable to update register\n" KNRM);
+        if (_VERBOSE_TEST) fprintf(stderr, KYEL "unable to update register\n" KNRM);
     }
 
     return 0;
@@ -110,15 +109,14 @@ int send_initial_comm(int processing_fd) {
     char to_send[STRING_SIZE];
     sprintf(to_send, "SGET_MESSAGES\n");
     if((unsigned int)send(processing_fd, to_send, strlen(to_send), 0) != strlen("SGET_MESSAGES\n")) {
-
         if (_VERBOSE_TEST) printf("error sending initial communication\n");
         status = 0;
     }
 
-    return ( (1 == status) ? processing_fd : (-1) );
+    return ((1 == status) ? processing_fd : (-1));
 }
 
-int connect_to_old_server( server old_server, bool is_comm_sent) {
+int connect_to_old_server(server old_server, bool is_comm_sent) {
     int processing_fd;
     int status = 1; //false
 
@@ -126,20 +124,20 @@ int connect_to_old_server( server old_server, bool is_comm_sent) {
         // create new comunication
         processing_fd = socket(AF_INET, SOCK_STREAM, 0);
         if (-1 == processing_fd) {
-            if (_VERBOSE_TEST) printf( KRED "error creating socket\n" KNRM );
+            if (_VERBOSE_TEST) printf(KRED "error creating socket\n" KNRM);
             status = -1; //fatal error
             return status;
         }
 
         char portitoa[STRING_SIZE];
-        if ( 0 > sprintf(portitoa, "%hu",get_tcp_port( old_server )) ){
+        if (0 > sprintf(portitoa, "%hu", get_tcp_port(old_server))) {
             if (_VERBOSE_TEST) printf(KRED "error converting u_short to string\n" KNRM);
             status = -1; //fatal error
             return status;
         }
         struct addrinfo *res = get_server_address_tcp( get_ip_address(old_server),
             portitoa);
-        if( res == NULL ){
+        if (!res) {
             processing_fd = -1;
             status = 1; //false
         }
@@ -241,7 +239,7 @@ int tcp_new_comm(list servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(
         struct sockaddr_in newserv_info;
         int newserv_fd;
 
-        int addrlen = sizeof( newserv_info );
+        int addrlen = sizeof(newserv_info);
 
         //Create new socket, new_fd
         if ((newserv_fd = accept(listen_fd, (struct sockaddr *)&newserv_info,
@@ -272,8 +270,7 @@ char *get_servers(int fd) {
             id_server->ai_addr, id_server->ai_addrlen);
 
     if (0 > n) {
-        if ( true == is_verbose() ) fprintf(stderr, KYEL "unable to send\n" KNRM);
-        fprintf(stderr, KYEL "unable to send\n" KNRM);
+        if (_VERBOSE_TEST) fprintf(stderr, KYEL "unable to send\n" KNRM);
         return NULL;
     }
 
@@ -282,7 +279,7 @@ char *get_servers(int fd) {
             &id_server->ai_addrlen);
 
     if (0 > n) {
-        if ( true == is_verbose() ) fprintf(stderr, KYEL "unable to receive\n" KNRM);
+        if (_VERBOSE_TEST) fprintf(stderr, KYEL "unable to receive\n" KNRM);
         return NULL;
     } else {
         return_string = (char *)malloc((n+1) * sizeof(char));
@@ -311,12 +308,11 @@ uint_fast8_t parse_servers(int_fast16_t udp_register_fd, list msgsrv_list) {
     separated_info = strtok(NULL, "\n");
 
     while (NULL != separated_info) { //Proceeds getting info and treating
-
         sscanf_state = sscanf(separated_info, "%[^;];%[^;];%hu;%hu",step_mem_name, step_mem_ip_addr,
             &step_mem_udp_port, &step_mem_tcp_port);//Separates info and saves it in variables
 
         if (4 != sscanf_state) {
-             if ( true == is_verbose() ) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
+             if (true == is_verbose()) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
              continue;
         }
 
@@ -338,8 +334,8 @@ uint_fast8_t handle_join(list msgsrv_list, int_fast16_t *udp_register_fd, server
     uint_fast8_t err = 0;
 
     id_server = reg_server(udp_register_fd, host, id_server_ip, id_server_port);
-    if(id_server == NULL) {
-        if ( _VERBOSE_TEST ) printf( KYEL "error registering on id_server\n" KNRM);
+    if (id_server == NULL) {
+        if (_VERBOSE_TEST) printf( KYEL "error registering on id_server\n" KNRM);
         return err = 1;
     }
 

@@ -11,19 +11,19 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
 
     char* to_append = get_first_n_messages(msg_matrix, get_capacity(msg_matrix));
     int_fast32_t nbytes = 0;
-    if(!to_append){
-        nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n\n", SMESSAGE_CODE);  
-    }else{
+    if (!to_append) {
+        nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n\n", SMESSAGE_CODE);
+    } else {
         nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n%s\n", SMESSAGE_CODE, to_append);
     }
     free(to_append);
 
     char *ptr = response_buffer;
     int_fast32_t nleft = nbytes;
-    while(0 < nleft) {
+    while (0 < nleft) {
         nwritten = write(fd,ptr + nwritten, nleft - nwritten);
         nleft = nleft - nwritten;
-        if(nwritten <= 0) {//error
+        if (0 >= nwritten) {//error
             exit_code = 1;
             break;
         }
@@ -40,7 +40,7 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
     char *response_buffer, *ptr = NULL;
     int_fast16_t nleft, nwritten = 0;
 
-    printf(KCYN "\n Sharing last message %s \n" KNRM, get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
+    if (_VERBOSE_TEST) printf(KCYN "\nSharing last message %s\n" KNRM, get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
     response_buffer = (char *)alloca(2 * STRING_SIZE);
     if (NULL == response_buffer) {
@@ -51,12 +51,12 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
             SMESSAGE_CODE, get_lc(get_element(msg_matrix, get_size(msg_matrix) - 1)),
             get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
-    if (NULL != servers_list) { //TCP sockets already connected handling
+    if (servers_list) { //TCP sockets already connected handling
         for (aux_node = get_head(servers_list);
                 aux_node != NULL ;
                 aux_node = get_next_node(aux_node)) {
 
-            processing_fd = get_fd((server )get_node_item(aux_node)); //file descriptor/socket
+            processing_fd = get_fd((server)get_node_item(aux_node)); //file descriptor/socket
 
             ptr = response_buffer;
             nleft = strlen(ptr);
@@ -64,10 +64,10 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
                 nwritten = write(processing_fd,ptr + nwritten ,nleft - nwritten);
                 nleft = nleft - nwritten;
                 if(-1 == nwritten) {
-                    if ( _VERBOSE_TEST ) printf("error sending communication TCP\n");
+                    if ( _VERBOSE_TEST ) printf("\nerror sending communication TCP\n");
                     close(processing_fd);
-                    set_fd((server )get_node_item(aux_node), -1 );
-                    set_connected((server )get_node_item(aux_node), 0);
+                    set_fd((server)get_node_item(aux_node), -1 );
+                    set_connected((server)get_node_item(aux_node), 0);
                     return 1;
                 } //error
             }
@@ -84,7 +84,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     char *to_append;
 
     uint_fast32_t num = atoi(input_buffer);
-    if (num < 1) {
+    if (1 > num) {
         return 1;
     }
 
@@ -102,17 +102,16 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
 
         free(to_append);
         if (-1 == read_size) {
-            if (_VERBOSE_TEST) printf("error sending communication UDP\n");
+            if (_VERBOSE_TEST) printf("\nerror sending communication UDP\n");
             exit_code = 1;
         }
         free(response_buffer);
-    }
-    else{
+    } else {
         int_fast8_t nwritten = sendto(fd, "MESSAGES\n", strlen("MESSAGES\n"), 0,
                 address, addrlen);
 
         if (-1 == nwritten) {
-            if (_VERBOSE_TEST) printf("error sending communication UDP\n");
+            if (_VERBOSE_TEST) printf("\nerror sending communication UDP\n");
             exit_code = 1;
         }
     }
@@ -128,23 +127,19 @@ uint_fast8_t handle_publish(matrix msg_matrix, char *input_buffer) {
 }
 
 uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
-    char buffer[STRING_SIZE];
-    char op[STRING_SIZE];
-    char input_buffer[STRING_SIZE];
+    char buffer[STRING_SIZE] = {'\0'};
+    char op[STRING_SIZE] = {'\0'};
+    char input_buffer[STRING_SIZE] = {'\0'};
     uint_fast8_t err = 0;
 
-    struct sockaddr_in receive_address = { 0, .sin_port = 0 };
+    struct sockaddr_in receive_address = {0, .sin_port = 0};
     uint_fast16_t addrlen = sizeof(receive_address);
-
-    memset(buffer, '\0', sizeof(char) * STRING_SIZE);
-    memset(op, '\0', sizeof(char) * STRING_SIZE);
-    memset(input_buffer, '\0', sizeof(char) * STRING_SIZE);
 
     int_fast16_t read_size = recvfrom(fd, buffer, sizeof(buffer), 0,
             (struct sockaddr *)&receive_address, (socklen_t*)&addrlen);
 
     if (-1 == read_size) {
-        if (_VERBOSE_TEST) printf("udp receive error\n");
+        if (_VERBOSE_TEST) printf("\nUDP receive error\n");
         return 1;
     }
 
@@ -184,7 +179,7 @@ uint_fast8_t parse_messages(matrix msg_matrix) {
         if (lc > g_lc) {
             g_lc = lc ++;
         }
-        strncat(msg, "\n" ,STRING_SIZE);
+        strncat(msg, "\n" ,STRING_SIZE - 1);
         add_element(msg_matrix, get_size(msg_matrix), (item)new_message(lc, msg), free_message);
 
         separated_info = strtok(NULL, "\n");//Gets new info
@@ -208,16 +203,12 @@ uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, i
 
     if (NULL != servers_list) { //TCP sockets already connected handling
         node aux_node;
-        for (aux_node = get_head(servers_list);
-                aux_node != NULL ;
+        for (aux_node = get_head(servers_list); aux_node != NULL;
                 aux_node = get_next_node(aux_node)) {
 
-            int processing_fd;
-
-            processing_fd = get_fd((server )get_node_item(aux_node)); //file descriptor/socket
+            int processing_fd = get_fd((server)get_node_item(aux_node)); //file descriptor/socket
 
             if ((*STAT_FD)(processing_fd, rfds)) {
-
             	bzero(buffer,sizeof(char) * STRING_SIZE * (get_capacity(msg_matrix) + 5));
 
                 while (nread != -1) {
@@ -229,18 +220,17 @@ uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, i
                         set_connected((server )get_node_item(aux_node), 0);
                         break;
                     }
-					printf("JUST To know he sent %s\n", micro_buffer);
 					strncat(buffer, micro_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 5));
                 }
 
                 p = strtok(buffer, "\n");
-                if( NULL != p )strncpy(op, p, STRING_SIZE);
-                else{
+                if (NULL != p) {
+                    strncpy(op, p, STRING_SIZE);
+                } else {
                 	bzero(op, STRING_SIZE);
                 }
 
                 if (0 == strcmp("SGET_MESSAGES", op)) {
-                    printf( KGRN "JUST To know he sent %s\n" KNRM, op);
                     err = handle_sget_messages(processing_fd, msg_matrix);
                     fflush( stdout );
                     if (err) {
@@ -251,7 +241,6 @@ uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, i
                     //Send all my messages
 
                 } else if (0 == strcmp("SMESSAGES", op) ) {
-                    printf("JUST To know he sent %s\n", op);
                     fflush(stdout);
 
                     err = parse_messages(msg_matrix);

@@ -241,8 +241,6 @@ int main(int argc, char *argv[]) {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
 
-            fprintf(stdout, KGRN "Prompt > " KNRM);
-            fflush(stdout);
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
@@ -253,6 +251,9 @@ int main(int argc, char *argv[]) {
         }
 
         tcp_fd_handle(msgsrv_list, msg_matrix, &rfds, is_fd_set); //TCP already started comunications handling
+
+        fprintf(stdout, KGRN "\nPrompt > " KNRM);
+        fflush(stdout);
     }
 
 free_matrix(msg_matrix, free_message);
