@@ -22,6 +22,8 @@ client: $(wildcard src/rmb/*.c)
 server: $(wildcard src/msgserv/*.c)
 	$(CC) $(CFLAGS) -I$(UTILS_DIR) $(wildcard wildcard src/utils/*.c) $(wildcard src/msgserv/*.c) -o bin/$(SERVER)
 
+id:
+	go build -o ./bin/id_server $(wildcard wildcard src/idserv/*.go)
 tests:
 	$(CC) $(CFLAGS) -I$(UTILS_DIR) -Isrc/msgserv $(wildcard wildcard src/utils/*.c) src/msgserv/message.c $(wildcard src/testing/*.c) -o bin/test
 	$(./bin/test)
