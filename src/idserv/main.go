@@ -61,11 +61,12 @@ func main() {
 
 	go handleUDPConn(conn, serverRecv, askForServers)
 
+	log.Println("Identity Server setup complete")
 	for {
 		select {
 		case <-timer.C:
 			servers = servers[:0]
-            log.Println("Wiped Servers")
+			log.Println("Wiped Servers")
 		case serverToAdd := <-serverRecv:
 			for _, o := range servers {
 				if (o.name == serverToAdd.name) &&
@@ -88,7 +89,7 @@ func handleRegistrations(data string, serverRecv chan server) {
 	var err error
 
 	if len(buffer) < 4 {
-        log.Println("Invalid Register")
+		log.Println("Invalid Register")
 		return
 	}
 
