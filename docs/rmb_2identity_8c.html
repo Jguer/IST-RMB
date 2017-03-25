@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -86,6 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">identity.c File Reference</div>  </div>
@@ -102,14 +103,107 @@ Include dependency graph for identity.c:</div>
 </div>
 <p><a href="rmb_2identity_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a6baece8be8f9ab55223d41b535511b6f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2identity_8c.html#a6baece8be8f9ab55223d41b535511b6f">REQUEST</a>&#160;&#160;&#160;&quot;GET_SERVERS&quot;</td></tr>
+<tr class="separator:a6baece8be8f9ab55223d41b535511b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8e75ab3c74fc254d6cb67aa3257f839a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2identity_8c.html#a8e75ab3c74fc254d6cb67aa3257f839a">init_program</a> (struct addrinfo *id_server, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, <a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> **msgservers_lst, <a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> **sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd)</td></tr>
-<tr class="memdesc:a8e75ab3c74fc254d6cb67aa3257f839a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initiates the program variables.  <a href="#a8e75ab3c74fc254d6cb67aa3257f839a">More...</a><br/></td></tr>
-<tr class="separator:a8e75ab3c74fc254d6cb67aa3257f839a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cba927f7fd909e390da7e59fa557862"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2identity_8c.html#a7cba927f7fd909e390da7e59fa557862">init_program</a> (struct addrinfo *<a class="el" href="msgserv_2identity_8h.html#ac2b0bffa6c02e0b4083ccbab19a9d769">id_server</a>, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, <a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> *msgservers_lst, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> *sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd)</td></tr>
+<tr class="memdesc:a7cba927f7fd909e390da7e59fa557862"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initiates the program variables.  <a href="#a7cba927f7fd909e390da7e59fa557862">More...</a><br/></td></tr>
+<tr class="separator:a7cba927f7fd909e390da7e59fa557862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ca61856ddebe488248f4c6048786e4a"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2identity_8c.html#a6ca61856ddebe488248f4c6048786e4a">get_servers</a> (int fd, struct addrinfo *<a class="el" href="msgserv_2identity_8h.html#ac2b0bffa6c02e0b4083ccbab19a9d769">id_server</a>)</td></tr>
+<tr class="separator:a6ca61856ddebe488248f4c6048786e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5639878ddd37ad38a519fccee0448db9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2identity_8c.html#a5639878ddd37ad38a519fccee0448db9">parse_servers</a> (char *id_serv_info)</td></tr>
+<tr class="separator:a5639878ddd37ad38a519fccee0448db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac693b13545061a17d9fb53447add3c05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2identity_8c.html#ac693b13545061a17d9fb53447add3c05">fetch_servers</a> (int fd, struct addrinfo *<a class="el" href="msgserv_2identity_8h.html#ac2b0bffa6c02e0b4083ccbab19a9d769">id_server</a>)</td></tr>
+<tr class="memdesc:ac693b13545061a17d9fb53447add3c05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Grabs the servers from the identity server and returns them in a list of server structures.  <a href="#ac693b13545061a17d9fb53447add3c05">More...</a><br/></td></tr>
+<tr class="separator:ac693b13545061a17d9fb53447add3c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a6baece8be8f9ab55223d41b535511b6f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define REQUEST&#160;&#160;&#160;&quot;GET_SERVERS&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="rmb_2identity_8c_source.html#l00003">3</a> of file <a class="el" href="rmb_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a8e75ab3c74fc254d6cb67aa3257f839a"></a>
+<a class="anchor" id="ac693b13545061a17d9fb53447add3c05"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> fetch_servers </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct addrinfo *&#160;</td>
+          <td class="paramname"><em>id_server</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Grabs the servers from the identity server and returns them in a list of server structures. </p>
+<p>list <a class="el" href="rmb_2identity_8h.html#ac693b13545061a17d9fb53447add3c05" title="Grabs the servers from the identity server and returns them in a list of server structures. ">fetch_servers(int fd, struct addrinfo *id_server)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fd</td><td>File descriptor for comunication with id_server </td></tr>
+    <tr><td class="paramname">id_server</td><td>Identity Server IP address info </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="rmb_2identity_8c_source.html#l00122">122</a> of file <a class="el" href="rmb_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6ca61856ddebe488248f4c6048786e4a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* get_servers </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct addrinfo *&#160;</td>
+          <td class="paramname"><em>id_server</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="rmb_2identity_8c_source.html#l00057">57</a> of file <a class="el" href="rmb_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7cba927f7fd909e390da7e59fa557862"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -134,13 +228,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> *&#160;</td>
           <td class="paramname"><em>msgservers_lst</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> *&#160;</td>
           <td class="paramname"><em>sel_server</em>, </td>
         </tr>
         <tr>
@@ -164,7 +258,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initiates the program variables. </p>
-<p>int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, list **msgservers_lst, server **sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd)</p>
+<p>int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, list *msgservers_lst, server *sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd)</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id_server</td><td>Identity Server </td></tr>
@@ -178,7 +272,25 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="rmb_2identity_8c_source.html#l00003">3</a> of file <a class="el" href="rmb_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2identity_8c_source.html#l00005">5</a> of file <a class="el" href="rmb_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5639878ddd37ad38a519fccee0448db9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> parse_servers </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>id_serv_info</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="rmb_2identity_8c_source.html#l00086">86</a> of file <a class="el" href="rmb_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>

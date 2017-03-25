@@ -1,8 +1,18 @@
 var searchData=
 [
-  ['name',['name',['../struct__server.html#a5ac083a645d964373f022d03df4849c8',1,'_server']]],
-  ['new_5fmessage',['new_message',['../struct__message_8c.html#a81b6e71d130cf8ff6ae10fa8bb574926',1,'new_message(uint_fast32_t lc, char *src):&#160;struct_message.c'],['../struct__message_8h.html#a81b6e71d130cf8ff6ae10fa8bb574926',1,'new_message(uint_fast32_t lc, char *src):&#160;struct_message.c']]],
-  ['new_5fserver',['new_server',['../struct__server_8c.html#a1fd2ed3d15d30f861fcfcb40ad4d7991',1,'new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port):&#160;struct_server.c'],['../struct__server_8h.html#adb3003bebfe5374708634d356336d5a8',1,'new_server(char *name, char *ip_address, u_short udp_port, u_short tcp_port):&#160;struct_server.c']]],
-  ['next',['next',['../struct__node.html#ad31f019420701d9f52072b8b81381889',1,'_node']]],
-  ['node',['node',['../util__list_8h.html#a78708754e1cdf986278e3a3826931956',1,'util_list.h']]]
+  ['main',['main',['../msgserv_2main_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;main.c'],['../rmb_2main_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;main.c'],['../tests_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;tests.c']]],
+  ['main_2ec',['main.c',['../msgserv_2main_8c.html',1,'']]],
+  ['main_2ec',['main.c',['../rmb_2main_8c.html',1,'']]],
+  ['matrix',['matrix',['../util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f',1,'util_matrix.h']]],
+  ['max_5fpending',['MAX_PENDING',['../msgserv_2identity_8h.html#aa6d6477212b284279d80e0593f3f42af',1,'identity.h']]],
+  ['memory_5ferror',['memory_error',['../utils_8c.html#a2bee3ad7d4beb19e9fe94c85d49c6465',1,'memory_error(char *msg):&#160;utils.c'],['../utils_8h.html#a2bee3ad7d4beb19e9fe94c85d49c6465',1,'memory_error(char *msg):&#160;utils.c']]],
+  ['merge_5flists',['merge_lists',['../util__list_8c.html#aab68747ef625dc65c1e17e376ecf73b4',1,'merge_lists(list list_a, list list_b):&#160;util_list.c'],['../util__list_8h.html#aab68747ef625dc65c1e17e376ecf73b4',1,'merge_lists(list list_a, list list_b):&#160;util_list.c']]],
+  ['message',['message',['../struct__message_8h.html#a2220e17a2b47ced7b6c4dbbde9169e0b',1,'struct_message.h']]],
+  ['message_2ec',['message.c',['../rmb_2message_8c.html',1,'']]],
+  ['message_2ec',['message.c',['../msgserv_2message_8c.html',1,'']]],
+  ['message_2eh',['message.h',['../rmb_2message_8h.html',1,'']]],
+  ['message_2eh',['message.h',['../msgserv_2message_8h.html',1,'']]],
+  ['message_5fcode',['MESSAGE_CODE',['../msgserv_2message_8h.html#a96e7ed186f7f9efc819709764dbb0012',1,'message.h']]],
+  ['message_5fstruct_5ftest_2ec',['message_struct_test.c',['../message__struct__test_8c.html',1,'']]],
+  ['msg',['msg',['../structgreatest__run__info.html#a2c3cb87d009c003069b9a90f020f8a9f',1,'greatest_run_info']]]
 ];

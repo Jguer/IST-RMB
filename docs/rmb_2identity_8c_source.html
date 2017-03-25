@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -91,63 +91,158 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <a href="rmb_2identity_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="rmb_2identity_8h.html">identity.h</a>&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;</div>
-<div class="line"><a name="l00003"></a><span class="lineno"><a class="line" href="rmb_2identity_8h.html#a8e75ab3c74fc254d6cb67aa3257f839a">    3</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="rmb_2identity_8c.html#a8e75ab3c74fc254d6cb67aa3257f839a">init_program</a>(<span class="keyword">struct</span> addrinfo *id_server, int_fast32_t *outgoing_fd,</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;    int_fast32_t *binded_fd, <a class="code" href="struct__stack.html">list</a> **msgservers_lst, <a class="code" href="struct__server.html">server</a> **sel_server,</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;    <span class="keyword">struct</span> itimerspec *new_timer, int_fast32_t *timer_fd)</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    {</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    *outgoing_fd = socket(AF_INET, SOCK_DGRAM, 0);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordflow">if</span> (-1 == *outgoing_fd) {</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        fprintf(stderr, <a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to create socket\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    }</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    *binded_fd = socket(AF_INET, SOCK_DGRAM, 0);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">if</span> (-1 == *binded_fd) {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        fprintf(stderr, <a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to create socket\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    }</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    *msgservers_lst = <a class="code" href="struct__server_8c.html#a4e0943176e8d0fcb9dd7a2d2d39014d5">fetch_servers</a>(*outgoing_fd, id_server);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    *sel_server = <a class="code" href="rmb_2message_8c.html#a78fad15cf4c99e1a1571ee8d738e29f3">select_server</a>(*msgservers_lst);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="comment">//Bind socket to any port on the client ip </span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">struct </span>sockaddr_in serveraddr;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    memset((<span class="keywordtype">void</span>*)&amp;serveraddr,(<span class="keywordtype">int</span>)<span class="charliteral">&#39;\0&#39;</span>,</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">sizeof</span>(serveraddr));</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    serveraddr.sin_family= AF_INET;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    serveraddr.sin_addr.s_addr= htonl(INADDR_ANY);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    serveraddr.sin_port= htons((u_short)0); <span class="comment">//INPORT_ANY    </span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">if</span> (-1 == bind(*binded_fd,(<span class="keyword">struct</span> sockaddr*)&amp;serveraddr,<span class="keyword">sizeof</span>(serveraddr))){</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        fprintf(stderr, <a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to create socket\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">return</span> 1; <span class="comment">//EXIT FAILURE</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">/* Start Timer */</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    *timer_fd = timerfd_create (CLOCK_MONOTONIC, TFD_NONBLOCK);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">if</span> (*timer_fd == -1) {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        printf(<a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to create timer.\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">return</span> 1; <span class="comment">//EXIT FAILURE</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">int</span> err_tm= timerfd_settime (*timer_fd, 0, new_timer, NULL);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span> (-1 == err_tm) {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        printf(<a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to set timer\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> 1; <span class="comment">//EXIT FAILURE</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">return</span> 0; <span class="comment">//EXIT SUCCESS</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<div class="line"><a name="l00003"></a><span class="lineno"><a class="line" href="rmb_2identity_8c.html#a6baece8be8f9ab55223d41b535511b6f">    3</a></span>&#160;<span class="preprocessor">#define REQUEST &quot;GET_SERVERS&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="rmb_2identity_8h.html#a7cba927f7fd909e390da7e59fa557862">    5</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="rmb_2identity_8c.html#a7cba927f7fd909e390da7e59fa557862">init_program</a>(<span class="keyword">struct</span> addrinfo *<a class="code" href="msgserv_2identity_8c.html#ac2b0bffa6c02e0b4083ccbab19a9d769">id_server</a>, int_fast32_t *outgoing_fd,</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    int_fast32_t *binded_fd, <a class="code" href="struct__stack.html">list</a> *msgservers_lst, <a class="code" href="struct__server.html">server</a> *sel_server,</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    <span class="keyword">struct</span> itimerspec *new_timer, int_fast32_t *timer_fd)</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    {</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    *outgoing_fd = socket(AF_INET, SOCK_DGRAM, 0);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordflow">if</span> (-1 == *outgoing_fd) {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        fprintf(stderr, <a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to create socket\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    }</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    *binded_fd = socket(AF_INET, SOCK_DGRAM, 0);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span> (-1 == *binded_fd) {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        fprintf(stderr, <a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to create socket\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    *msgservers_lst = <a class="code" href="rmb_2identity_8c.html#ac693b13545061a17d9fb53447add3c05">fetch_servers</a>(*outgoing_fd, id_server);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    *sel_server = <a class="code" href="rmb_2message_8c.html#a41ac45072ba0683ac4f551442daa665e">select_server</a>(*msgservers_lst);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="comment">//Bind socket to any port on the client ip</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">struct </span>sockaddr_in serveraddr;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    memset((<span class="keywordtype">void</span>*)&amp;serveraddr,(<span class="keywordtype">int</span>)<span class="charliteral">&#39;\0&#39;</span>,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">sizeof</span>(serveraddr));</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    serveraddr.sin_family= AF_INET;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    serveraddr.sin_addr.s_addr= htonl(INADDR_ANY);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    serveraddr.sin_port= htons((u_short)0); <span class="comment">//INPORT_ANY</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">if</span> (-1 == bind(*binded_fd,(<span class="keyword">struct</span> sockaddr*)&amp;serveraddr,<span class="keyword">sizeof</span>(serveraddr))){</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        fprintf(stderr, <a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to create socket\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">return</span> 1; <span class="comment">//EXIT FAILURE</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">/* Start Timer */</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    *timer_fd = timerfd_create (CLOCK_MONOTONIC, TFD_NONBLOCK);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> (*timer_fd == -1) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        printf(<a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to create timer.\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> 1; <span class="comment">//EXIT FAILURE</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">int</span> err_tm= timerfd_settime (*timer_fd, 0, new_timer, NULL);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">if</span> (-1 == err_tm) {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        printf(<a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;Unable to set timer\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">return</span> 1; <span class="comment">//EXIT FAILURE</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">return</span> 0; <span class="comment">//EXIT SUCCESS</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// get_servers asks the identity server for the server list.</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">// Returns raw data.</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="rmb_2identity_8c.html#a6ca61856ddebe488248f4c6048786e4a">   57</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="msgserv_2identity_8c.html#a451d33d9b3e01eca0f4fadd63e90a0d1">get_servers</a>(<span class="keywordtype">int</span> fd, <span class="keyword">struct</span> addrinfo *<a class="code" href="msgserv_2identity_8c.html#ac2b0bffa6c02e0b4083ccbab19a9d769">id_server</a>) {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    ssize_t n = 0;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">char</span> *return_string = NULL;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">char</span> response[<a class="code" href="utils_8h.html#a48c115751f544f6dc2232111ecf30708">RESPONSE_SIZE</a>] = {<span class="charliteral">&#39;\0&#39;</span>};</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    n = sendto(fd, <a class="code" href="rmb_2identity_8c.html#a6baece8be8f9ab55223d41b535511b6f">REQUEST</a>, strlen(<a class="code" href="rmb_2identity_8c.html#a6baece8be8f9ab55223d41b535511b6f">REQUEST</a>) + 1, 0,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            id_server-&gt;ai_addr, id_server-&gt;ai_addrlen);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">if</span> (0 &gt; n) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">if</span> ( <span class="keyword">true</span> == <a class="code" href="utils_8c.html#a323aba01db0eccbb36fce697164fae2e">is_verbose</a>() ) fprintf(stderr, <a class="code" href="utils_8h.html#a897b10d246533c95ba86cb79f92e465a">KYEL</a> <span class="stringliteral">&quot;unable to send\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        fprintf(stderr, <a class="code" href="utils_8h.html#a897b10d246533c95ba86cb79f92e465a">KYEL</a> <span class="stringliteral">&quot;unable to send\n&quot;</span> KNRM);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    n = recvfrom(fd, response, <a class="code" href="utils_8h.html#a48c115751f544f6dc2232111ecf30708">RESPONSE_SIZE</a>, 0,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            id_server-&gt;ai_addr,</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            &amp;id_server-&gt;ai_addrlen);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">if</span> (0 &gt; n) {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">if</span> ( <span class="keyword">true</span> == <a class="code" href="utils_8c.html#a323aba01db0eccbb36fce697164fae2e">is_verbose</a>() ) fprintf(stderr, <a class="code" href="utils_8h.html#a897b10d246533c95ba86cb79f92e465a">KYEL</a> <span class="stringliteral">&quot;unable to receive\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        return_string = (<span class="keywordtype">char</span> *)malloc((n+1) * <span class="keyword">sizeof</span>(char));</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        strncpy(return_string, response, strlen(response) + 1);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">return</span> return_string; <span class="comment">//Dirty Pointer</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="rmb_2identity_8c.html#a5639878ddd37ad38a519fccee0448db9">   86</a></span>&#160;<a class="code" href="struct__stack.html">list</a> <a class="code" href="msgserv_2identity_8c.html#a919042cd98422c96f1e41951f15e1780">parse_servers</a>(<span class="keywordtype">char</span> *id_serv_info) {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">char</span> *separated_info;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">char</span> step_mem_name[<a class="code" href="utils_8h.html#ad78224efe1d3fb39b67ca74ad9d9eec7">STRING_SIZE</a>]; <span class="comment">//To define later</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">char</span> step_mem_ip_addr[<a class="code" href="utils_8h.html#ad78224efe1d3fb39b67ca74ad9d9eec7">STRING_SIZE</a>];</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">int</span>  sscanf_state = 0;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    u_short step_mem_udp_port;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    u_short step_mem_tcp_port;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="struct__stack.html">list</a> msgserv_list = <a class="code" href="util__list_8c.html#a7833b8576a3787298839307cb37f9e6e">create_list</a>();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    strtok(id_serv_info, <span class="stringliteral">&quot;\n&quot;</span>); <span class="comment">//Gets the first info, stoping at newline</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    separated_info = strtok(NULL, <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">while</span> (NULL != separated_info) { <span class="comment">//Proceeds getting info and treating</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        sscanf_state = sscanf(separated_info, <span class="stringliteral">&quot;%[^;];%[^;];%hu;%hu&quot;</span>,step_mem_name, step_mem_ip_addr,</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            &amp;step_mem_udp_port, &amp;step_mem_tcp_port);<span class="comment">//Separates info and saves it in variables</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">if</span> (4 != sscanf_state) {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;             <span class="keywordflow">if</span> ( <span class="keyword">true</span> == <a class="code" href="utils_8c.html#a323aba01db0eccbb36fce697164fae2e">is_verbose</a>() ) fprintf(stdout, <a class="code" href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a> <span class="stringliteral">&quot;error processing id server data. data is invalid or corrupt\n&quot;</span> <a class="code" href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a>);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;             <span class="keywordflow">return</span> msgserv_list;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <a class="code" href="struct__server.html">server</a> alloc_server = <a class="code" href="struct__server_8c.html#a3d6ef4329eb586d4332c1242e9f4ed63">new_server</a>(step_mem_name ,</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            step_mem_ip_addr, step_mem_udp_port, step_mem_tcp_port);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <a class="code" href="struct__server_8c.html#accc9d1f041f2828fc260cc0ad7f09ce1">set_fd</a>(alloc_server, -2);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <a class="code" href="struct__server_8c.html#a77b30564822036b0cdaeeaa07c0ad0a8">set_connected</a>(alloc_server, 0);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <a class="code" href="util__list_8c.html#a6936cde9f0c4a5c268f76ce759e0e7a6">push_item_to_list</a>( msgserv_list, alloc_server ); <span class="comment">//Pushes to list</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        separated_info = strtok(NULL, <span class="stringliteral">&quot;\n&quot;</span>);<span class="comment">//Gets new info</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> msgserv_list;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">// fetch_servers returns a list parsed from the response of (get_servers).</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="rmb_2identity_8h.html#ac693b13545061a17d9fb53447add3c05">  122</a></span>&#160;<a class="code" href="struct__stack.html">list</a> <a class="code" href="rmb_2identity_8c.html#ac693b13545061a17d9fb53447add3c05">fetch_servers</a>(<span class="keywordtype">int</span> fd, <span class="keyword">struct</span> addrinfo *<a class="code" href="msgserv_2identity_8c.html#ac2b0bffa6c02e0b4083ccbab19a9d769">id_server</a>) {</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">char</span> *response;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="struct__stack.html">list</a> msgserv_lst = NULL;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    response = <a class="code" href="msgserv_2identity_8c.html#a451d33d9b3e01eca0f4fadd63e90a0d1">get_servers</a>(fd, id_server); <span class="comment">//Show server will return NULL on disconnection</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">if</span> (NULL != response){</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        msgserv_lst = <a class="code" href="msgserv_2identity_8c.html#a919042cd98422c96f1e41951f15e1780">parse_servers</a>(response);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        free(response);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">return</span> msgserv_lst;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
 <div class="ttc" id="struct__stack_html"><div class="ttname"><a href="struct__stack.html">_stack</a></div><div class="ttdef"><b>Definition:</b> <a href="util__list_8c_source.html#l00003">util_list.c:3</a></div></div>
-<div class="ttc" id="struct__server_8c_html_a4e0943176e8d0fcb9dd7a2d2d39014d5"><div class="ttname"><a href="struct__server_8c.html#a4e0943176e8d0fcb9dd7a2d2d39014d5">fetch_servers</a></div><div class="ttdeci">list * fetch_servers(int fd, struct addrinfo *id_server)</div><div class="ttdef"><b>Definition:</b> <a href="struct__server_8c_source.html#l00124">struct_server.c:124</a></div></div>
+<div class="ttc" id="msgserv_2identity_8c_html_ac2b0bffa6c02e0b4083ccbab19a9d769"><div class="ttname"><a href="msgserv_2identity_8c.html#ac2b0bffa6c02e0b4083ccbab19a9d769">id_server</a></div><div class="ttdeci">struct addrinfo * id_server</div><div class="ttdef"><b>Definition:</b> <a href="msgserv_2identity_8c_source.html#l00005">identity.c:5</a></div></div>
+<div class="ttc" id="rmb_2message_8c_html_a41ac45072ba0683ac4f551442daa665e"><div class="ttname"><a href="rmb_2message_8c.html#a41ac45072ba0683ac4f551442daa665e">select_server</a></div><div class="ttdeci">server select_server(list server_list)</div><div class="ttdoc">select_server returns a pointer to a random server in server_list. </div><div class="ttdef"><b>Definition:</b> <a href="rmb_2message_8c_source.html#l00012">message.c:12</a></div></div>
 <div class="ttc" id="utils_8h_html_a137aa83ec74421d226a90c92ec032ac9"><div class="ttname"><a href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a></div><div class="ttdeci">#define KNRM</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00020">utils.h:20</a></div></div>
-<div class="ttc" id="rmb_2message_8c_html_a78fad15cf4c99e1a1571ee8d738e29f3"><div class="ttname"><a href="rmb_2message_8c.html#a78fad15cf4c99e1a1571ee8d738e29f3">select_server</a></div><div class="ttdeci">server * select_server(list *server_list)</div><div class="ttdoc">select_server returns a pointer to a random server in server_list. </div><div class="ttdef"><b>Definition:</b> <a href="rmb_2message_8c_source.html#l00014">message.c:14</a></div></div>
+<div class="ttc" id="struct__server_8c_html_a3d6ef4329eb586d4332c1242e9f4ed63"><div class="ttname"><a href="struct__server_8c.html#a3d6ef4329eb586d4332c1242e9f4ed63">new_server</a></div><div class="ttdeci">server new_server(char *name, char *ip_addr, u_short udp_port, u_short tcp_port)</div><div class="ttdef"><b>Definition:</b> <a href="struct__server_8c_source.html#l00083">struct_server.c:83</a></div></div>
+<div class="ttc" id="util__list_8c_html_a7833b8576a3787298839307cb37f9e6e"><div class="ttname"><a href="util__list_8c.html#a7833b8576a3787298839307cb37f9e6e">create_list</a></div><div class="ttdeci">list create_list()</div><div class="ttdef"><b>Definition:</b> <a href="util__list_8c_source.html#l00014">util_list.c:14</a></div></div>
+<div class="ttc" id="rmb_2identity_8c_html_a7cba927f7fd909e390da7e59fa557862"><div class="ttname"><a href="rmb_2identity_8c.html#a7cba927f7fd909e390da7e59fa557862">init_program</a></div><div class="ttdeci">int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, list *msgservers_lst, server *sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd)</div><div class="ttdoc">Initiates the program variables. </div><div class="ttdef"><b>Definition:</b> <a href="rmb_2identity_8c_source.html#l00005">identity.c:5</a></div></div>
+<div class="ttc" id="utils_8h_html_a897b10d246533c95ba86cb79f92e465a"><div class="ttname"><a href="utils_8h.html#a897b10d246533c95ba86cb79f92e465a">KYEL</a></div><div class="ttdeci">#define KYEL</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00023">utils.h:23</a></div></div>
+<div class="ttc" id="rmb_2identity_8c_html_a6baece8be8f9ab55223d41b535511b6f"><div class="ttname"><a href="rmb_2identity_8c.html#a6baece8be8f9ab55223d41b535511b6f">REQUEST</a></div><div class="ttdeci">#define REQUEST</div><div class="ttdef"><b>Definition:</b> <a href="rmb_2identity_8c_source.html#l00003">identity.c:3</a></div></div>
+<div class="ttc" id="utils_8c_html_a323aba01db0eccbb36fce697164fae2e"><div class="ttname"><a href="utils_8c.html#a323aba01db0eccbb36fce697164fae2e">is_verbose</a></div><div class="ttdeci">bool is_verbose()</div><div class="ttdef"><b>Definition:</b> <a href="utils_8c_source.html#l00018">utils.c:18</a></div></div>
+<div class="ttc" id="msgserv_2identity_8c_html_a919042cd98422c96f1e41951f15e1780"><div class="ttname"><a href="msgserv_2identity_8c.html#a919042cd98422c96f1e41951f15e1780">parse_servers</a></div><div class="ttdeci">uint_fast8_t parse_servers(int_fast16_t udp_register_fd, list msgsrv_list)</div><div class="ttdef"><b>Definition:</b> <a href="msgserv_2identity_8c_source.html#l00295">identity.c:295</a></div></div>
+<div class="ttc" id="struct__server_8c_html_accc9d1f041f2828fc260cc0ad7f09ce1"><div class="ttname"><a href="struct__server_8c.html#accc9d1f041f2828fc260cc0ad7f09ce1">set_fd</a></div><div class="ttdeci">void set_fd(server this, int fd)</div><div class="ttdef"><b>Definition:</b> <a href="struct__server_8c_source.html#l00155">struct_server.c:155</a></div></div>
+<div class="ttc" id="rmb_2identity_8c_html_ac693b13545061a17d9fb53447add3c05"><div class="ttname"><a href="rmb_2identity_8c.html#ac693b13545061a17d9fb53447add3c05">fetch_servers</a></div><div class="ttdeci">list fetch_servers(int fd, struct addrinfo *id_server)</div><div class="ttdoc">Grabs the servers from the identity server and returns them in a list of server structures. </div><div class="ttdef"><b>Definition:</b> <a href="rmb_2identity_8c_source.html#l00122">identity.c:122</a></div></div>
+<div class="ttc" id="util__list_8c_html_a6936cde9f0c4a5c268f76ce759e0e7a6"><div class="ttname"><a href="util__list_8c.html#a6936cde9f0c4a5c268f76ce759e0e7a6">push_item_to_list</a></div><div class="ttdeci">void push_item_to_list(list got_list, item new_item)</div><div class="ttdef"><b>Definition:</b> <a href="util__list_8c_source.html#l00040">util_list.c:40</a></div></div>
 <div class="ttc" id="utils_8h_html_a66290957baed5df3930ada4cb8caccf1"><div class="ttname"><a href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a></div><div class="ttdeci">#define KRED</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00021">utils.h:21</a></div></div>
-<div class="ttc" id="struct__server_html"><div class="ttname"><a href="struct__server.html">_server</a></div><div class="ttdef"><b>Definition:</b> <a href="struct__server_8c_source.html#l00005">struct_server.c:5</a></div></div>
-<div class="ttc" id="rmb_2identity_8c_html_a8e75ab3c74fc254d6cb67aa3257f839a"><div class="ttname"><a href="rmb_2identity_8c.html#a8e75ab3c74fc254d6cb67aa3257f839a">init_program</a></div><div class="ttdeci">int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, list **msgservers_lst, server **sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd)</div><div class="ttdoc">Initiates the program variables. </div><div class="ttdef"><b>Definition:</b> <a href="rmb_2identity_8c_source.html#l00003">identity.c:3</a></div></div>
+<div class="ttc" id="struct__server_html"><div class="ttname"><a href="struct__server.html">_server</a></div><div class="ttdef"><b>Definition:</b> <a href="struct__server_8c_source.html#l00003">struct_server.c:3</a></div></div>
+<div class="ttc" id="utils_8h_html_ad78224efe1d3fb39b67ca74ad9d9eec7"><div class="ttname"><a href="utils_8h.html#ad78224efe1d3fb39b67ca74ad9d9eec7">STRING_SIZE</a></div><div class="ttdeci">#define STRING_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00029">utils.h:29</a></div></div>
+<div class="ttc" id="utils_8h_html_a48c115751f544f6dc2232111ecf30708"><div class="ttname"><a href="utils_8h.html#a48c115751f544f6dc2232111ecf30708">RESPONSE_SIZE</a></div><div class="ttdeci">#define RESPONSE_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00030">utils.h:30</a></div></div>
 <div class="ttc" id="rmb_2identity_8h_html"><div class="ttname"><a href="rmb_2identity_8h.html">identity.h</a></div></div>
+<div class="ttc" id="struct__server_8c_html_a77b30564822036b0cdaeeaa07c0ad0a8"><div class="ttname"><a href="struct__server_8c.html#a77b30564822036b0cdaeeaa07c0ad0a8">set_connected</a></div><div class="ttdeci">void set_connected(server this, bool connected)</div><div class="ttdef"><b>Definition:</b> <a href="struct__server_8c_source.html#l00149">struct_server.c:149</a></div></div>
+<div class="ttc" id="msgserv_2identity_8c_html_a451d33d9b3e01eca0f4fadd63e90a0d1"><div class="ttname"><a href="msgserv_2identity_8c.html#a451d33d9b3e01eca0f4fadd63e90a0d1">get_servers</a></div><div class="ttdeci">char * get_servers(int fd)</div><div class="ttdef"><b>Definition:</b> <a href="msgserv_2identity_8c_source.html#l00266">identity.c:266</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

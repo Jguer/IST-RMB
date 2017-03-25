@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -115,18 +115,17 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8ca7a4c530312bfc3248aa5a786911f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#a8ca7a4c530312bfc3248aa5a786911f7">select_server</a> (<a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *server_list)</td></tr>
-<tr class="memdesc:a8ca7a4c530312bfc3248aa5a786911f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">select_server returns a pointer to a random server in server_list.  <a href="#a8ca7a4c530312bfc3248aa5a786911f7">More...</a><br/></td></tr>
-<tr class="separator:a8ca7a4c530312bfc3248aa5a786911f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0c8566e8f9bcfc2edf971ed2e7c462a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#ae0c8566e8f9bcfc2edf971ed2e7c462a">rem_awol_server</a> (<a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *server_list, <a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *awol_server)</td></tr>
-<tr class="memdesc:ae0c8566e8f9bcfc2edf971ed2e7c462a"><td class="mdescLeft">&#160;</td><td class="mdescRight">removes from the list the server on awol_server  <a href="#ae0c8566e8f9bcfc2edf971ed2e7c462a">More...</a><br/></td></tr>
-<tr class="separator:ae0c8566e8f9bcfc2edf971ed2e7c462a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c74ca84755949f4b4f10a2bdace48a5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#a9c74ca84755949f4b4f10a2bdace48a5">publish</a> (int fd, <a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *sel_server, char *msg)</td></tr>
-<tr class="memdesc:a9c74ca84755949f4b4f10a2bdace48a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">publish sends a msg with 140 characters max to sel_server.  <a href="#a9c74ca84755949f4b4f10a2bdace48a5">More...</a><br/></td></tr>
-<tr class="separator:a9c74ca84755949f4b4f10a2bdace48a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69f72e9fd2d5bbbfeb436a6b876fafd9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#a69f72e9fd2d5bbbfeb436a6b876fafd9">ask_for_messages</a> (int fd, <a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *sel_server, int num)</td></tr>
-<tr class="memdesc:a69f72e9fd2d5bbbfeb436a6b876fafd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">ask_for_messages sends a UDP request to sel_server for the last num messages.  <a href="#a69f72e9fd2d5bbbfeb436a6b876fafd9">More...</a><br/></td></tr>
-<tr class="separator:a69f72e9fd2d5bbbfeb436a6b876fafd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41ac45072ba0683ac4f551442daa665e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#a41ac45072ba0683ac4f551442daa665e">select_server</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> server_list)</td></tr>
+<tr class="memdesc:a41ac45072ba0683ac4f551442daa665e"><td class="mdescLeft">&#160;</td><td class="mdescRight">select_server returns a pointer to a random server in server_list.  <a href="#a41ac45072ba0683ac4f551442daa665e">More...</a><br/></td></tr>
+<tr class="separator:a41ac45072ba0683ac4f551442daa665e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac30f5346ba98f079011b8adf9808161a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#ac30f5346ba98f079011b8adf9808161a">rem_awol_server</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> server_list, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> awol_server)</td></tr>
+<tr class="separator:ac30f5346ba98f079011b8adf9808161a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3751719ef29e64078936df2e340b8f8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#ad3751719ef29e64078936df2e340b8f8">publish</a> (int fd, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> sel_server, char *msg)</td></tr>
+<tr class="memdesc:ad3751719ef29e64078936df2e340b8f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">publish sends a msg with 140 characters max to sel_server.  <a href="#ad3751719ef29e64078936df2e340b8f8">More...</a><br/></td></tr>
+<tr class="separator:ad3751719ef29e64078936df2e340b8f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14d1d63c17c0a13be1cb36ea36acf165"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#a14d1d63c17c0a13be1cb36ea36acf165">ask_for_messages</a> (int fd, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> sel_server, int num)</td></tr>
+<tr class="memdesc:a14d1d63c17c0a13be1cb36ea36acf165"><td class="mdescLeft">&#160;</td><td class="mdescRight">ask_for_messages sends a UDP request to sel_server for the last num messages.  <a href="#a14d1d63c17c0a13be1cb36ea36acf165">More...</a><br/></td></tr>
+<tr class="separator:a14d1d63c17c0a13be1cb36ea36acf165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada7d7207bbd0380abfe0474d9d2b5ec5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#ada7d7207bbd0380abfe0474d9d2b5ec5">handle_incoming_messages</a> (int fd, uint num)</td></tr>
 <tr class="separator:ada7d7207bbd0380abfe0474d9d2b5ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68e7cbbe8d9f6e7058e1475d2b2a1fec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rmb_2message_8h.html#a68e7cbbe8d9f6e7058e1475d2b2a1fec">free_incoming_messages</a> ()</td></tr>
@@ -144,7 +143,7 @@ Functions</h2></td></tr>
 
 <p>Definition in file <a class="el" href="rmb_2message_8h_source.html">message.h</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a69f72e9fd2d5bbbfeb436a6b876fafd9"></a>
+<a class="anchor" id="a14d1d63c17c0a13be1cb36ea36acf165"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -157,7 +156,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>sel_server</em>, </td>
         </tr>
         <tr>
@@ -184,7 +183,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00086">86</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00084">84</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>
@@ -203,7 +202,7 @@ Functions</h2></td></tr>
 
 <p>ask_server_test marks the test to happen </p>
 
-<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00174">174</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00184">184</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>
@@ -222,7 +221,7 @@ Functions</h2></td></tr>
 
 <p>exec_server_test returns server state: 0 working, 1 not working, 2 still testing </p>
 
-<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00178">178</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00189">189</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>
@@ -241,7 +240,7 @@ Functions</h2></td></tr>
 
 <p>free_incoming_messages must be run to clear the memory allocated by handle_incoming_messages </p>
 
-<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00166">166</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00176">176</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>
@@ -269,11 +268,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00116">116</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00117">117</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a9c74ca84755949f4b4f10a2bdace48a5"></a>
+<a class="anchor" id="ad3751719ef29e64078936df2e340b8f8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -286,7 +285,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>sel_server</em>, </td>
         </tr>
         <tr>
@@ -313,24 +312,24 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00056">56</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00054">54</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae0c8566e8f9bcfc2edf971ed2e7c462a"></a>
+<a class="anchor" id="ac30f5346ba98f079011b8adf9808161a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void rem_awol_server </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
           <td class="paramname"><em>server_list</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>awol_server</em>&#160;</td>
         </tr>
         <tr>
@@ -341,27 +340,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>removes from the list the server on awol_server </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">server_list</td><td>List containing server information. </td></tr>
-    <tr><td class="paramname">awol_server</td><td>Server that is disconnected </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00029">29</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00028">28</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a8ca7a4c530312bfc3248aa5a786911f7"></a>
+<a class="anchor" id="a41ac45072ba0683ac4f551442daa665e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a>* select_server </td>
+          <td class="memname"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> select_server </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
           <td class="paramname"><em>server_list</em></td><td>)</td>
           <td></td>
         </tr>
@@ -376,7 +366,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00014">14</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
+<p>Definition at line <a class="el" href="rmb_2message_8c_source.html#l00012">12</a> of file <a class="el" href="rmb_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>

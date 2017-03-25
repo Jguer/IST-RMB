@@ -1,14 +1,11 @@
 var searchData=
 [
-  ['identity_2ec',['identity.c',['../msgserv_2identity_8c.html',1,'']]],
-  ['identity_2ec',['identity.c',['../rmb_2identity_8c.html',1,'']]],
-  ['identity_2eh',['identity.h',['../rmb_2identity_8h.html',1,'']]],
-  ['identity_2eh',['identity.h',['../msgserv_2identity_8h.html',1,'']]],
-  ['init_5fprogram',['init_program',['../rmb_2identity_8c.html#a8e75ab3c74fc254d6cb67aa3257f839a',1,'init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, list **msgservers_lst, server **sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd):&#160;identity.c'],['../rmb_2identity_8h.html#a8e75ab3c74fc254d6cb67aa3257f839a',1,'init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, list **msgservers_lst, server **sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd):&#160;identity.c']]],
-  ['init_5ftcp',['init_tcp',['../msgserv_2identity_8c.html#acfad51541e9597a48825d09c306d915c',1,'init_tcp(server *host):&#160;identity.c'],['../msgserv_2identity_8h.html#acfad51541e9597a48825d09c306d915c',1,'init_tcp(server *host):&#160;identity.c']]],
-  ['init_5fudp',['init_udp',['../msgserv_2identity_8c.html#ae681132d957180d08902d5689471a96a',1,'init_udp(server *host):&#160;identity.c'],['../msgserv_2identity_8h.html#ae681132d957180d08902d5689471a96a',1,'init_udp(server *host):&#160;identity.c']]],
-  ['ip_5faddr',['ip_addr',['../struct__server.html#afe9487cd8022e4eb2ebdfb64557623e2',1,'_server']]],
-  ['is_5ffd_5fset',['is_fd_set',['../msgserv_2main_8c.html#a7b8038e7741299cd4383b3aa29db0ad5',1,'main.c']]],
-  ['is_5fverbose',['is_verbose',['../utils_8c.html#a323aba01db0eccbb36fce697164fae2e',1,'is_verbose():&#160;utils.c'],['../utils_8h.html#a323aba01db0eccbb36fce697164fae2e',1,'is_verbose():&#160;utils.c']]],
-  ['item',['item',['../utils_8h.html#a37ff604c52750a277af8b1f5c70e23bd',1,'utils.h']]]
+  ['handle_5fclient_5fcomms',['handle_client_comms',['../msgserv_2message_8c.html#a114d8d5ef2ebb2e27fdffe5d2f6d907c',1,'handle_client_comms(int fd, matrix msg_matrix):&#160;message.c'],['../msgserv_2message_8h.html#a463526987af3832d070c82d43107fced',1,'handle_client_comms(int fd, matrix msg_matrix):&#160;message.c']]],
+  ['handle_5fget_5fmessages',['handle_get_messages',['../msgserv_2message_8c.html#a61e271c04351b8e1bd529a7672c84bed',1,'message.c']]],
+  ['handle_5fincoming_5fmessages',['handle_incoming_messages',['../rmb_2message_8c.html#ada7d7207bbd0380abfe0474d9d2b5ec5',1,'handle_incoming_messages(int fd, uint num):&#160;message.c'],['../rmb_2message_8h.html#ada7d7207bbd0380abfe0474d9d2b5ec5',1,'handle_incoming_messages(int fd, uint num):&#160;message.c']]],
+  ['handle_5fintsignal',['handle_intsignal',['../msgserv_2main_8c.html#a37676e93701d8102a1170964f29df3f8',1,'main.c']]],
+  ['handle_5fjoin',['handle_join',['../msgserv_2identity_8c.html#a5a4c10431065ee819c53d99eff0269f7',1,'handle_join(list msgsrv_list, int_fast16_t *udp_register_fd, server host, char *id_server_ip, char *id_server_port):&#160;identity.c'],['../msgserv_2identity_8h.html#a5a4c10431065ee819c53d99eff0269f7',1,'handle_join(list msgsrv_list, int_fast16_t *udp_register_fd, server host, char *id_server_ip, char *id_server_port):&#160;identity.c']]],
+  ['handle_5fpublish',['handle_publish',['../msgserv_2message_8c.html#a4b7c92f083e6d84c625ed834420bf105',1,'handle_publish(matrix msg_matrix, char *input_buffer):&#160;message.c'],['../msgserv_2message_8h.html#a4b7c92f083e6d84c625ed834420bf105',1,'handle_publish(matrix msg_matrix, char *input_buffer):&#160;message.c']]],
+  ['handle_5fsget_5fmessages',['handle_sget_messages',['../msgserv_2message_8c.html#abd51f048a6337ab812394101f781fa40',1,'handle_sget_messages(int fd, matrix msg_matrix):&#160;message.c'],['../msgserv_2message_8h.html#abd51f048a6337ab812394101f781fa40',1,'handle_sget_messages(int fd, matrix msg_matrix):&#160;message.c']]],
+  ['head',['head',['../struct__stack.html#ade61a781937429ba4c0ee1725a7d73da',1,'_stack']]]
 ];

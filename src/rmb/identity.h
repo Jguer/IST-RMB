@@ -27,5 +27,14 @@ int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd,
 	struct itimerspec *new_timer, int_fast32_t *timer_fd);
 
 
-/* PARSERS */
+/* PARSER */
+
+/*!\fd list fetch_servers(int fd, struct addrinfo *id_server)
+
+	\brief Grabs the servers from the identity server and returns them
+	in a list of server structures.
+
+	\param fd File descriptor for comunication with id_server
+	\param id_server Identity Server IP address info
+*/
 list fetch_servers(int fd, struct addrinfo *id_server);

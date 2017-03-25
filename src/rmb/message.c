@@ -24,8 +24,9 @@ server select_server(list server_list) {
     return (server)get_node_item(head);
 }
 
+//rem_awol_server removes a server from the list, the server in $(awol_server)
 void rem_awol_server(list server_list, server awol_server){
-    if(server_list) { //Add child sockets to the socket set
+    if(server_list) { 
         if ((get_head(server_list))) {
             if (!different_servers((server)get_node_item(get_head(server_list)), awol_server)) {
                 remove_head(server_list, free_server);
@@ -109,11 +110,15 @@ int ask_for_messages(int fd, server sel_server, int num) {
     return 0;
 }
 
-
+/* handle_incoming_messages reads the info that comes in via UDP, 
+knowing that the last client to server request was made with $(num) messages.
+$(fd) is the udp binded socket.
+*/
 int handle_incoming_messages(int fd, uint num){
     struct sockaddr_in server_addr = { 0 , .sin_port = 0};
     socklen_t addr_len = sizeof(server_addr);
 
+    //Space reservation for incoming messages
     if ((num + 1) * RESPONSE_SIZE >= _size_to_alloc) {
         _size_to_alloc = (num + 1) * RESPONSE_SIZE;
         _response_buffer = (char*)realloc(_response_buffer, sizeof(char) * _size_to_alloc);
@@ -121,16 +126,19 @@ int handle_incoming_messages(int fd, uint num){
             memory_error("Unable to realloc buffer\n");
         }
     }
+    //Initializing the alloc'd space to zeros.
     memset(_response_buffer, '\0', sizeof(char) * _size_to_alloc);
 
+    //Receiving
     int_fast16_t read_size = recvfrom(fd, _response_buffer, sizeof(char)*_size_to_alloc, 0,
             (struct sockaddr *)&server_addr, &addr_len);
 
     if (-1 == read_size) {
         if (_VERBOSE_TEST) fprintf(stderr, KRED "Failed UPD receive from %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
-        return 1; //EXIT FAILLURE
+        return 1; //EXIT FAILURE
     }
 
+    //Just debug print
     if (_VERBOSE_TEST){  //Put raw incoming data
         puts(_response_buffer);
         fflush(stdout);
@@ -139,8 +147,11 @@ int handle_incoming_messages(int fd, uint num){
     char op[RESPONSE_SIZE] = {'0'};
 
     int size_of_read = 0;
+    // Parses the info received to $(op) and $(size_of_read)
+    // Simple data treatment.
     sscanf(_response_buffer, "%s\n%n" , op, &size_of_read);
     if (0 == strcmp(op, "MESSAGES")) {
+        //Print only if its a user request
         if(true == _testing_with_results) {
             printf("Last %d messages:\n", num);
             printf("%s",&_response_buffer[9]);
@@ -156,10 +167,12 @@ int handle_incoming_messages(int fd, uint num){
         return 0; //EXIT SUCCESS
     }
 
+    //Flag that sets if this is just a server test or a real user request.
     _testing_with_results = false;
 }
 
 
+//Cleans the alloc'd buffer (eases the implementation)
 void free_incoming_messages() {
     if (NULL != _response_buffer) {
         free(_response_buffer);
@@ -167,10 +180,12 @@ void free_incoming_messages() {
     return;
 }
 
+//Sets the next receive to behave like a test (Don't print output)
 void ask_server_test() {
     _test_server = true;
 }
 
+// Counts if the server still didn't answer
 int exec_server_test() {
     if( _test_server && _last_test_server) {
     _test_server = false;

@@ -3,8 +3,10 @@
 /*
 	Private implementation
 */
+
+//Runs the list to check if the server is banned, if it is returns the server item, else NULL
 server is_server_in_list(list list_of_banned, server server_to_check){
-	if(list_of_banned) { //Add child sockets to the socket set
+	if(list_of_banned) {
         if ((get_head(list_of_banned))) {
             if (!different_servers((server)get_node_item(get_head(list_of_banned)), server_to_check)) {
                 return (server)get_node_item(get_head(list_of_banned));
@@ -26,6 +28,8 @@ server is_server_in_list(list list_of_banned, server server_to_check){
     }
     return NULL;
 }
+
+//Modifiers of the list fundamental parameter, ban time
 
 void reduce_ban(server server_to_update){
 	set_fd(server_to_update, (get_fd(server_to_update) - 1));

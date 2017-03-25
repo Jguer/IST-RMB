@@ -1,11 +1,12 @@
 <map id="src/utils/struct_message.h" name="src/utils/struct_message.h">
-<area shape="rect" id="node2" href="$msgserv_2identity_8h.html" title="src/msgserv/identity.h" alt="" coords="166,80,316,107"/>
-<area shape="rect" id="node5" href="$msgserv_2message_8h.html" title="src/msgserv/message.h" alt="" coords="341,80,504,107"/>
-<area shape="rect" id="node7" href="$rmb_2identity_8h.html" title="src/rmb/identity.h" alt="" coords="528,80,651,107"/>
-<area shape="rect" id="node10" href="$struct__message_8c.html" title="src/utils/struct_message.c" alt="" coords="675,80,851,107"/>
-<area shape="rect" id="node3" href="$msgserv_2identity_8c.html" title="src/msgserv/identity.c" alt="" coords="5,155,155,181"/>
-<area shape="rect" id="node4" href="$msgserv_2main_8c.html" title="src/msgserv/main.c" alt="" coords="179,155,316,181"/>
-<area shape="rect" id="node6" href="$msgserv_2message_8c.html" title="src/msgserv/message.c" alt="" coords="341,155,504,181"/>
-<area shape="rect" id="node8" href="$rmb_2identity_8c.html" title="src/rmb/identity.c" alt="" coords="528,155,651,181"/>
-<area shape="rect" id="node9" href="$rmb_2main_8c.html" title="src/rmb/main.c" alt="" coords="675,155,784,181"/>
+<area shape="rect" id="node2" href="$msgserv_2identity_8h.html" title="src/msgserv/identity.h" alt="" coords="173,80,323,107"/>
+<area shape="rect" id="node5" href="$msgserv_2message_8h.html" title="src/msgserv/message.h" alt="" coords="373,80,536,107"/>
+<area shape="rect" id="node7" href="$message__struct__test_8c.html" title="src/testing/message\l_struct_test.c" alt="" coords="529,155,668,197"/>
+<area shape="rect" id="node8" href="$rmb_2identity_8h.html" title="src/rmb/identity.h" alt="" coords="664,80,787,107"/>
+<area shape="rect" id="node11" href="$struct__message_8c.html" title="src/utils/struct_message.c" alt="" coords="811,80,987,107"/>
+<area shape="rect" id="node3" href="$msgserv_2identity_8c.html" title="src/msgserv/identity.c" alt="" coords="5,163,155,189"/>
+<area shape="rect" id="node4" href="$msgserv_2main_8c.html" title="src/msgserv/main.c" alt="" coords="179,163,316,189"/>
+<area shape="rect" id="node6" href="$msgserv_2message_8c.html" title="src/msgserv/message.c" alt="" coords="341,163,504,189"/>
+<area shape="rect" id="node9" href="$rmb_2identity_8c.html" title="src/rmb/identity.c" alt="" coords="693,163,816,189"/>
+<area shape="rect" id="node10" href="$rmb_2main_8c.html" title="src/rmb/main.c" alt="" coords="840,163,949,189"/>
 </map>

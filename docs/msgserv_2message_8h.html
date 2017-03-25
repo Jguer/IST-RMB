@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -86,6 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">message.h File Reference</div>  </div>
@@ -94,28 +95,76 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><code>#include &quot;<a class="el" href="struct__server_8h_source.html">../utils/struct_server.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="utils_8h_source.html">../utils/utils.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="struct__message_8h_source.html">../utils/struct_message.h</a>&quot;</code><br/>
+<code>#include &lt;alloca.h&gt;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for message.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="msgserv_2message_8h__incl.png" border="0" usemap="#src_2msgserv_2message_8h" alt=""/></div>
 <map name="src_2msgserv_2message_8h" id="src_2msgserv_2message_8h">
-<area shape="rect" id="node2" href="struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="412,80,560,107"/><area shape="rect" id="node8" href="utils_8h.html" title="utils.h" alt="" coords="141,229,197,256"/><area shape="rect" id="node14" href="struct__message_8h.html" title="../utils/struct_message.h" alt="" coords="86,80,252,107"/><area shape="rect" id="node13" href="util__list_8h.html" title="util_list.h" alt="" coords="401,155,475,181"/><area shape="rect" id="node15" href="util__matrix_8h.html" title="Matrix structure definition. " alt="" coords="103,155,236,181"/></map>
+<area shape="rect" id="node2" href="struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="364,80,512,107"/><area shape="rect" id="node8" href="utils_8h.html" title="utils.h" alt="" coords="141,229,197,256"/><area shape="rect" id="node14" href="struct__message_8h.html" title="../utils/struct_message.h" alt="" coords="129,80,295,107"/><area shape="rect" id="node13" href="util__list_8h.html" title="util_list.h" alt="" coords="401,155,475,181"/><area shape="rect" id="node15" href="util__matrix_8h.html" title="Matrix structure definition. " alt="" coords="103,155,236,181"/></map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="msgserv_2message_8h__dep__incl.png" border="0" usemap="#src_2msgserv_2message_8hdep" alt=""/></div>
 <map name="src_2msgserv_2message_8hdep" id="src_2msgserv_2message_8hdep">
-<area shape="rect" id="node2" href="msgserv_2main_8c.html" title="src/msgserv/main.c" alt="" coords="5,80,141,107"/><area shape="rect" id="node3" href="msgserv_2message_8c.html" title="src/msgserv/message.c" alt="" coords="167,80,329,107"/></map>
+<area shape="rect" id="node2" href="msgserv_2main_8c.html" title="src/msgserv/main.c" alt="" coords="5,88,141,115"/><area shape="rect" id="node3" href="msgserv_2message_8c.html" title="src/msgserv/message.c" alt="" coords="167,88,329,115"/><area shape="rect" id="node4" href="message__struct__test_8c.html" title="src/testing/message\l_struct_test.c" alt="" coords="354,81,493,122"/></map>
 </div>
 </div>
 <p><a href="msgserv_2message_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a96e7ed186f7f9efc819709764dbb0012"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2message_8h.html#a96e7ed186f7f9efc819709764dbb0012">MESSAGE_CODE</a>&#160;&#160;&#160;&quot;MESSAGES&quot;</td></tr>
+<tr class="separator:a96e7ed186f7f9efc819709764dbb0012"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dd1173e0dd7adab812e2731db61c9fb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2message_8h.html#a4dd1173e0dd7adab812e2731db61c9fb">SMESSAGE_CODE</a>&#160;&#160;&#160;&quot;SMESSAGES&quot;</td></tr>
+<tr class="separator:a4dd1173e0dd7adab812e2731db61c9fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a49ef089345651733fcb3dde7cd938c05"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2message_8h.html#a49ef089345651733fcb3dde7cd938c05">tcp_fd_handle</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> servers_list, <a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a> msg_matrix, fd_set *rfds, int(*STAT_FD)(int, fd_set *))</td></tr>
+<tr class="separator:a49ef089345651733fcb3dde7cd938c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af23cec42b58976fdc9e02c4d9b941942"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2message_8h.html#af23cec42b58976fdc9e02c4d9b941942">parse_messages</a> (<a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a> msg_matrix)</td></tr>
+<tr class="separator:af23cec42b58976fdc9e02c4d9b941942"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd51f048a6337ab812394101f781fa40"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2message_8h.html#abd51f048a6337ab812394101f781fa40">handle_sget_messages</a> (int fd, <a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a> msg_matrix)</td></tr>
+<tr class="separator:abd51f048a6337ab812394101f781fa40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64e2b6f35ebba2375312f0040ef6b8da"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2message_8h.html#a64e2b6f35ebba2375312f0040ef6b8da">share_last_message</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> servers_list, <a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a> msg_matrix)</td></tr>
+<tr class="separator:a64e2b6f35ebba2375312f0040ef6b8da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a463526987af3832d070c82d43107fced"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2message_8h.html#a463526987af3832d070c82d43107fced">handle_client_comms</a> (int fd, <a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a> msg_matrix)</td></tr>
+<tr class="memdesc:a463526987af3832d070c82d43107fced"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle_client_comms receives the comunications via udp from the client. then interprets and sends back the requested info or saves the new message  <a href="#a463526987af3832d070c82d43107fced">More...</a><br/></td></tr>
 <tr class="separator:a463526987af3832d070c82d43107fced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b7c92f083e6d84c625ed834420bf105"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2message_8h.html#a4b7c92f083e6d84c625ed834420bf105">handle_publish</a> (<a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a> msg_matrix, char *input_buffer)</td></tr>
+<tr class="separator:a4b7c92f083e6d84c625ed834420bf105"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a96e7ed186f7f9efc819709764dbb0012"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MESSAGE_CODE&#160;&#160;&#160;&quot;MESSAGES&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2message_8h_source.html#l00006">6</a> of file <a class="el" href="msgserv_2message_8h_source.html">message.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4dd1173e0dd7adab812e2731db61c9fb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SMESSAGE_CODE&#160;&#160;&#160;&quot;SMESSAGES&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2message_8h_source.html#l00007">7</a> of file <a class="el" href="msgserv_2message_8h_source.html">message.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a463526987af3832d070c82d43107fced"></a>
 <div class="memitem">
@@ -141,7 +190,158 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2message_8c_source.html#l00050">50</a> of file <a class="el" href="msgserv_2message_8c_source.html">message.c</a>.</p>
+<p>handle_client_comms receives the comunications via udp from the client. then interprets and sends back the requested info or saves the new message </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fd</td><td>File descriptor for udp comms </td></tr>
+    <tr><td class="paramname">msg_matrix</td><td>Structure to allocate messages </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="msgserv_2message_8c_source.html#l00130">130</a> of file <a class="el" href="msgserv_2message_8c_source.html">message.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4b7c92f083e6d84c625ed834420bf105"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast8_t handle_publish </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a>&#160;</td>
+          <td class="paramname"><em>msg_matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>input_buffer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2message_8c_source.html#l00123">123</a> of file <a class="el" href="msgserv_2message_8c_source.html">message.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abd51f048a6337ab812394101f781fa40"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast8_t handle_sget_messages </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a>&#160;</td>
+          <td class="paramname"><em>msg_matrix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2message_8c_source.html#l00003">3</a> of file <a class="el" href="msgserv_2message_8c_source.html">message.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af23cec42b58976fdc9e02c4d9b941942"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast8_t parse_messages </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a>&#160;</td>
+          <td class="paramname"><em>msg_matrix</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2message_8c_source.html#l00166">166</a> of file <a class="el" href="msgserv_2message_8c_source.html">message.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a64e2b6f35ebba2375312f0040ef6b8da"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast8_t share_last_message </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
+          <td class="paramname"><em>servers_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a>&#160;</td>
+          <td class="paramname"><em>msg_matrix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2message_8c_source.html#l00036">36</a> of file <a class="el" href="msgserv_2message_8c_source.html">message.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a49ef089345651733fcb3dde7cd938c05"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast8_t tcp_fd_handle </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
+          <td class="paramname"><em>servers_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a>&#160;</td>
+          <td class="paramname"><em>msg_matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">fd_set *&#160;</td>
+          <td class="paramname"><em>rfds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int(*)(int, fd_set *)&#160;</td>
+          <td class="paramname"><em>STAT_FD</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2message_8c_source.html#l00196">196</a> of file <a class="el" href="msgserv_2message_8c_source.html">message.c</a>.</p>
 
 </div>
 </div>

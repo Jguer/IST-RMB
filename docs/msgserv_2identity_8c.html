@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -86,7 +86,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">identity.c File Reference</div>  </div>
 </div><!--header-->
@@ -102,38 +104,67 @@ Include dependency graph for identity.c:</div>
 </div>
 <p><a href="msgserv_2identity_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a6baece8be8f9ab55223d41b535511b6f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a6baece8be8f9ab55223d41b535511b6f">REQUEST</a>&#160;&#160;&#160;&quot;GET_SERVERS&quot;</td></tr>
+<tr class="separator:a6baece8be8f9ab55223d41b535511b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acfad51541e9597a48825d09c306d915c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#acfad51541e9597a48825d09c306d915c">init_tcp</a> (<a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *host)</td></tr>
-<tr class="separator:acfad51541e9597a48825d09c306d915c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae681132d957180d08902d5689471a96a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#ae681132d957180d08902d5689471a96a">init_udp</a> (<a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *host)</td></tr>
-<tr class="separator:ae681132d957180d08902d5689471a96a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abaf9a9fefc1ff2fc86fd3e893ff23b88"><td class="memItemLeft" align="right" valign="top">struct addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#abaf9a9fefc1ff2fc86fd3e893ff23b88">reg_server</a> (int *fd, <a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *host, char *ip_name, char *udp_port)</td></tr>
-<tr class="separator:abaf9a9fefc1ff2fc86fd3e893ff23b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab06c30d00948e9cdbc755546a9ea0d34"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#ab06c30d00948e9cdbc755546a9ea0d34">init_tcp</a> (<a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> host)</td></tr>
+<tr class="separator:ab06c30d00948e9cdbc755546a9ea0d34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a574c39e0a138bfa20986a0e8d03e88da"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a574c39e0a138bfa20986a0e8d03e88da">init_udp</a> (<a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> host)</td></tr>
+<tr class="separator:a574c39e0a138bfa20986a0e8d03e88da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c74a73aba87722df22f3c3ae9d73392"><td class="memItemLeft" align="right" valign="top">struct addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a4c74a73aba87722df22f3c3ae9d73392">reg_server</a> (int_fast16_t *fd, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> host, char *ip_name, char *udp_port)</td></tr>
+<tr class="separator:a4c74a73aba87722df22f3c3ae9d73392"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6ed4c442f04011ee72a01077ec6eadb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#ae6ed4c442f04011ee72a01077ec6eadb">update_reg</a> (int fd, struct addrinfo *id_server_info)</td></tr>
 <tr class="separator:ae6ed4c442f04011ee72a01077ec6eadb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cea198d1d847f8059c98545b2779cb5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a4cea198d1d847f8059c98545b2779cb5">send_initial_comm</a> (int processing_fd)</td></tr>
 <tr class="separator:a4cea198d1d847f8059c98545b2779cb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa06001e362533bbf00642f19d33fcfc9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#aa06001e362533bbf00642f19d33fcfc9">connect_to_old_server</a> (<a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *old_server, bool is_comm_sent)</td></tr>
-<tr class="separator:aa06001e362533bbf00642f19d33fcfc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1789cc6bfb565e6da29dec5c8b49926"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#aa1789cc6bfb565e6da29dec5c8b49926">join_to_old_servers</a> (<a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *msgservers_list, <a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *host)</td></tr>
-<tr class="separator:aa1789cc6bfb565e6da29dec5c8b49926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af62436dc0f6183e7d862b0f1d2b6da77"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#af62436dc0f6183e7d862b0f1d2b6da77">remove_bad_servers</a> (<a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *servers_list, <a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *host, int max_fd, fd_set *rfds, void(*SET_FD)(int, fd_set *))</td></tr>
-<tr class="separator:af62436dc0f6183e7d862b0f1d2b6da77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2c26a9ced3261ba5538ba4f56ae65a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#aa2c26a9ced3261ba5538ba4f56ae65a2">tcp_fd_handle</a> (<a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *servers_list, <a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a> msg_matrix, fd_set *rfds, int(*STAT_FD)(int, fd_set *))</td></tr>
-<tr class="separator:aa2c26a9ced3261ba5538ba4f56ae65a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a887dad1c689bb43cf0e52f67fce4f4a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a887dad1c689bb43cf0e52f67fce4f4a8">tcp_new_comm</a> (<a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *servers_list, int listen_fd, fd_set *rfds, int(*STAT_FD)(int, fd_set *))</td></tr>
-<tr class="separator:a887dad1c689bb43cf0e52f67fce4f4a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a710aea3db71a88f55bf47848b1a25c57"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a710aea3db71a88f55bf47848b1a25c57">connect_to_old_server</a> (<a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> old_server, bool is_comm_sent)</td></tr>
+<tr class="separator:a710aea3db71a88f55bf47848b1a25c57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb8676b4970cce2b34d37b3bf92204e2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#afb8676b4970cce2b34d37b3bf92204e2">join_to_old_servers</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> msgservers_list, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> host)</td></tr>
+<tr class="separator:afb8676b4970cce2b34d37b3bf92204e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d8a469796f8b62bdc3eda77dd0f222c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a9d8a469796f8b62bdc3eda77dd0f222c">remove_bad_servers</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> servers_list, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> host, int max_fd, fd_set *rfds, void(*SET_FD)(int, fd_set *))</td></tr>
+<tr class="separator:a9d8a469796f8b62bdc3eda77dd0f222c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25c917f3360b2a899a73686b4f8a8627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a25c917f3360b2a899a73686b4f8a8627">tcp_new_comm</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> servers_list, int listen_fd, fd_set *rfds, int(*STAT_FD)(int, fd_set *))</td></tr>
+<tr class="separator:a25c917f3360b2a899a73686b4f8a8627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a451d33d9b3e01eca0f4fadd63e90a0d1"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a451d33d9b3e01eca0f4fadd63e90a0d1">get_servers</a> (int fd)</td></tr>
+<tr class="separator:a451d33d9b3e01eca0f4fadd63e90a0d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a919042cd98422c96f1e41951f15e1780"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a919042cd98422c96f1e41951f15e1780">parse_servers</a> (int_fast16_t udp_register_fd, <a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> msgsrv_list)</td></tr>
+<tr class="separator:a919042cd98422c96f1e41951f15e1780"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a4c10431065ee819c53d99eff0269f7"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#a5a4c10431065ee819c53d99eff0269f7">handle_join</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> msgsrv_list, int_fast16_t *udp_register_fd, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> host, char *id_server_ip, char *id_server_port)</td></tr>
+<tr class="separator:a5a4c10431065ee819c53d99eff0269f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ac2b0bffa6c02e0b4083ccbab19a9d769"><td class="memItemLeft" align="right" valign="top">struct addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="msgserv_2identity_8c.html#ac2b0bffa6c02e0b4083ccbab19a9d769">id_server</a> = NULL</td></tr>
+<tr class="separator:ac2b0bffa6c02e0b4083ccbab19a9d769"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a6baece8be8f9ab55223d41b535511b6f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define REQUEST&#160;&#160;&#160;&quot;GET_SERVERS&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00003">3</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="aa06001e362533bbf00642f19d33fcfc9"></a>
+<a class="anchor" id="a710aea3db71a88f55bf47848b1a25c57"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int connect_to_old_server </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>old_server</em>, </td>
         </tr>
         <tr>
@@ -150,60 +181,124 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00125">125</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00121">121</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="acfad51541e9597a48825d09c306d915c"></a>
+<a class="anchor" id="a451d33d9b3e01eca0f4fadd63e90a0d1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* get_servers </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fd</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00266">266</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5a4c10431065ee819c53d99eff0269f7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast8_t handle_join </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
+          <td class="paramname"><em>msgsrv_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast16_t *&#160;</td>
+          <td class="paramname"><em>udp_register_fd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
+          <td class="paramname"><em>host</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>id_server_ip</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>id_server_port</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00337">337</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab06c30d00948e9cdbc755546a9ea0d34"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int init_tcp </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>host</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00005">5</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00007">7</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae681132d957180d08902d5689471a96a"></a>
+<a class="anchor" id="a574c39e0a138bfa20986a0e8d03e88da"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int init_udp </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>host</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00046">46</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00043">43</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa1789cc6bfb565e6da29dec5c8b49926"></a>
+<a class="anchor" id="afb8676b4970cce2b34d37b3bf92204e2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int join_to_old_servers </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
           <td class="paramname"><em>msgservers_list</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>host</em>&#160;</td>
         </tr>
         <tr>
@@ -214,24 +309,52 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00181">181</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00174">174</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="abaf9a9fefc1ff2fc86fd3e893ff23b88"></a>
+<a class="anchor" id="a919042cd98422c96f1e41951f15e1780"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast8_t parse_servers </td>
+          <td>(</td>
+          <td class="paramtype">int_fast16_t&#160;</td>
+          <td class="paramname"><em>udp_register_fd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
+          <td class="paramname"><em>msgsrv_list</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00295">295</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4c74a73aba87722df22f3c3ae9d73392"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">struct addrinfo* reg_server </td>
           <td>(</td>
-          <td class="paramtype">int *&#160;</td>
+          <td class="paramtype">int_fast16_t *&#160;</td>
           <td class="paramname"><em>fd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>host</em>, </td>
         </tr>
         <tr>
@@ -254,24 +377,24 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00074">74</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00068">68</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af62436dc0f6183e7d862b0f1d2b6da77"></a>
+<a class="anchor" id="a9d8a469796f8b62bdc3eda77dd0f222c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int remove_bad_servers </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
           <td class="paramname"><em>servers_list</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__server_8h.html#a8a5a5b83235cde9168ecfe61b206a9ce">server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a>&#160;</td>
           <td class="paramname"><em>host</em>, </td>
         </tr>
         <tr>
@@ -300,7 +423,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00210">210</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00197">197</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>
@@ -318,58 +441,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00113">113</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00108">108</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa2c26a9ced3261ba5538ba4f56ae65a2"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tcp_fd_handle </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *&#160;</td>
-          <td class="paramname"><em>servers_list</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a>&#160;</td>
-          <td class="paramname"><em>msg_matrix</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">fd_set *&#160;</td>
-          <td class="paramname"><em>rfds</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int(*)(int, fd_set *)&#160;</td>
-          <td class="paramname"><em>STAT_FD</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00256">256</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a887dad1c689bb43cf0e52f67fce4f4a8"></a>
+<a class="anchor" id="a25c917f3360b2a899a73686b4f8a8627"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int tcp_new_comm </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="util__list_8h.html#afd0986af091153ff99a32043eeb006f9">list</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a>&#160;</td>
           <td class="paramname"><em>servers_list</em>, </td>
         </tr>
         <tr>
@@ -398,7 +481,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00328">328</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00238">238</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>
@@ -426,7 +509,22 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00101">101</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00096">96</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="ac2b0bffa6c02e0b4083ccbab19a9d769"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct addrinfo* id_server = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="msgserv_2identity_8c_source.html#l00005">5</a> of file <a class="el" href="msgserv_2identity_8c_source.html">identity.c</a>.</p>
 
 </div>
 </div>

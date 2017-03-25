@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -87,7 +87,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">struct_message.c File Reference</div>  </div>
 </div><!--header-->
@@ -120,12 +121,17 @@ Functions</h2></td></tr>
 <tr class="separator:ac481264dacd359391d43324a6cdc6b7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81b6e71d130cf8ff6ae10fa8bb574926"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct__message_8h.html#a2220e17a2b47ced7b6c4dbbde9169e0b">message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__message_8c.html#a81b6e71d130cf8ff6ae10fa8bb574926">new_message</a> (uint_fast32_t lc, char *src)</td></tr>
 <tr class="separator:a81b6e71d130cf8ff6ae10fa8bb574926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd9a57602f8ac927f275c9ed110dbde1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__message_8c.html#afd9a57602f8ac927f275c9ed110dbde1">parse_messages</a> (char *buffer, uint_fast32_t m)</td></tr>
-<tr class="separator:afd9a57602f8ac927f275c9ed110dbde1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a008a541ea25639f6c6d9a97df0fc1624"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__message_8c.html#a008a541ea25639f6c6d9a97df0fc1624">free_message</a> (<a class="el" href="utils_8h.html#a37ff604c52750a277af8b1f5c70e23bd">item</a> got_item)</td></tr>
 <tr class="separator:a008a541ea25639f6c6d9a97df0fc1624"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac724d23b391357d22fa2311150c60130"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__message_8c.html#ac724d23b391357d22fa2311150c60130">print_message_plain</a> (<a class="el" href="utils_8h.html#a37ff604c52750a277af8b1f5c70e23bd">item</a> got_item)</td></tr>
+<tr class="separator:ac724d23b391357d22fa2311150c60130"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acedcb1add5bcef112628a5be56dbe8e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__message_8c.html#acedcb1add5bcef112628a5be56dbe8e0">print_message</a> (<a class="el" href="utils_8h.html#a37ff604c52750a277af8b1f5c70e23bd">item</a> got_item)</td></tr>
 <tr class="separator:acedcb1add5bcef112628a5be56dbe8e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a62c5871d417faf5ae7f6f1716a3d7f0e"><td class="memItemLeft" align="right" valign="top">uint_fast32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__message_8c.html#a62c5871d417faf5ae7f6f1716a3d7f0e">g_lc</a></td></tr>
+<tr class="separator:a62c5871d417faf5ae7f6f1716a3d7f0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a008a541ea25639f6c6d9a97df0fc1624"></a>
@@ -142,7 +148,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00105">105</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
+<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00089">89</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
 
 </div>
 </div>
@@ -170,7 +176,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00017">17</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
+<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00019">19</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
 
 </div>
 </div>
@@ -188,7 +194,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00013">13</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
+<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00015">15</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
 
 </div>
 </div>
@@ -206,7 +212,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00009">9</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
+<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00011">11</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
 
 </div>
 </div>
@@ -234,34 +240,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00066">66</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="afd9a57602f8ac927f275c9ed110dbde1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="util__matrix_8h.html#aeb5e136aaa594729b3c7657e59ccb67f">matrix</a> parse_messages </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint_fast32_t&#160;</td>
-          <td class="paramname"><em>m</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
 <p>Definition at line <a class="el" href="struct__message_8c_source.html#l00077">77</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
 
 </div>
@@ -280,7 +258,25 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00116">116</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
+<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00112">112</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac724d23b391357d22fa2311150c60130"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void print_message_plain </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="utils_8h.html#a37ff604c52750a277af8b1f5c70e23bd">item</a>&#160;</td>
+          <td class="paramname"><em>got_item</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00100">100</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
 
 </div>
 </div>
@@ -308,7 +304,22 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00060">60</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
+<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00071">71</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="a62c5871d417faf5ae7f6f1716a3d7f0e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast32_t g_lc</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="struct__message_8c_source.html#l00008">8</a> of file <a class="el" href="struct__message_8c_source.html">struct_message.c</a>.</p>
 
 </div>
 </div>
