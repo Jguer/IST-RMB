@@ -7,6 +7,7 @@ struct addrinfo *id_server = NULL;
 int init_tcp(server host) {
     int master_fd;
     struct sockaddr_in tcpaddr = {0, .sin_port = 0};
+    struct timeval tv = {.tv_sec = 30, .tv_usec= 0};
     void (*old_handler)(int);   //interrupt handler
 
     master_fd = socket(AF_INET, SOCK_STREAM, 0);  //Create master socket
@@ -14,6 +15,7 @@ int init_tcp(server host) {
         if (_VERBOSE_TEST) printf( KRED "error creating socket\n" KNRM );
         return -1;
     }
+    setsockopt(master_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
 
     tcpaddr.sin_family = AF_INET;
     tcpaddr.sin_addr.s_addr = inet_addr(get_ip_address(host));
@@ -43,12 +45,15 @@ int init_tcp(server host) {
 int init_udp(server host) {
     int u_fd;
     struct sockaddr_in udpaddr = {0 , .sin_port = 0};
+    struct timeval tv = {.tv_sec = 30, .tv_usec= 0};
 
     u_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (u_fd==-1) {
         if (_VERBOSE_TEST) printf( KRED "error creating socket\n" KNRM);
         return -1;
     }
+
+    setsockopt(u_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
 
     udpaddr.sin_family = AF_INET;
     udpaddr.sin_addr.s_addr = inet_addr(get_ip_address(host));
@@ -69,6 +74,8 @@ struct addrinfo *reg_server(int_fast16_t *fd, server host ,char *ip_name, char *
     if (!id_server_info) {
             return NULL;
     }
+    struct timeval tv = {.tv_sec = 30, .tv_usec= 0};
+
     int nwritten;
 
     if (!id_server_info) return NULL;
@@ -78,6 +85,8 @@ struct addrinfo *reg_server(int_fast16_t *fd, server host ,char *ip_name, char *
         if (_VERBOSE_TEST) printf(KRED "error creating udp socket for registry\n" KNRM);
         return NULL;
     }
+
+    setsockopt(*fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
 
     if (0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host),
                 get_ip_address(host), get_udp_port(host), get_tcp_port(host))) return NULL;
@@ -119,6 +128,7 @@ int send_initial_comm(int processing_fd) {
 int connect_to_old_server(server old_server, bool is_comm_sent) {
     int processing_fd;
     int status = 1; //false
+    struct timeval tv = {.tv_sec = 30, .tv_usec= 0};
 
     if (-2 == get_fd(old_server)) {
         // create new comunication
@@ -128,6 +138,7 @@ int connect_to_old_server(server old_server, bool is_comm_sent) {
             status = -1; //fatal error
             return status;
         }
+        setsockopt(processing_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
 
         char portitoa[STRING_SIZE];
         if (0 > sprintf(portitoa, "%hu", get_tcp_port(old_server))) {
@@ -235,7 +246,7 @@ int remove_bad_servers(list servers_list, server host, int max_fd, fd_set *rfds,
 
 int tcp_new_comm(list servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(int, fd_set *)) {
     if ((*STAT_FD)(listen_fd, rfds)) { //if something happens on tcp_listen_fd create and allocate new socket
-
+        struct timeval tv = {.tv_sec = 30, .tv_usec= 0};
         struct sockaddr_in newserv_info;
         int newserv_fd;
 
@@ -248,6 +259,7 @@ int tcp_new_comm(list servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(
             if (_VERBOSE_TEST) printf("error accepting communication\n");
             return -1; //Fatal error
         }
+        setsockopt(newserv_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
 
         //add new socket to list of sockets
         server newserv = new_server("MSG Server",inet_ntoa(newserv_info.sin_addr),0 , ntohs( newserv_info.sin_port ) );

@@ -139,11 +139,11 @@ int main(int argc, char *argv[]) {
     udp_global_fd = init_udp(host); //Initiates UDP connection
     tcp_listen_fd = init_tcp(host); //Initiates TCP connection
 
-    if ( 0 >= udp_global_fd || 0 >= tcp_listen_fd ){
+    if ( 0 >= udp_global_fd || 0 >= tcp_listen_fd){
         fprintf(stdout, KYEL "Cannot initializate UDP and/or TCP connections\n" KGRN
                 "Check the ip address and ports\n" KNRM) ;
+        g_exit = 1;
         exit_code = EXIT_FAILURE;
-        goto PROGRAM_EXIT;
     }
 
     matrix msg_matrix = create_matrix(m);
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
             ,name, ip, udp_port, tcp_port, id_server_ip, id_server_port);
     fflush(stdout);
 
-    if (daemon_mode) {
+    if (daemon_mode && !g_exit) {
         err = handle_join(msgsrv_list, &udp_register_fd, host, id_server_ip, id_server_port);
         if (err) {
             fprintf(stderr, KRED "Unable to join. Error code %d\n" KNRM, err);
@@ -188,8 +188,7 @@ int main(int argc, char *argv[]) {
         int activity = select(max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, threading function
         if(0 > activity){
             if (_VERBOSE_TEST) printf("error on select\n%d\n", errno);
-            exit_code = EXIT_FAILURE;
-            goto PROGRAM_EXIT;
+            break;
         }
 
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
@@ -199,17 +198,15 @@ int main(int argc, char *argv[]) {
 
 
         if ( 0 != tcp_new_comm(msgsrv_list, tcp_listen_fd, &rfds, is_fd_set)) { //Starts connection for incoming requests
-            exit_code = EXIT_FAILURE;
-            goto PROGRAM_EXIT;
+            break;
         }
 
         //if something happened on other socket we must process it
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
             read_size = read(0, buffer, STRING_SIZE);
-            if ( 0 == read_size ) {
-                if ( _VERBOSE_TEST ) printf("error reading from stdio\n");
-                exit_code = EXIT_FAILURE;
-                goto PROGRAM_EXIT;
+            if (0 == read_size) {
+                if (_VERBOSE_TEST) printf("error reading from stdio\n");
+                break;
             }
 
             buffer[read_size-1] = '\0'; //switches \n to \0
@@ -240,6 +237,8 @@ int main(int argc, char *argv[]) {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
 
+            fprintf(stdout, KGRN "\nPrompt > " KNRM);
+            fflush(stdout);
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
@@ -251,8 +250,6 @@ int main(int argc, char *argv[]) {
 
         for_each_element(msgsrv_list, server_treat_communications, (void*[]){(void *)msg_matrix, (void *)&rfds});
 
-        fprintf(stdout, KGRN "\nPrompt > " KNRM);
-        fflush(stdout);
     }
 
 free_matrix(msg_matrix, free_message);
