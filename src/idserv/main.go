@@ -135,7 +135,7 @@ func handleUDPConn(conn *net.UDPConn, serverRecv chan server, askForServers chan
 
 		switch {
 		case strings.Contains(string(buf[0:4]), "REG"):
-			handleRegistrations(string(buf[4:n-2]), serverRecv)
+			go handleRegistrations(string(buf[4:n-2]), serverRecv)
 		case strings.Contains(string(buf[0:11]), "GET_SERVERS"):
 			go handleServerRequests(askForServers, addr, conn)
 		default:
