@@ -60,7 +60,6 @@ matrix create_matrix(size_t capacity) {
 void print_matrix(matrix this, void (*print_item)(item)) {
     for (uint_fast32_t i = 0; i < this->capacity; i++) {
         print_item(this->array[i]);
-        fflush(stdout);
     }
 }
 

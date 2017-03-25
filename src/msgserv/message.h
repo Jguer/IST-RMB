@@ -11,6 +11,7 @@ uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, i
 uint_fast8_t parse_messages(matrix msg_matrix);
 uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix);
 uint_fast8_t share_last_message(list servers_list, matrix msg_matrix);
+void server_treat_communications(item obj, void *cnt_array[]);
 
 /*! \fn handle_client_comms(int fd, matrix msg_matrix)
 	\brief handle_client_comms receives the comunications via udp from the client.

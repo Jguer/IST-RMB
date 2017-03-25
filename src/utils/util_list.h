@@ -15,6 +15,7 @@ void print_list(list got_list, void (*print_item)(item));
 void free_list(list got_list, void (*free_item)(item));
 void merge_lists(list list_a, list list_b);
 void dec_size_list(list got_list);
+void for_each_element(list got_list, void (*action)(item obj, void *cnt_array[]), void *cnt_array[]);
 
 /* NODE */
 node create_node(item new_item, node next_node);

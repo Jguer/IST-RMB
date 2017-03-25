@@ -217,6 +217,16 @@ void merge_lists(list list_a, list list_b) {
     return;
 }
 
+void for_each_element(list got_list, void (*action)(item obj, void *cnt_array[]), void *cnt_array[]) {
+    if (NULL != got_list) {
+        node aux_node;
+        for (aux_node = get_head(got_list); aux_node != NULL;
+                aux_node = get_next_node(aux_node)) {
+            action(get_node_item(aux_node),cnt_array);
+        }
+    }
+}
+
 void already_free(item got_item) {
     if(got_item)
         return;

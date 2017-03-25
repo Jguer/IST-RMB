@@ -51,6 +51,7 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
             SMESSAGE_CODE, get_lc(get_element(msg_matrix, get_size(msg_matrix) - 1)),
             get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
+    printf("Sending %s\n", response_buffer);
     if (servers_list) { //TCP sockets already connected handling
         for (aux_node = get_head(servers_list);
                 aux_node != NULL ;
@@ -188,72 +189,70 @@ uint_fast8_t parse_messages(matrix msg_matrix) {
     return 0;
 }
 
-uint_fast8_t tcp_fd_handle(list servers_list, matrix msg_matrix, fd_set *rfds, int (*STAT_FD)(int, fd_set *)) {
-    char *buffer = NULL;
+
+void server_treat_communications(item obj, void *cnt_array[]) {
+    //Opt Args
+    matrix msg_matrix = (matrix) cnt_array[0];
+    fd_set *rfds = (fd_set *) cnt_array[1];
+
+    server cur_server = (server)obj;
+    printf("Treating %s\n", get_name(cur_server));
+
+    int fd = get_fd(cur_server);
+    int_fast32_t nread = 0;
     char op[STRING_SIZE];
     char *p = NULL;
-    int nread = 0;
     uint_fast8_t err = 0;
 
-    buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (get_capacity(msg_matrix) + 5));
+    char *buffer = (char *)alloca(STRING_SIZE * (get_capacity(msg_matrix) + 5));
     if (!buffer) {
         memory_error("tcp_fd_handle");
-        return 1;
+        return;
     }
 
-    if (NULL != servers_list) { //TCP sockets already connected handling
-        node aux_node;
-        for (aux_node = get_head(servers_list); aux_node != NULL;
-                aux_node = get_next_node(aux_node)) {
+    if (FD_ISSET(fd, rfds)) {
+        bzero(buffer, STRING_SIZE * (get_capacity(msg_matrix) + 5));
 
-            int processing_fd = get_fd((server)get_node_item(aux_node)); //file descriptor/socket
+        printf("Received Communication\n");
+        while (nread != -1) {
+            char micro_buffer[STRING_SIZE] = {'\0'};
+            nread = recv(fd,micro_buffer,RESPONSE_SIZE - 1, MSG_DONTWAIT);
+            if (0 == nread) {
+                close(fd);
+                set_fd(cur_server, -1 );
+                set_connected(cur_server, 0);
+                break;
+            }
+            strncat(buffer, micro_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 5));
+        }
+        printf("Read %s\n", buffer);
 
-            if ((*STAT_FD)(processing_fd, rfds)) {
-            	bzero(buffer,sizeof(char) * STRING_SIZE * (get_capacity(msg_matrix) + 5));
+        p = strtok(buffer, "\n");
+        if (NULL != p) {
+            strncpy(op, p, STRING_SIZE);
+        } else {
+            bzero(op, STRING_SIZE);
+        }
 
-                while (nread != -1) {
-                	char micro_buffer[STRING_SIZE] = {'\0'};
-                	nread = recv(processing_fd,micro_buffer,RESPONSE_SIZE - 1, MSG_DONTWAIT);
-                    if (0 == nread) {
-                        close(processing_fd);
-                        set_fd( (server )get_node_item(aux_node), -1 );
-                        set_connected((server )get_node_item(aux_node), 0);
-                        break;
-                    }
-					strncat(buffer, micro_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 5));
-                }
+        if (0 == strcmp("SGET_MESSAGES", op)) {
+            err = handle_sget_messages(fd, msg_matrix);
+            fflush(stdout);
+            if (err) {
+                close(fd);
+                set_fd(cur_server, -1 );
+                set_connected(cur_server, 0);
+            }
+            //Send all my messages
 
-                p = strtok(buffer, "\n");
-                if (NULL != p) {
-                    strncpy(op, p, STRING_SIZE);
-                } else {
-                	bzero(op, STRING_SIZE);
-                }
+        } else if (0 == strcmp("SMESSAGES", op) ) {
+            fflush(stdout);
 
-                if (0 == strcmp("SGET_MESSAGES", op)) {
-                    err = handle_sget_messages(processing_fd, msg_matrix);
-                    fflush( stdout );
-                    if (err) {
-                        close(processing_fd);
-                        set_fd( (server )get_node_item(aux_node), -1 );
-                        set_connected((server )get_node_item(aux_node), 0);
-                    }
-                    //Send all my messages
-
-                } else if (0 == strcmp("SMESSAGES", op) ) {
-                    fflush(stdout);
-
-                    err = parse_messages(msg_matrix);
-                    if (err) {
-                        close(processing_fd);
-                        set_fd((server)get_node_item(aux_node), -1 );
-                        set_connected((server)get_node_item(aux_node), 0);
-                    }
-                }
+            err = parse_messages(msg_matrix);
+            if (err) {
+                close(fd);
+                set_fd(cur_server, -1 );
+                set_connected(cur_server, 0);
             }
         }
     }
-
-    free(buffer);
-    return 0;
 }

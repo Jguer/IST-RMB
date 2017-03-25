@@ -215,7 +215,6 @@ int main(int argc, char *argv[]) {
             buffer[read_size-1] = '\0'; //switches \n to \0
 
             //User options input: show_servers, exit, publish message, show_latest_messages n;
-            //User options input: show_servers, exit, publish message, show_latest_messages n;
             if (strcasecmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
                 if (!is_join_complete) { //Register on idServer
                     err = handle_join(msgsrv_list, &udp_register_fd, host, id_server_ip, id_server_port);
@@ -250,7 +249,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        tcp_fd_handle(msgsrv_list, msg_matrix, &rfds, is_fd_set); //TCP already started comunications handling
+        for_each_element(msgsrv_list, server_treat_communications, (void*[]){(void *)msg_matrix, (void *)&rfds});
 
         fprintf(stdout, KGRN "\nPrompt > " KNRM);
         fflush(stdout);
