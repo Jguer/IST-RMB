@@ -161,6 +161,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, KRED "Unable to join. Error code %d\n" KNRM, err);
         } else {
             is_join_complete = true;
+            timerfd_settime (timer_fd, 0, &new_timer, NULL);
         }
     }
     // Processing Loop
@@ -176,8 +177,7 @@ int main(int argc, char *argv[]) {
             FD_SET(tcp_listen_fd, &rfds);
             max_fd = tcp_listen_fd > udp_global_fd ? tcp_listen_fd : udp_global_fd;
             max_fd = timer_fd > max_fd ? timer_fd : max_fd;
-        }
-        else {
+        } else {
             max_fd = STDIN_FILENO;
         }
 
