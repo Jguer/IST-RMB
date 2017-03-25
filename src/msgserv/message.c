@@ -33,12 +33,32 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
     return exit_code;
 }
 
-uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
-    node aux_node;
-    int_fast16_t processing_fd;
-    uint_fast8_t exit_code = 0;
-    char *response_buffer, *ptr = NULL;
+// cnt_array[0] must be of type char*
+void send_to_server(item obj, void *cnt_array[]) {
     int_fast16_t nleft, nwritten = 0;
+    server cur_server = (server) obj;
+    int fd = get_fd(cur_server); //file descriptor/socket
+    char *ptr = NULL;
+    char *msg = (char *)cnt_array[0];
+
+    ptr = msg;
+    nleft = strlen(ptr);
+    while (0 < nleft) {
+        nwritten = write(fd,ptr + nwritten, nleft - nwritten);
+        nleft = nleft - nwritten;
+        if (-1 == nwritten) {
+            if (_VERBOSE_TEST) printf("\nerror sending communication TCP\n");
+            close(fd);
+            set_fd(cur_server, -1);
+            set_connected(cur_server, 0);
+            return;
+        } //error
+    }
+}
+
+uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
+    uint_fast8_t exit_code = 0;
+    char *response_buffer = NULL;
 
     if (_VERBOSE_TEST) printf(KCYN "\nSharing last message %s\n" KNRM, get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
@@ -51,30 +71,7 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
             SMESSAGE_CODE, get_lc(get_element(msg_matrix, get_size(msg_matrix) - 1)),
             get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
-    printf("Sending %s\n", response_buffer);
-    if (servers_list) { //TCP sockets already connected handling
-        for (aux_node = get_head(servers_list);
-                aux_node != NULL ;
-                aux_node = get_next_node(aux_node)) {
-
-            processing_fd = get_fd((server)get_node_item(aux_node)); //file descriptor/socket
-
-            ptr = response_buffer;
-            nleft = strlen(ptr);
-            while(0 < nleft) {
-                nwritten = write(processing_fd,ptr + nwritten ,nleft - nwritten);
-                nleft = nleft - nwritten;
-                if(-1 == nwritten) {
-                    if ( _VERBOSE_TEST ) printf("\nerror sending communication TCP\n");
-                    close(processing_fd);
-                    set_fd((server)get_node_item(aux_node), -1 );
-                    set_connected((server)get_node_item(aux_node), 0);
-                    return 1;
-                } //error
-            }
-        }
-    }
-
+    for_each_element(servers_list, send_to_server, (void*[]){(void *)response_buffer});
     return exit_code;
 }
 
@@ -190,13 +187,13 @@ uint_fast8_t parse_messages(matrix msg_matrix) {
 }
 
 
+// cnt_array[0] must be of type matrix and cnt_array[1] must be of type *fd_set
 void server_treat_communications(item obj, void *cnt_array[]) {
     //Opt Args
     matrix msg_matrix = (matrix) cnt_array[0];
     fd_set *rfds = (fd_set *) cnt_array[1];
 
     server cur_server = (server)obj;
-    printf("Treating %s\n", get_name(cur_server));
 
     int fd = get_fd(cur_server);
     int_fast32_t nread = 0;
