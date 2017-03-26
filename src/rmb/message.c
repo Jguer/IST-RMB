@@ -58,7 +58,7 @@ int publish(int fd, server sel_server, char *msg) {
     socklen_t addr_len;
     char msg_to_send[RESPONSE_SIZE];
 
-    sprintf(msg_to_send, "%s %s\n", PUBLISH, msg);
+    sprintf(msg_to_send, "%s %s", PUBLISH, msg);
 
     server_addr.sin_family = AF_INET;
     if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
@@ -69,6 +69,7 @@ int publish(int fd, server sel_server, char *msg) {
     server_addr.sin_port = htons(get_udp_port(sel_server));
     addr_len = sizeof(server_addr);
 
+    printf("Message:%s\nChars:%d\n",msg_to_send,strlen(msg_to_send));
     n = sendto(fd, msg_to_send, strlen(msg_to_send) + 1, 0,
             (struct sockaddr*)&server_addr, addr_len);
 

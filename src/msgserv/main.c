@@ -242,9 +242,6 @@ int main(int argc, char *argv[]) {
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
-
-            fprintf(stdout, KGRN "\nPrompt > " KNRM);
-            fflush(stdout);
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling

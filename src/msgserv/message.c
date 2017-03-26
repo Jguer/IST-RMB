@@ -9,7 +9,7 @@ uint_fast8_t handle_sget_messages(int fd, matrix msg_matrix) {
         memory_error("unable to allocate response while sharing last message");
     }
 
-    char* to_append = get_first_n_messages(msg_matrix, get_capacity(msg_matrix));
+    char* to_append = get_first_n_messages(msg_matrix, get_capacity(msg_matrix), MSG_W_LC);
     int_fast32_t nbytes = 0;
     if (!to_append) {
         nbytes = snprintf(response_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 1), "%s\n\n", SMESSAGE_CODE);
@@ -67,9 +67,8 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
         memory_error("unable to allocate response while sharing last message");
         return EXIT_FAILURE;
     }
-    snprintf(response_buffer, STRING_SIZE * 2, "%s\n%d;%s",
-            SMESSAGE_CODE, get_lc(get_element(msg_matrix, get_size(msg_matrix) - 1)),
-            get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
+    snprintf(response_buffer, STRING_SIZE * 2, "%s\n%s",
+            SMESSAGE_CODE, get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
     for_each_element(servers_list, send_to_server, (void*[]){(void *)response_buffer});
     return exit_code;
@@ -89,7 +88,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
     num = get_capacity(msg_matrix) < num ? get_capacity(msg_matrix) : num;
     num = get_size(msg_matrix) < num ? get_size(msg_matrix) : num;
 
-    to_append = get_first_n_messages(msg_matrix, num);
+    to_append = get_first_n_messages(msg_matrix, num, MSG_WO_LC);
 
     if (NULL != to_append) {
         response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
@@ -125,7 +124,7 @@ uint_fast8_t handle_publish(matrix msg_matrix, char *input_buffer) {
 }
 
 uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
-    char buffer[STRING_SIZE] = {'\0'};
+    char buffer[RESPONSE_SIZE] = {'\0'};
     char op[STRING_SIZE] = {'\0'};
     char input_buffer[STRING_SIZE] = {'\0'};
     uint_fast8_t err = 0;
@@ -142,8 +141,7 @@ uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
     }
 
     sscanf(buffer, "%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
-    input_buffer[strlen(input_buffer)]='\n';
-    input_buffer[strlen(input_buffer) + 1] = '\0';
+    input_buffer[strlen(input_buffer)] = '\0';
 
     if (_VERBOSE_TEST) puts(buffer);
 
