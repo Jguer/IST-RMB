@@ -171,13 +171,13 @@ int connect_to_old_server(server old_server, bool is_comm_sent) {
             }
         }
 
+        freeaddrinfo(res);
         set_fd(old_server, processing_fd);
     }
 
     if(1 == status && true == is_comm_sent) status = 0; //if comm is already sent to one is good
 
     return status;
-
 }
 
 int join_to_old_servers(list msgservers_list , server host) {

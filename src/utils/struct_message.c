@@ -17,17 +17,17 @@ int get_lc(message this) {
 }
 
 char *get_first_n_messages(matrix msg_matrix, int n) {
-    char *to_return = (char*)malloc(sizeof(char) * STRING_SIZE * n);
-    if (!to_return) {
-        return to_return;
-    }
-    bzero(to_return, STRING_SIZE * n);
     int list_size = (int)get_size(msg_matrix);
-    int i = list_size - n;
-
     if (list_size == 0){
         return NULL;
     }
+
+    char *to_return = (char*)malloc(sizeof(char) * STRING_SIZE * n);
+    if (!to_return) {
+        return NULL;
+    }
+    bzero(to_return, STRING_SIZE * n);
+    int i = list_size - n;
 
     if (i < 0) {
     	if (get_overflow(msg_matrix)){

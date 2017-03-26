@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
                 break;
             }
 
-            print_prompt = true;
+            print_prompt = false;
 
             buffer[read_size-1] = '\0'; //switches \n to \0
 
@@ -234,17 +234,17 @@ int main(int argc, char *argv[]) {
                 if (msgsrv_list != NULL && 0 != get_list_size(msgsrv_list)) print_list(msgsrv_list, print_server);
                 else printf("No registered servers\n");
             } else if (0 == strcasecmp("show_messages", buffer) || 0 == strcmp("2", buffer)) {
-                if (0 == get_size(msg_matrix) && false == get_overflow(msg_matrix)) printf("0 messages received\n");
-                print_matrix(msg_matrix, print_message);
+                if (0 == get_size(msg_matrix) && false == get_overflow(msg_matrix)) {
+                    printf("0 messages received\n");
+                } else {
+                    print_matrix(msg_matrix, print_message);
+                }
             } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
                 g_exit = 1;
-                print_prompt = false;
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
-
-            fprintf(stdout, KGRN "\nPrompt > " KNRM);
-            fflush(stdout);
+                print_prompt = true;
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
@@ -252,12 +252,11 @@ int main(int argc, char *argv[]) {
             if (2 == err) {
                 share_last_message(msgsrv_list, msg_matrix);
             }
-            print_prompt = false;
         }
 
         for_each_element(msgsrv_list, server_treat_communications, (void*[]){(void *)msg_matrix, (void *)&rfds});
 
-        if (print_prompt){
+        if (print_prompt) {
             fprintf(stdout, KGRN "\nPrompt > " KNRM);
             fflush(stdout);
         }
