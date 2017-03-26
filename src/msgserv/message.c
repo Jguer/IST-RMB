@@ -125,7 +125,7 @@ uint_fast8_t handle_publish(matrix msg_matrix, char *input_buffer) {
 }
 
 uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
-    char buffer[STRING_SIZE] = {'\0'};
+    char buffer[RESPONSE_SIZE] = {'\0'};
     char op[STRING_SIZE] = {'\0'};
     char input_buffer[STRING_SIZE] = {'\0'};
     uint_fast8_t err = 0;
