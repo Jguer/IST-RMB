@@ -142,8 +142,8 @@ uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
     }
 
     sscanf(buffer, "%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
-    input_buffer[strlen(input_buffer)]='\n';
-    input_buffer[strlen(input_buffer) + 1] = '\0';
+    input_buffer[read_size]='\n';
+    input_buffer[read_size + 1] = '\0';
 
     if (_VERBOSE_TEST) puts(buffer);
 
