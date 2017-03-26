@@ -222,25 +222,33 @@ void server_treat_communications(item obj, void *cnt_array[]) {
                 message_end = true;
             }
 
+            /* printf("MicroBuffer: %s\n", micro_buffer); */
             token = strtok(micro_buffer, "\n");
             while (token) {
+                /* printf("Token: %s\n", token); */
                 aux_token = strtok(NULL, "\n");
                 if (aux_token) {
                     if (strlen(to_hold)) {
                         snprintf(to_analyze, STRING_SIZE * 3, "%s%s", to_hold, token);
                         to_hold[0] = '\0';
                     } else {
-                        to_analyze = strcpy(to_analyze, token);
+                        memcpy(to_analyze, token, STRING_SIZE * 3);
                     }
                 } else {
                     if(message_end) {
-                        memcpy(to_analyze, token, STRING_SIZE * 3);
+                        if (strlen(to_hold)) {
+                            snprintf(to_analyze, STRING_SIZE * 3, "%s%s", to_hold, token);
+                        } else {
+                            memcpy(to_analyze, token, STRING_SIZE * 3);
+                        }
                     } else {
                         strncat(to_hold, token, STRING_SIZE);
+                        token = aux_token;
+                        continue;
                     }
                 }
 
-                printf("To Analyze: %s\n", to_analyze);
+                /* printf("To Analyze: %s\n", to_analyze); */
                 if (sms_state) {
                     err = parse_message(msg_matrix, to_analyze);
                     if (err) {
