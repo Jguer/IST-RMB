@@ -39,6 +39,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -70,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -91,6 +92,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">identity.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Initialization of the program and identity server communication.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;sys/timerfd.h&gt;</code><br/>
 <code>#include &quot;<a class="el" href="rmb_2message_8h_source.html">message.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="struct__server_8h_source.html">../utils/struct_server.h</a>&quot;</code><br/>
@@ -108,7 +112,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="rmb_2identity_8h__dep__incl.png" border="0" usemap="#src_2rmb_2identity_8hdep" alt=""/></div>
 <map name="src_2rmb_2identity_8hdep" id="src_2rmb_2identity_8hdep">
-<area shape="rect" id="node2" href="rmb_2identity_8c.html" title="src/rmb/identity.c" alt="" coords="5,80,128,107"/><area shape="rect" id="node3" href="rmb_2main_8c.html" title="src/rmb/main.c" alt="" coords="152,80,261,107"/></map>
+<area shape="rect" id="node2" href="rmb_2identity_8c.html" title="src/rmb/identity.c" alt="" coords="5,80,128,107"/><area shape="rect" id="node3" href="rmb_2main_8c.html" title="Reliable Message Board &#45; Client. " alt="" coords="152,80,261,107"/></map>
 </div>
 </div>
 <p><a href="rmb_2identity_8h_source.html">Go to the source code of this file.</a></p>
@@ -122,7 +126,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:ac693b13545061a17d9fb53447add3c05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Grabs the servers from the identity server and returns them in a list of server structures.  <a href="#ac693b13545061a17d9fb53447add3c05">More...</a><br/></td></tr>
 <tr class="separator:ac693b13545061a17d9fb53447add3c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Initialization of the program and identity server communication. </p>
+
+<p>Definition in file <a class="el" href="rmb_2identity_8h_source.html">identity.h</a>.</p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="ac693b13545061a17d9fb53447add3c05"></a>
 <div class="memitem">
 <div class="memproto">
@@ -148,7 +156,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Grabs the servers from the identity server and returns them in a list of server structures. </p>
-<p>list <a class="el" href="rmb_2identity_8h.html#ac693b13545061a17d9fb53447add3c05" title="Grabs the servers from the identity server and returns them in a list of server structures. ">fetch_servers(int fd, struct addrinfo *id_server)</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fd</td><td>File descriptor for comunication with id_server </td></tr>
@@ -216,7 +223,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initiates the program variables. </p>
-<p>int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd, int_fast32_t *binded_fd, list *msgservers_lst, server *sel_server, struct itimerspec *new_timer, int_fast32_t *timer_fd)</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id_server</td><td>Identity Server </td></tr>

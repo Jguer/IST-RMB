@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['struct_5fmessage_2ec',['struct_message.c',['../struct__message_8c.html',1,'']]],
-  ['struct_5fmessage_2eh',['struct_message.h',['../struct__message_8h.html',1,'']]],
-  ['struct_5fserver_2ec',['struct_server.c',['../struct__server_8c.html',1,'']]],
-  ['struct_5fserver_2eh',['struct_server.h',['../struct__server_8h.html',1,'']]]
+  ['main_2ec',['main.c',['../msgserv_2main_8c.html',1,'']]],
+  ['main_2ec',['main.c',['../rmb_2main_8c.html',1,'']]],
+  ['message_2ec',['message.c',['../rmb_2message_8c.html',1,'']]],
+  ['message_2ec',['message.c',['../msgserv_2message_8c.html',1,'']]],
+  ['message_2eh',['message.h',['../rmb_2message_8h.html',1,'']]],
+  ['message_2eh',['message.h',['../msgserv_2message_8h.html',1,'']]],
+  ['message_5fstruct_5ftest_2ec',['message_struct_test.c',['../message__struct__test_8c.html',1,'']]]
 ];

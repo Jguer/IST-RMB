@@ -1,5 +1,5 @@
 <map id="src/rmb/identity.c" name="src/rmb/identity.c">
-<area shape="rect" id="node2" href="$rmb_2identity_8h.html" title="identity.h" alt="" coords="456,80,530,107"/>
+<area shape="rect" id="node2" href="$rmb_2identity_8h.html" title="Initialization of the program and identity server communication. " alt="" coords="456,80,530,107"/>
 <area shape="rect" id="node4" href="$rmb_2message_8h.html" title="Outbound communication with message server. " alt="" coords="369,155,455,181"/>
 <area shape="rect" id="node5" href="$utils_8h.html" title="../utils/utils.h" alt="" coords="562,379,659,405"/>
 <area shape="rect" id="node10" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="338,229,486,256"/>
