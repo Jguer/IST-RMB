@@ -3,7 +3,7 @@
 #include "identity.h"
 #include "message.h"
 
-uint_fast8_t g_exit = 0;
+bool g_exit = false;
 
 void usage(char* name) {
     fprintf(stdout, "Example Usage: %s –n name –j ip -u upt –t tpt [-i siip] [-p sipt] [–m m] [–r r] %s \n", name, _VERBOSE_OPT_SHOW );
@@ -37,7 +37,7 @@ void ignore_sigpipe()
 }
 
 void handle_intsignal(int sig) {
-    g_exit = 1;
+    g_exit = true;
     signal(sig, SIG_IGN);
 }
 
@@ -193,10 +193,11 @@ int main(int argc, char *argv[]) {
             break;
         }
 
+        print_prompt = false;
+
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             update_reg(udp_register_fd, id_server);
             timerfd_settime (timer_fd, 0, &new_timer, NULL);
-            print_prompt = false;
         }
 
 
@@ -211,8 +212,6 @@ int main(int argc, char *argv[]) {
                 if (_VERBOSE_TEST) printf("error reading from stdio\n");
                 break;
             }
-
-            print_prompt = false;
 
             buffer[read_size-1] = '\0'; //switches \n to \0
 
@@ -240,11 +239,12 @@ int main(int argc, char *argv[]) {
                     print_matrix(msg_matrix, print_message);
                 }
             } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
-                g_exit = 1;
+                g_exit = true;
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
-                print_prompt = true;
+
+            print_prompt = true;
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling
