@@ -9,8 +9,9 @@
 #include "identity.h"
 #include "ban.h"
 
+bool g_exit = false;
 /*! \fn void usage(char *name);
-    
+
     \brief Prints the application terminal usage
 
     \param name -Name of the app
@@ -67,6 +68,8 @@ int main(int argc, char *argv[]) {
     uint_fast32_t msg_num = 0;
 
     list msgservers_lst = NULL;
+    list banservers_lst = create_list();
+
     server sel_server;
 
     struct itimerspec new_timer = {
@@ -74,7 +77,7 @@ int main(int argc, char *argv[]) {
         {SERVER_TEST_TIME_SEC,SERVER_TEST_TIME_nSEC}    //Stop time
         };
 
-    // Program variables initialization 
+    // Program variables initialization
     if (1 == init_program(id_server, &outgoing_fd,
                 &binded_fd, &msgservers_lst, &sel_server,
                 &new_timer, &timer_fd)){
@@ -83,10 +86,9 @@ int main(int argc, char *argv[]) {
     }
 
     //Loop only variables, unnecessary to declare above the initialization of major variables
-    fd_set rfds;
+    fd_set rfds = {{0}};
     bool server_not_answering = false;
     char op[STRING_SIZE], input_buffer[STRING_SIZE];
-    list banservers_lst = create_list();
 
     if (sel_server != NULL) { //Prints the prompt
         fprintf(stdout, KGRN "Prompt > " KNRM);
@@ -94,7 +96,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Interactive loop (Cycles for the rest of the program)
-    while (true) {
+    while (!g_exit) {
         FD_ZERO(&rfds); //Add file descriptors to the Set (select() MACROS)
         FD_SET(STDIN_FILENO, &rfds); //fd is always 0
         FD_SET(binded_fd, &rfds);
@@ -118,7 +120,7 @@ int main(int argc, char *argv[]) {
             if (server_not_answering) { //Removes the server from the servers list
                 rem_awol_server(msgservers_lst, sel_server);
             }
-            
+
             sel_server = select_server(msgservers_lst); //Chooses one servers from the list
             //Every time we test a server for his banned status a ban time counter decreases
             while (sel_server != NULL && is_banned(banservers_lst, sel_server)){
@@ -225,7 +227,6 @@ int main(int argc, char *argv[]) {
                     }
                     ask_server_test(); //Say that a test was made
                 }
-
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 int msg_num_test = atoi(input_buffer);
                 if( 0 < msg_num_test) { //Requests the last $(msg_num_test) messages to the server
@@ -243,7 +244,7 @@ int main(int argc, char *argv[]) {
             }else if (0 == strcasecmp("exit", op) || 0 == strcmp("9", op)) {
                 //Kills the program
                 exit_code = EXIT_SUCCESS;
-                goto PROGRAM_EXIT;
+                g_exit = true;
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, op);
             }
@@ -258,11 +259,11 @@ int main(int argc, char *argv[]) {
     }
 
 PROGRAM_EXIT: //Cleaning routine
+    close(outgoing_fd);
+    close(binded_fd);
     freeaddrinfo(id_server);
     free_incoming_messages();
     free_list(msgservers_lst, free_server);
-    if(banservers_lst) free_list(banservers_lst, free_server);
-    close(outgoing_fd);
-    close(binded_fd);
+    free_list(banservers_lst, free_server);
     return exit_code;
 }
