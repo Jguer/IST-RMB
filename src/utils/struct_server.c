@@ -181,7 +181,9 @@ void free_server(item got_item) {
         return;
     }
 
-    close(this->fd);
+    if (this->fd > 0) {
+        close(this->fd);
+    }
     free(this->name);
     free(this->ip_addr);
     free(this);

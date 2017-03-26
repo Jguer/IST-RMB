@@ -44,7 +44,7 @@ matrix create_matrix(size_t capacity) {
     if(!new_matrix)
         memory_error("Unable to reserve matrix memory");
 
-    new_matrix->array = (item)malloc(sizeof(item) * capacity);
+    new_matrix->array = (item)calloc(capacity, sizeof(item));
     if(!new_matrix->array)
         memory_error("Unable to reserve array memory");
 
@@ -71,6 +71,7 @@ void free_matrix(matrix this, void (*free_item)(item)) {
     for (uint_fast32_t i = 0; i < this->capacity; i++) {
         free_item(this->array[i]);
     }
+    free(this->array);
 
     /* Bring freedom to matrix */
     free(this);

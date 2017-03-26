@@ -170,7 +170,7 @@ uint_fast8_t parse_message(matrix msg_matrix, char *info) {
 
     lc = atoi(lc_buffer);
     if (lc > g_lc) {
-        g_lc = lc ++;
+        g_lc = lc + 1;
     }
 
     strncat(msg, "\n" ,STRING_SIZE - 1);
@@ -206,7 +206,6 @@ void server_treat_communications(item obj, void *cnt_array[]) {
     uint_fast8_t err = 0, sms_state = 0;
     char *aux_token, *token;
     if (FD_ISSET(fd, rfds)) {
-        printf("Received Communication\n");
         while (nread != -1) {
             char micro_buffer[STRING_SIZE] = {'\0'};
             nread = recv(fd, micro_buffer, STRING_SIZE - 1, MSG_DONTWAIT);
@@ -271,34 +270,6 @@ void server_treat_communications(item obj, void *cnt_array[]) {
             }
         }
     }
-#if 0
-        printf("Read %s\n", buffer);
-
-        p = strtok(buffer, "\n");
-        if (NULL != p) {
-            strncpy(op, p, STRING_SIZE);
-        } else {
-            bzero(op, STRING_SIZE);
-        }
-
-        if (0 == strcmp("SGET_MESSAGES", op)) {
-            err = handle_sget_messages(fd, msg_matrix);
-            fflush(stdout);
-            if (err) {
-                close_communication(cur_server);
-            }
-            //Send all my messages
-
-        } else if (0 == strcmp("SMESSAGES", op) ) {
-            fflush(stdout);
-
-            err = parse_messages(msg_matrix);
-            if (err) {
-                close_communication(cur_server);
-            }
-        }
-    }
-#endif
 
     free(to_hold);
     free(to_analyze);

@@ -263,12 +263,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
-free_matrix(msg_matrix, free_message);
-free_list(msgsrv_list, free_server);
-close(tcp_listen_fd);
-close(udp_global_fd);
-close(udp_register_fd);
-close(timer_fd);
+    close(tcp_listen_fd);
+    close(udp_global_fd);
+    close(udp_register_fd);
+    close(timer_fd);
+    free_server(host);
+    free_list(msgsrv_list, free_server);
+    free_matrix(msg_matrix, free_message);
+    freeaddrinfo(id_server);
 PROGRAM_EXIT:
     return exit_code;
 }
