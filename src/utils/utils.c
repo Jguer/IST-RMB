@@ -19,3 +19,7 @@ bool is_verbose(){
     return _verbosity_level_protected;
 }
 
+void flush_input(){
+	int c;
+	while ((c = getchar()) != '\n' && c != EOF);
+}

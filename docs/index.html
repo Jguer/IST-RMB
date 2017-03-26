@@ -39,6 +39,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -65,7 +66,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -79,7 +80,54 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">RCI Message Board Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<div class="textblock"><h1>Reliable Message Board </h1>
+<p>Instituto Superior Técnico, Lisboa MEEC</p>
+<p>This program was developed by two IST students for evaluation in the course of RCI (<em>Internet and Computer Networks</em>).</p>
+<p>The program is deployed with 2 applications, one is for the client side and other for the server side. </p>
+<hr/>
+ <h2>Client Side Application:</h2>
+<p>The client is capable of sending messages to a server and get the latest messages that the user requested. The defined terminal interface is: </p>
+<blockquote class="doxtable">
+<p>publish <b>message</b><br/>
+ show_latest_messages <b>n</b><br/>
+ show_servers<br/>
+ show_selected_server<br/>
+ exit<br/>
+ </p>
+</blockquote>
+<h4>publish</h4>
+<p>Sends to the server the content written in <b>message</b> up to 140 characters </p>
+<h4>show_latest_messages</h4>
+<p>Asks the server for the last <b>n</b> messages and prints the response on the terminal </p>
+<h4>show_servers</h4>
+<p>Show the list of connect-able servers, servers that have been unresponsive only appear after some time </p>
+<h4>show_selected_server</h4>
+<p>Prints the info about the server to which the client is connected </p>
+<h4>exit</h4>
+<p>Exits the application</p>
+<p>Technical aspects of client application: See <a class="el" href="Technical_C.html">Client Technical Details</a> </p>
+<hr/>
+ <h2>Server side application</h2>
+<p>The server receives messages from clients and distributes them across the other servers. On request it gives the last The defined terminal interface is: </p>
+<blockquote class="doxtable">
+<p>join<br/>
+ show_messages<br/>
+ show_servers<br/>
+ exit<br/>
+ </p>
+</blockquote>
+<h4>join</h4>
+<p>Registers this server on the identity server, checks for other servers and connects to them. </p>
+<h4>show_messages</h4>
+<p>Prints all the messages received by this server </p>
+<h4>show_servers</h4>
+<p>Show the list of connected servers </p>
+<h4>exit</h4>
+<p>Exits the application</p>
+<p>Technical aspects of server application:</p>
+<h2>Developed by: </h2>
+<p>João Guerreiro 81248 João Domingos 81713 </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

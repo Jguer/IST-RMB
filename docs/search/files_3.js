@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['main_2ec',['main.c',['../msgserv_2main_8c.html',1,'']]],
-  ['main_2ec',['main.c',['../rmb_2main_8c.html',1,'']]],
-  ['message_2ec',['message.c',['../rmb_2message_8c.html',1,'']]],
-  ['message_2ec',['message.c',['../msgserv_2message_8c.html',1,'']]],
-  ['message_2eh',['message.h',['../rmb_2message_8h.html',1,'']]],
-  ['message_2eh',['message.h',['../msgserv_2message_8h.html',1,'']]],
-  ['message_5fstruct_5ftest_2ec',['message_struct_test.c',['../message__struct__test_8c.html',1,'']]]
+  ['identity_2ec',['identity.c',['../msgserv_2identity_8c.html',1,'']]],
+  ['identity_2ec',['identity.c',['../rmb_2identity_8c.html',1,'']]],
+  ['identity_2eh',['identity.h',['../msgserv_2identity_8h.html',1,'']]],
+  ['identity_2eh',['identity.h',['../rmb_2identity_8h.html',1,'']]]
 ];

@@ -12,7 +12,7 @@
   */
 server select_server(list server_list);
 
-/*!\fn void rem_awol_server(list server_list, server* awol_server);
+/*!\fn void rem_awol_server(list server_list, server awol_server);
   \brief removes from the list the server on awol_server
   \param server_list List containing server information.
   \param awol_server Server that is disconnected
@@ -35,7 +35,7 @@ int publish(int fd, server sel_server, char *msg);
   */
 int ask_for_messages(int fd, server sel_server, int num);
 
-/*! \fn int handle_incoming_messages(int fd, int msg_num, bool test_server, server sel_server)
+/*! \fn int handle_incoming_messages(int fd, uint num)
   \brief handle_incoming_messages receives all the messages and handles the content. Verifying the data.
   \param fd Descriptor to use in receive.
   \param num Number of messages to get.

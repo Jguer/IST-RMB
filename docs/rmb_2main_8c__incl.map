@@ -1,7 +1,7 @@
 <map id="src/rmb/main.c" name="src/rmb/main.c">
 <area shape="rect" id="node5" href="$rmb_2message_8h.html" title="Outbound communication with message server. " alt="" coords="319,155,405,181"/>
-<area shape="rect" id="node18" href="$rmb_2identity_8h.html" title="identity.h" alt="" coords="247,80,320,107"/>
-<area shape="rect" id="node21" href="$ban_8h.html" title="ban.h" alt="" coords="525,155,579,181"/>
+<area shape="rect" id="node18" href="$rmb_2identity_8h.html" title="Initialization of the program and identity server communication. " alt="" coords="247,80,320,107"/>
+<area shape="rect" id="node21" href="$ban_8h.html" title="Basic structure to implement banned servers. " alt="" coords="525,155,579,181"/>
 <area shape="rect" id="node6" href="$utils_8h.html" title="../utils/utils.h" alt="" coords="299,379,396,405"/>
 <area shape="rect" id="node11" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="533,229,681,256"/>
 <area shape="rect" id="node17" href="$util__list_8h.html" title="util_list.h" alt="" coords="984,304,1057,331"/>

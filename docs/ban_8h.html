@@ -39,6 +39,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -70,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -91,6 +92,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">ban.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Basic structure to implement banned servers.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="struct__server_8h_source.html">../utils/struct_server.h</a>&quot;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ban.h:</div>
@@ -104,7 +108,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ban_8h__dep__incl.png" border="0" usemap="#src_2rmb_2ban_8hdep" alt=""/></div>
 <map name="src_2rmb_2ban_8hdep" id="src_2rmb_2ban_8hdep">
-<area shape="rect" id="node2" href="ban_8c.html" title="src/rmb/ban.c" alt="" coords="5,80,107,107"/><area shape="rect" id="node3" href="rmb_2main_8c.html" title="src/rmb/main.c" alt="" coords="132,80,241,107"/></map>
+<area shape="rect" id="node2" href="ban_8c.html" title="src/rmb/ban.c" alt="" coords="5,80,107,107"/><area shape="rect" id="node3" href="rmb_2main_8c.html" title="Reliable Message Board &#45; Client. " alt="" coords="132,80,241,107"/></map>
 </div>
 </div>
 <p><a href="ban_8h_source.html">Go to the source code of this file.</a></p>
@@ -112,11 +116,17 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a4b11ff16806417cdb6aa6101696639b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ban_8h.html#a4b11ff16806417cdb6aa6101696639b3">ban_server</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> list_of_banned, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> server_to_ban)</td></tr>
+<tr class="memdesc:a4b11ff16806417cdb6aa6101696639b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">ban_server Puts the server to ban in a list if it's not in there already, if it is, reset the counter  <a href="#a4b11ff16806417cdb6aa6101696639b3">More...</a><br/></td></tr>
 <tr class="separator:a4b11ff16806417cdb6aa6101696639b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a367af9dc0d0890456065dc4925e47dc9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ban_8h.html#a367af9dc0d0890456065dc4925e47dc9">is_banned</a> (<a class="el" href="util__list_8h.html#a47e9d42cefa4795824e02fe866a1dd3d">list</a> list_of_banned, <a class="el" href="struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f">server</a> server_to_check)</td></tr>
+<tr class="memdesc:a367af9dc0d0890456065dc4925e47dc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">ban_server Checks if the server is banned, if it is return true, else false;  <a href="#a367af9dc0d0890456065dc4925e47dc9">More...</a><br/></td></tr>
 <tr class="separator:a367af9dc0d0890456065dc4925e47dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Basic structure to implement banned servers. </p>
+
+<p>Definition in file <a class="el" href="ban_8h_source.html">ban.h</a>.</p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a4b11ff16806417cdb6aa6101696639b3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -140,6 +150,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>ban_server Puts the server to ban in a list if it's not in there already, if it is, reset the counter </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">list_of_banned</td><td>Structure of type list that saves the servers data </td></tr>
+    <tr><td class="paramname">server_to_ban</td><td>Server to check if is on the list, if its not put </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Definition at line <a class="el" href="ban_8c_source.html#l00050">50</a> of file <a class="el" href="ban_8c_source.html">ban.c</a>.</p>
 
@@ -168,6 +187,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>ban_server Checks if the server is banned, if it is return true, else false; </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">list_of_banned</td><td>Structure of type list that has the servers data </td></tr>
+    <tr><td class="paramname">server_to_ban</td><td>Server to check if is on the list and still banned </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Definition at line <a class="el" href="ban_8c_source.html#l00060">60</a> of file <a class="el" href="ban_8c_source.html">ban.c</a>.</p>
 

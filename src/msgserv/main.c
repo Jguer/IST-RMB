@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
 
     int_fast16_t m = 200, r = 10;
     bool is_join_complete = false;
+    bool print_prompt = true;
     fd_set rfds;
 
     int_fast16_t tcp_listen_fd, udp_global_fd, udp_register_fd, timer_fd, max_fd;
@@ -166,6 +167,7 @@ int main(int argc, char *argv[]) {
     }
     // Processing Loop
     while(!g_exit) {
+        print_prompt = true;
         //Clear the set
         FD_ZERO(&rfds);
 
@@ -194,6 +196,7 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             update_reg(udp_register_fd, id_server);
             timerfd_settime (timer_fd, 0, &new_timer, NULL);
+            print_prompt = false;
         }
 
 
@@ -208,6 +211,8 @@ int main(int argc, char *argv[]) {
                 if (_VERBOSE_TEST) printf("error reading from stdio\n");
                 break;
             }
+
+            print_prompt = true;
 
             buffer[read_size-1] = '\0'; //switches \n to \0
 
@@ -233,6 +238,7 @@ int main(int argc, char *argv[]) {
                 print_matrix(msg_matrix, print_message);
             } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
                 g_exit = 1;
+                print_prompt = false;
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
@@ -246,10 +252,15 @@ int main(int argc, char *argv[]) {
             if (2 == err) {
                 share_last_message(msgsrv_list, msg_matrix);
             }
+            print_prompt = false;
         }
 
         for_each_element(msgsrv_list, server_treat_communications, (void*[]){(void *)msg_matrix, (void *)&rfds});
 
+        if (print_prompt){
+            fprintf(stdout, KGRN "\nPrompt > " KNRM);
+            fflush(stdout);
+        }
     }
 
 free_matrix(msg_matrix, free_message);
@@ -261,4 +272,3 @@ close(timer_fd);
 PROGRAM_EXIT:
     return exit_code;
 }
-

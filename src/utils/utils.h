@@ -39,3 +39,4 @@ typedef void *item;
 void memory_error(char *msg);
 void verbose(bool verbosity);
 bool is_verbose();
+void flush_input();
