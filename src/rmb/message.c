@@ -24,7 +24,7 @@ server select_server(list server_list) {
     return (server)get_node_item(head);
 }
 
-//rem_awol_server removes a server from the list, the server in $(awol_server)
+// rem_awol_server removes a server from the list, the server in $(awol_server)
 void rem_awol_server(list server_list, server awol_server){
     if(server_list) { 
         if ((get_head(server_list))) {
@@ -110,10 +110,9 @@ int ask_for_messages(int fd, server sel_server, int num) {
     return 0;
 }
 
-/* handle_incoming_messages reads the info that comes in via UDP, 
-knowing that the last client to server request was made with $(num) messages.
-$(fd) is the udp binded socket.
-*/
+// handle_incoming_messages reads the info that comes in via UDP, 
+// knowing that the last client to server request was made with $(num) messages.
+// $(fd) is the udp binded socket.
 int handle_incoming_messages(int fd, uint num){
     struct sockaddr_in server_addr = { 0 , .sin_port = 0};
     socklen_t addr_len = sizeof(server_addr);

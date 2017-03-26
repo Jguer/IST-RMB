@@ -39,6 +39,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -70,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -110,7 +111,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">return</span> _verbosity_level_protected;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="utils_8h.html#ac27a7d9c3a7919438af81b6ee92d73b3">   22</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="utils_8c.html#ac27a7d9c3a7919438af81b6ee92d73b3">flush_input</a>(){</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">int</span> c;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">while</span> ((c = getchar()) != <span class="charliteral">&#39;\n&#39;</span> &amp;&amp; c != EOF);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
 <div class="ttc" id="utils_8h_html_a137aa83ec74421d226a90c92ec032ac9"><div class="ttname"><a href="utils_8h.html#a137aa83ec74421d226a90c92ec032ac9">KNRM</a></div><div class="ttdeci">#define KNRM</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00020">utils.h:20</a></div></div>
+<div class="ttc" id="utils_8c_html_ac27a7d9c3a7919438af81b6ee92d73b3"><div class="ttname"><a href="utils_8c.html#ac27a7d9c3a7919438af81b6ee92d73b3">flush_input</a></div><div class="ttdeci">void flush_input()</div><div class="ttdef"><b>Definition:</b> <a href="utils_8c_source.html#l00022">utils.c:22</a></div></div>
 <div class="ttc" id="utils_8c_html_a323aba01db0eccbb36fce697164fae2e"><div class="ttname"><a href="utils_8c.html#a323aba01db0eccbb36fce697164fae2e">is_verbose</a></div><div class="ttdeci">bool is_verbose()</div><div class="ttdef"><b>Definition:</b> <a href="utils_8c_source.html#l00018">utils.c:18</a></div></div>
 <div class="ttc" id="utils_8h_html"><div class="ttname"><a href="utils_8h.html">utils.h</a></div></div>
 <div class="ttc" id="utils_8h_html_a66290957baed5df3930ada4cb8caccf1"><div class="ttname"><a href="utils_8h.html#a66290957baed5df3930ada4cb8caccf1">KRED</a></div><div class="ttdeci">#define KRED</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00021">utils.h:21</a></div></div>

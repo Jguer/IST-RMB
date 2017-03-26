@@ -1,5 +1,7 @@
 #pragma once
-
+/*! \file rmb/identity.h
+ * \brief Initialization of the program and identity server communication
+ */
 #include <sys/timerfd.h>
 
 #include "message.h"
@@ -7,7 +9,7 @@
 #include "../utils/struct_message.h"
 #include "../utils/utils.h"
 
-/*!\fd int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd,
+/*!\fn int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd,
 	int_fast32_t *binded_fd, list *msgservers_lst,	server *sel_server,
 	struct itimerspec *new_timer, int_fast32_t *timer_fd)
 
@@ -27,9 +29,7 @@ int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd,
 	struct itimerspec *new_timer, int_fast32_t *timer_fd);
 
 
-/* PARSER */
-
-/*!\fd list fetch_servers(int fd, struct addrinfo *id_server)
+/*!\fn list fetch_servers(int fd, struct addrinfo *id_server)
 
 	\brief Grabs the servers from the identity server and returns them
 	in a list of server structures.

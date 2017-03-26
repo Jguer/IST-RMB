@@ -1,3 +1,6 @@
+/*! \file rmb/main.c
+ * \brief Reliable Message Board - Client
+ */
 #include <time.h>
 #include <errno.h>
 #include <sys/timerfd.h>
@@ -6,13 +9,13 @@
 #include "identity.h"
 #include "ban.h"
 
-/*! \fn usage(char *name)
+/*! \fn void usage(char *name);
     
     \brief Prints the application terminal usage
-    \param name Name of the app
+
+    \param name -Name of the app
 */
-//_Verbose_OPT_* are debug only variables
-void usage(char* name) {
+void usage(char *name) { //_Verbose_OPT_* are debug only variables
     fprintf(stdout, "Example Usage: %s [-i siip] [-p sipt] %s \n", name, _VERBOSE_OPT_SHOW);
     fprintf(stdout, "Arguments:\n"
             "\t-i\t\t[server ip]\n"
@@ -189,17 +192,39 @@ int main(int argc, char *argv[]) {
                     fflush(stdout);
                     continue;
                 }
-                //Publish the user message $(input_buffer) to the server $(sel_server)
-                err = publish(binded_fd, sel_server, input_buffer);
-                if (err) {
-                    fprintf(stderr, KRED "Publish error\n" KNRM);
+                else if (140 <= strlen(input_buffer)){
+                    fprintf(stdout, KYEL "Message above size limit\n" KNRM
+                        KGRN "Do you still want to send: " KNRM "%s\n", input_buffer);
+                    flush_input();
+                    fprintf(stdout, KGRN "Y/N ?" KNRM);
+                    fflush(stdout);
+                    char y_n_answer[10] = {'\0'};
+                    scanf("%10s",y_n_answer);
+                    if('Y' == y_n_answer[0] || 'y' == y_n_answer[0]){
+                        err = publish(binded_fd, sel_server, input_buffer);
+                        if (err) {
+                            fprintf(stderr, KRED "Publish error\n" KNRM);
+                        }
+                        //Make a test to the server (Just tests answering, not content) the zero msg_num configures the test
+                        err = ask_for_messages(binded_fd, sel_server, 0);
+                        if (err) {
+                            fprintf(stderr, KRED "Ask for messages error\n" KNRM);
+                        }
+                        ask_server_test(); //Say that a test was made
+                    }
                 }
-                //Make a test to the server (Just tests answering, not content) the zero msg_num configures the test
-                err = ask_for_messages(binded_fd, sel_server, 0);
-                if (err) {
-                    fprintf(stderr, KRED "Ask for messages error\n" KNRM);
+                else{
+                    err = publish(binded_fd, sel_server, input_buffer);
+                    if (err) {
+                        fprintf(stderr, KRED "Publish error\n" KNRM);
+                    }
+                    //Make a test to the server (Just tests answering, not content) the zero msg_num configures the test
+                    err = ask_for_messages(binded_fd, sel_server, 0);
+                    if (err) {
+                        fprintf(stderr, KRED "Ask for messages error\n" KNRM);
+                    }
+                    ask_server_test(); //Say that a test was made
                 }
-                ask_server_test(); //Say that a test was made
 
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 int msg_num_test = atoi(input_buffer);
@@ -212,10 +237,10 @@ int main(int argc, char *argv[]) {
                     //Only positive (understanded as zero is not a positive)
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
                 }
-            }else if (0 == strcasecmp("show_selected_server", op) || 0 == strcmp("s", op)) {
+            }else if (0 == strcasecmp("show_selected_server", op) || 0 == strcmp("3", op)) {
                 //Added option, prints the server being currently used
                 print_server(sel_server);
-            }else if (0 == strcasecmp("exit", op) || 0 == strcmp("3", op)) {
+            }else if (0 == strcasecmp("exit", op) || 0 == strcmp("9", op)) {
                 //Kills the program
                 exit_code = EXIT_SUCCESS;
                 goto PROGRAM_EXIT;
