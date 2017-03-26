@@ -91,7 +91,7 @@ struct addrinfo *reg_server(int_fast16_t *fd, server host ,char *ip_name, char *
     if (0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host),
                 get_ip_address(host), get_udp_port(host), get_tcp_port(host))) return NULL;
 
-    nwritten = sendto(*fd, REG_MESSAGE, strlen(REG_MESSAGE) + 1, 0,
+    nwritten = sendto(*fd, REG_MESSAGE, strlen(REG_MESSAGE), 0,
             id_server_info->ai_addr, id_server_info->ai_addrlen);
 
     if (nwritten == -1) {

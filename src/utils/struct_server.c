@@ -187,3 +187,9 @@ void free_server(item got_item) {
     free(this);
     return;
 }
+
+void close_communication(server this) {
+    close(this->fd);
+    this->fd = -1;
+    this->connected = false;
+}

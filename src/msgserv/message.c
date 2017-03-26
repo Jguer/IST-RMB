@@ -156,72 +156,114 @@ uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
     return err;
 }
 
-uint_fast8_t parse_messages(matrix msg_matrix) {
+uint_fast8_t parse_message(matrix msg_matrix, char *info) {
     char msg[STRING_SIZE];
     char lc_buffer[6];
     uint_fast32_t lc;
-    char *separated_info;
     int sscanf_state = 0;
 
-    //strtok(buffer, "\n"); //Gets the first info, stoping at newline
-    separated_info = strtok(NULL, "\n");
-
-    while (separated_info) { //Proceeds getting info and treating
-        sscanf_state = sscanf(separated_info, "%[^;];%140[^\n]",lc_buffer, msg); //Separates info and saves it in variables
-
-        if (2 != sscanf_state) {
-             if (_VERBOSE_TEST) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
-             continue;
-        }
-        lc = atoi(lc_buffer);
-        if (lc > g_lc) {
-            g_lc = lc ++;
-        }
-        strncat(msg, "\n" ,STRING_SIZE - 1);
-        add_element(msg_matrix, get_size(msg_matrix), (item)new_message(lc, msg), free_message);
-
-        separated_info = strtok(NULL, "\n");//Gets new info
+    sscanf_state = sscanf(info, "%[^;];%140[^\n]",lc_buffer, msg); //Separates info and saves it in variables
+    if (2 != sscanf_state) {
+        if (_VERBOSE_TEST) fprintf(stdout, KRED "error processing id server data. data is invalid or corrupt\n" KNRM);
+        return 1;
     }
+
+    lc = atoi(lc_buffer);
+    if (lc > g_lc) {
+        g_lc = lc ++;
+    }
+
+    strncat(msg, "\n" ,STRING_SIZE - 1);
+    add_element(msg_matrix, get_size(msg_matrix), (item)new_message(lc, msg), free_message);
 
     return 0;
 }
-
 
 // cnt_array[0] must be of type matrix and cnt_array[1] must be of type *fd_set
 void server_treat_communications(item obj, void *cnt_array[]) {
     //Opt Args
     matrix msg_matrix = (matrix) cnt_array[0];
     fd_set *rfds = (fd_set *) cnt_array[1];
-
     server cur_server = (server)obj;
-
     int fd = get_fd(cur_server);
     int_fast32_t nread = 0;
-    char op[STRING_SIZE];
-    char *p = NULL;
-    uint_fast8_t err = 0;
 
-    char *buffer = (char *)alloca(STRING_SIZE * (get_capacity(msg_matrix) + 5));
-    if (!buffer) {
+    char *to_hold = (char *)malloc(RESPONSE_SIZE);
+    if (!to_hold) {
         memory_error("tcp_fd_handle");
         return;
     }
+    memset(to_hold, '\0', RESPONSE_SIZE);
 
+    char *to_analyze = (char *)malloc(STRING_SIZE * 3);
+    if (!to_analyze) {
+        memory_error("tcp_fd_handle");
+        return;
+    }
+    memset(to_analyze, '\0', STRING_SIZE * 3);
+
+
+    uint_fast8_t err = 0, sms_state = 0;
+    char *aux_token, *token;
     if (FD_ISSET(fd, rfds)) {
-        bzero(buffer, STRING_SIZE * (get_capacity(msg_matrix) + 5));
-
         printf("Received Communication\n");
         while (nread != -1) {
             char micro_buffer[STRING_SIZE] = {'\0'};
-            nread = recv(fd,micro_buffer,RESPONSE_SIZE - 1, MSG_DONTWAIT);
+            nread = recv(fd, micro_buffer, STRING_SIZE - 1, MSG_DONTWAIT);
             if (0 == nread) {
-                close(fd);
-                set_fd(cur_server, -1 );
-                set_connected(cur_server, 0);
+                close_communication(cur_server);
+                break;
+            } else if (-1 == nread) {
                 break;
             }
-            strncat(buffer, micro_buffer, STRING_SIZE * (get_capacity(msg_matrix) + 5));
+
+            bool message_end = false;
+            if(micro_buffer[nread - 1] == '\n') {
+                message_end = true;
+            }
+
+            token = strtok(micro_buffer, "\n");
+            while (token) {
+                aux_token = strtok(NULL, "\n");
+                if (aux_token) {
+                    if (strlen(to_hold)) {
+                        snprintf(to_analyze, STRING_SIZE * 3, "%s%s", to_hold, token);
+                        to_hold[0] = '\0';
+                    } else {
+                        to_analyze = strcpy(to_analyze, token);
+                    }
+                } else {
+                    if(message_end) {
+                        memcpy(to_analyze, token, STRING_SIZE * 3);
+                    } else {
+                        strncat(to_hold, token, STRING_SIZE);
+                    }
+                }
+
+                printf("To Analyze: %s\n", to_analyze);
+                if (sms_state) {
+                    err = parse_message(msg_matrix, to_analyze);
+                    if (err) {
+                        printf("Failed to parse_message %s \n", to_analyze);
+                    }
+                } else {
+                    if (0 == strcmp("SGET_MESSAGES", to_analyze)) {
+                        err = handle_sget_messages(fd, msg_matrix);
+                        if (err) {
+                            close_communication(cur_server);
+                        }
+                    } else if (0 == strcmp("SMESSAGES", to_analyze)) {
+                        sms_state = 1;
+                    }
+                }
+
+                fflush(stdout);
+                to_analyze[0] = '\0';
+                token = aux_token;
+            }
         }
+    }
+#if 0
         printf("Read %s\n", buffer);
 
         p = strtok(buffer, "\n");
@@ -235,9 +277,7 @@ void server_treat_communications(item obj, void *cnt_array[]) {
             err = handle_sget_messages(fd, msg_matrix);
             fflush(stdout);
             if (err) {
-                close(fd);
-                set_fd(cur_server, -1 );
-                set_connected(cur_server, 0);
+                close_communication(cur_server);
             }
             //Send all my messages
 
@@ -246,10 +286,12 @@ void server_treat_communications(item obj, void *cnt_array[]) {
 
             err = parse_messages(msg_matrix);
             if (err) {
-                close(fd);
-                set_fd(cur_server, -1 );
-                set_connected(cur_server, 0);
+                close_communication(cur_server);
             }
         }
     }
+#endif
+
+    free(to_hold);
+    free(to_analyze);
 }
