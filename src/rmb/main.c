@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     //Loop only variables, unnecessary to declare above the initialization of major variables
     fd_set rfds;
     bool server_not_answering = false;
-    char op[STRING_SIZE], input_buffer[STRING_SIZE];
+    char op[STRING_SIZE] = {'\0'}, input_buffer[STRING_SIZE] = {'\0'};
     list banservers_lst = create_list();
 
     if (sel_server != NULL) { //Prints the prompt
@@ -188,6 +188,7 @@ int main(int argc, char *argv[]) {
             } else if (0 == strcasecmp("publish", op) || 0 == strcmp("1", op)) {
                 if (0 == strlen(input_buffer)) {
                     //User input invalid
+                    fprintf(stderr,KRED "publish something\n" KNRM);
                     fprintf(stdout, KGRN "Prompt > " KNRM);
                     fflush(stdout);
                     continue;
@@ -227,6 +228,13 @@ int main(int argc, char *argv[]) {
                 }
 
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
+                if (0 == strlen(input_buffer)) {
+                    //User input invalid
+                    fprintf(stderr,KRED "give a number of messages to ask\n" KNRM);
+                    fprintf(stdout, KGRN "Prompt > " KNRM);
+                    fflush(stdout);
+                    continue;
+                }
                 int msg_num_test = atoi(input_buffer);
                 if( 0 < msg_num_test) { //Requests the last $(msg_num_test) messages to the server
                     msg_num = msg_num_test;
