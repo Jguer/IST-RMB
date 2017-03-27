@@ -89,7 +89,6 @@ int main(int argc, char *argv[]) {
     fd_set rfds = {{0}};
     bool server_not_answering = false;
     char op[STRING_SIZE] = {'\0'}, input_buffer[STRING_SIZE] = {'\0'};
-    list banservers_lst = create_list();
 
     if (sel_server != NULL) { //Prints the prompt
         fprintf(stdout, KGRN "Prompt > " KNRM);
