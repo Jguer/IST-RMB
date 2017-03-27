@@ -4,12 +4,28 @@
 #include <time.h>
 #include <errno.h>
 #include <sys/timerfd.h>
+#include <signal.h>
 
 #include "message.h"
 #include "identity.h"
 #include "ban.h"
 
 bool g_exit = false;
+
+void ignore_sigpipe()
+{
+    struct sigaction act;
+    memset(&act, 0, sizeof(act));
+    act.sa_handler = SIG_IGN;
+    act.sa_flags = SA_RESTART;
+    sigaction(SIGPIPE, &act, NULL);
+}
+
+void handle_intsignal(int sig) {
+    g_exit = true;
+    signal(sig, SIG_IGN);
+}
+
 /*! \fn void usage(char *name);
 
     \brief Prints the application terminal usage
@@ -27,6 +43,8 @@ void usage(char *name) { //_Verbose_OPT_* are debug only variables
 int main(int argc, char *argv[]) {
     char server_ip[STRING_SIZE] = "tejo.tecnico.ulisboa.pt";
     char server_port[STRING_SIZE] = "59000";
+    signal(SIGINT, handle_intsignal);
+    ignore_sigpipe();
 
     srand(time(NULL));
     // Treat options
@@ -150,9 +168,8 @@ int main(int argc, char *argv[]) {
 
         int activity = select(max_fd + 1 , &rfds, NULL, NULL, NULL); //Select, manages the file descriptors
         if (0 > activity) {
-            printf("error on select\n%d\n", errno);
-            exit_code = EXIT_FAILURE;
-            goto PROGRAM_EXIT;
+            /* printf("\n Error on select\n%d\n", errno); */
+            continue;
         }
         //Select changes the status of a fd on a fd_set, if it's ready to read we can process it
 
