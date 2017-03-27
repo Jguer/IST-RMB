@@ -67,8 +67,8 @@ uint_fast8_t share_last_message(list servers_list, matrix msg_matrix) {
         memory_error("unable to allocate response while sharing last message");
         return EXIT_FAILURE;
     }
-    snprintf(response_buffer, STRING_SIZE * 2, "%s\n%s",
-            SMESSAGE_CODE, get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
+    snprintf(response_buffer, STRING_SIZE * 2, "%s\n%d;%s\n",
+            SMESSAGE_CODE, get_lc(get_element(msg_matrix, get_size(msg_matrix) - 1)), get_string(get_element(msg_matrix, get_size(msg_matrix) - 1)));
 
     for_each_element(servers_list, send_to_server, (void*[]){(void *)response_buffer});
     return exit_code;
