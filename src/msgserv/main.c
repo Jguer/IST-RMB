@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
     }
     // Processing Loop
     while(!g_exit) {
-        print_prompt = true;
+        print_prompt = false;
         //Clear the set
         FD_ZERO(&rfds);
 
@@ -193,8 +193,6 @@ int main(int argc, char *argv[]) {
             break;
         }
 
-        print_prompt = false;
-
         if (FD_ISSET(timer_fd, &rfds)) { //if the timer is triggered
             update_reg(udp_register_fd, id_server);
             timerfd_settime (timer_fd, 0, &new_timer, NULL);
@@ -207,6 +205,7 @@ int main(int argc, char *argv[]) {
 
         //if something happened on other socket we must process it
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
+            print_prompt = true;
             read_size = read(0, buffer, STRING_SIZE);
             if (0 == read_size) {
                 if (_VERBOSE_TEST) printf("error reading from stdio\n");
@@ -240,11 +239,10 @@ int main(int argc, char *argv[]) {
                 }
             } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
                 g_exit = true;
+                print_prompt = false;
             } else {
                 fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
-
-            print_prompt = true;
         }
 
         if (FD_ISSET(udp_global_fd, &rfds)){ //UDP communications handling

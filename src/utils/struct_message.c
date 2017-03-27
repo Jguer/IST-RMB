@@ -16,12 +16,11 @@ int get_lc(message this) {
     return this->lc;
 }
 
-char *get_first_n_messages(matrix msg_matrix, int n) {
+char *get_first_n_messages(matrix msg_matrix, int n, int MODE){
     int list_size = (int)get_size(msg_matrix);
     if (list_size == 0){
         return NULL;
     }
-
     char *to_return = (char*)malloc(sizeof(char) * STRING_SIZE * n);
     if (!to_return) {
         return NULL;
@@ -36,9 +35,14 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
 					break;
 				}
 				char to_append[STRING_SIZE * 2] = {'\0'};
-				snprintf(to_append, STRING_SIZE * 2 ,"%d;%s",get_lc(get_element(msg_matrix, j)),
-						get_string(get_element(msg_matrix, j)) );
-				strncat(to_return, to_append, STRING_SIZE * n);
+                if (MSG_W_LC == MODE){
+                    snprintf(to_append, STRING_SIZE * 2 ,"%d;%s\n",get_lc(get_element(msg_matrix, j)),
+                    get_string(get_element(msg_matrix, j)) );
+                } else {
+                    snprintf(to_append, STRING_SIZE * 2 ,"%s\n",
+                    get_string(get_element(msg_matrix, j)) );
+                }
+                strncat(to_return, to_append, STRING_SIZE * n);
 			}
     	}
 
@@ -47,8 +51,13 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
 				break;
 			}
 			char to_append[STRING_SIZE * 2] = {'\0'};
-			snprintf(to_append, STRING_SIZE * 2 ,"%d;%s",get_lc(get_element(msg_matrix, i)),
-					get_string(get_element(msg_matrix, i)) );
+			if (MSG_W_LC == MODE){
+                snprintf(to_append, STRING_SIZE * 2 ,"%d;%s\n",get_lc(get_element(msg_matrix, i)),
+                get_string(get_element(msg_matrix, i)) );
+            } else {
+                snprintf(to_append, STRING_SIZE * 2 ,"%s\n",
+                get_string(get_element(msg_matrix, i)) );
+            }
 			strncat(to_return, to_append, STRING_SIZE * n);
 		}
     }
@@ -58,8 +67,13 @@ char *get_first_n_messages(matrix msg_matrix, int n) {
 				break;
 			}
 			char to_append[STRING_SIZE * 2] = {'\0'};
-			snprintf(to_append, STRING_SIZE * 2 ,"%d;%s",get_lc(get_element(msg_matrix, i)),
-					get_string(get_element(msg_matrix, i)) );
+			if (MSG_W_LC == MODE){
+                snprintf(to_append, STRING_SIZE * 2 ,"%d;%s\n",get_lc(get_element(msg_matrix, i)),
+                get_string(get_element(msg_matrix, i)) );
+            } else {
+                snprintf(to_append, STRING_SIZE * 2 ,"%s\n",
+                get_string(get_element(msg_matrix, i)) );
+            }
 			strncat(to_return, to_append, STRING_SIZE * n);
 		}
     }

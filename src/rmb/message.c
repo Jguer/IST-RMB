@@ -58,7 +58,7 @@ int publish(int fd, server sel_server, char *msg) {
     socklen_t addr_len;
     char msg_to_send[RESPONSE_SIZE];
 
-    sprintf(msg_to_send, "%s %s\n", PUBLISH, msg);
+    sprintf(msg_to_send, "%s %s", PUBLISH, msg);
 
     server_addr.sin_family = AF_INET;
     if (1 != inet_aton(get_ip_address(sel_server), &server_addr.sin_addr)) {
@@ -133,7 +133,7 @@ int handle_incoming_messages(int fd, uint num){
             (struct sockaddr *)&server_addr, &addr_len);
 
     if (-1 == read_size) {
-        if (_VERBOSE_TEST) fprintf(stderr, KRED "Failed UPD receive from %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
+        if (_VERBOSE_TEST) fprintf(stderr, KRED "Failed UDP receive from %s\n" KNRM, inet_ntoa(server_addr.sin_addr));
         return 1; //EXIT FAILURE
     }
 
@@ -153,7 +153,11 @@ int handle_incoming_messages(int fd, uint num){
         //Print only if its a user request
         if(true == _testing_with_results) {
             printf("Last %d messages:\n", num);
-            printf("%s",&_response_buffer[9]);
+            char *separated_info = strtok(&_response_buffer[9],"\n");
+            while (NULL != separated_info){
+                printf(KBLU ">> " KNRM "%s\n",separated_info);
+                separated_info = strtok(NULL, "\n");
+            }
             fflush(stdout);
             _test_server = false;
             return 2; //EXIT SUCCESS WITH PRINTED OUTPUT
