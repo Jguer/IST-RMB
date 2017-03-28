@@ -74,7 +74,7 @@ struct addrinfo *reg_server(int_fast16_t *fd, server host ,char *ip_name, char *
     if (!id_server_info) {
             return NULL;
     }
-    struct timeval tv = {.tv_sec = 30, .tv_usec= 0};
+    struct timeval tv = {.tv_sec = 3, .tv_usec= 0};
 
     int nwritten;
 
@@ -286,19 +286,34 @@ char *get_servers(int fd) {
         return NULL;
     }
 
-    n = recvfrom(fd, response, RESPONSE_SIZE, 0,
-            id_server->ai_addr,
-            &id_server->ai_addrlen);
-
-    if (0 > n) {
-        if (_VERBOSE_TEST) fprintf(stderr, KYEL "unable to receive\n" KNRM);
-        return NULL;
-    } else {
-        return_string = (char *)malloc((n+1) * sizeof(char));
-        strncpy(return_string, response, strlen(response) + 1);
+    time_t control_time = time(NULL);
+    time_t request_time = time(NULL);
+    
+    while(true){
+        n = recvfrom(fd, response, RESPONSE_SIZE, 0,
+                id_server->ai_addr,
+                &id_server->ai_addrlen);
+    
+        if (0 > n) {
+            
+            if (difftime(time(NULL), control_time) > 10){ //After ten seconds quit
+                fprintf(stderr, KYEL "Identity Server doesn't answer\n" KNRM);
+            } else if (difftime(time(NULL), request_time) > 2){ //Each three seconds send a new request
+                request_time = time(NULL);
+                if (0 != update_reg(fd, id_server)){
+                    return NULL;
+                }
+                continue;
+            } else if (_VERBOSE_TEST){ 
+                fprintf(stderr, KYEL "unable to receive\n" KNRM);
+            }
+            return NULL;
+        } else {
+            return_string = (char *)malloc((n+1) * sizeof(char));
+            strncpy(return_string, response, strlen(response) + 1);
+            return return_string; //Dirty Pointer
+        }
     }
-
-    return return_string; //Dirty Pointer
 }
 
 uint_fast8_t parse_servers(int_fast16_t udp_register_fd, list msgsrv_list) {

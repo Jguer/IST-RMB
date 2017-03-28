@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <time.h>
 #include "../utils/struct_server.h"
 #include "../utils/struct_message.h"
 
