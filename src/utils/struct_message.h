@@ -16,7 +16,7 @@ char    *get_first_n_messages(matrix msg_matrix, int n, int MODE);
 // Sets
 void    set_lc(message this, uint_fast32_t new_lc);
 // Methods
-message new_message(uint_fast32_t lc, char *src);
+message new_message(char *src);
 void    free_message(item got_item);
 void    print_message(item got_item);
 void    print_message_plain(item got_item);

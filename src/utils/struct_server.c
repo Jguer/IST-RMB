@@ -162,11 +162,11 @@ void print_server(item got_item) {
 
     if (/*-1 != this->fd*/ true ){
         fprintf(stdout,
-            KYEL "Server name:" RESET " %s "
-            KYEL "Server IP:" RESET " %s "
-            KYEL "UDP Port:" RESET " %hu "
-            KYEL "TCP Port:" RESET " %hu "
-            "Conn: %d ",
+            KCYN "Server name:" RESET " %s "
+            KRED "Server IP:"   RESET " %s "
+            KYEL "UDP Port:"    RESET " %hu "
+            KYEL "TCP Port:"    RESET " %hu "
+            KCYN "FD:"          RESET " %d " ,
             this->name, this->ip_addr, this->udp_port, this->tcp_port, this->fd);
     }
     else{

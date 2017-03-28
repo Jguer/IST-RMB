@@ -72,10 +72,10 @@ UDP_PORT=58000
 TCP_PORT=57000
 
 ## main
-make server
 
 for (( i=0; $i < ${#NAMES[@]} && $i < $M; ++i)); do
-  ./bin/msgserv -d -n "${NAMES[$i]}" -j "${IP}" -u "${UDP_PORT}" -t "${TCP_PORT}" -m "${CAPACITY[$i]}" &
+  st -e ./bin/msgserv -d -n "${NAMES[$i]}" -j "${IP}" -u "${UDP_PORT}" -t "${TCP_PORT}" -m "${CAPACITY[$i]}" &
   ((UDP_PORT++))
   ((TCP_PORT++))
+  sleep 2
 done

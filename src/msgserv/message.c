@@ -118,8 +118,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
 
 uint_fast8_t handle_publish(matrix msg_matrix, char *input_buffer) {
     add_element(msg_matrix, get_size(msg_matrix),
-            (item)new_message(g_lc, input_buffer), free_message);
-    g_lc++;
+            (item)new_message(input_buffer), free_message);
     return 2;
 }
 
@@ -168,11 +167,11 @@ uint_fast8_t parse_message(matrix msg_matrix, char *info) {
 
     lc = atoi(lc_buffer);
     if (lc > g_lc) {
-        g_lc = lc + 1;
+        g_lc = lc;
     }
 
     strncat(msg, "\n" ,STRING_SIZE - 1);
-    add_element(msg_matrix, get_size(msg_matrix), (item)new_message(lc, msg), free_message);
+    add_element(msg_matrix, get_size(msg_matrix), (item)new_message(msg), free_message);
 
     return 0;
 }

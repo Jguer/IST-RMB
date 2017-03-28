@@ -163,7 +163,7 @@ int connect_to_old_server(server old_server, bool is_comm_sent) {
         }                                       //Sends only a request for one of the initial servers
         else if (!is_comm_sent) {                            //Connect returns success
             //Send message like SGET_MESSAGES to request messages
-            printf(KGRN "Sending new connection to:"KNRM"%s\n", get_name( old_server ) );
+            /* printf(KGRN "Sending new connection to:"KNRM"%s\n", get_name(old_server)); */
             processing_fd = send_initial_comm( processing_fd);
             if ( processing_fd == -1) status = 1; //false
             else{
@@ -196,7 +196,9 @@ int join_to_old_servers(list msgservers_list , server host) {
     }
 
     if (!is_comm_sent) {
-        printf(KYEL "No connectable servers present: " KGRN "Wait mode\n" KNRM );
+        printf(KYEL "\nNo connectable servers present: " KGRN "Wait mode\n" KNRM );
+        fprintf(stdout, KGRN "\nPrompt > " KNRM);
+        fflush(stdout);
     }
 
     return 0; //Success
@@ -262,7 +264,7 @@ int tcp_new_comm(list servers_list, int listen_fd, fd_set *rfds, int (*STAT_FD)(
         setsockopt(newserv_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
 
         //add new socket to list of sockets
-        server newserv = new_server("MSG Server",inet_ntoa(newserv_info.sin_addr),0 , ntohs( newserv_info.sin_port ) );
+        server newserv = new_server("Inbound Server",inet_ntoa(newserv_info.sin_addr),0 , ntohs( newserv_info.sin_port ) );
         set_fd(newserv, newserv_fd);
         set_connected(newserv, 1);
         push_item_to_list(servers_list, newserv);

@@ -88,11 +88,12 @@ void set_lc(message this, uint_fast32_t new_lc) {
 }
 
 // Methods
-message new_message(uint_fast32_t lc, char *src) {
+message new_message(char *src) {
     message new_msg = (message)malloc(sizeof(struct _message));
     new_msg->content = (char *)malloc(sizeof(char)*STRING_SIZE);
 
-    new_msg->lc = lc;
+    new_msg->lc = g_lc;
+    g_lc ++;
     strncpy(new_msg->content, src, STRING_SIZE - 1);
     new_msg->content[STRING_SIZE - 1] = '\0';
 

@@ -67,20 +67,16 @@ size_t get_list_size(list got_list) {
 
 void print_list(list got_list, void (*print_item)(item)) {
     node aux_node;
-    printf("Print list:\n");
     fprintf(stdout, "Size of list: %zu\n", get_list_size(got_list));
 
     for(aux_node = get_head(got_list);
             aux_node != NULL;
             aux_node = get_next_node(aux_node))
     {
-        printf("[ ");
+        printf("❯❯ ");
         print_item(get_node_item(aux_node));
-        printf("] -> \n");
+        printf("\n");
     }
-
-    printf("-> [ " KBLU "NULL" RESET " ]\n");
-
 }
 
 void free_list(list got_list, void (*free_item)(item)) {
