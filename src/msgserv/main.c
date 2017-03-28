@@ -37,7 +37,12 @@ void ignore_sigpipe()
 }
 
 void handle_intsignal(int sig) {
+    if (g_exit == true){
+        fprintf(stderr, KRED "\nuser forced exit\n" KNRM);
+        exit(EXIT_FAILURE);
+    }
     g_exit = true;
+    fprintf(stderr, KCYN "\nuser requested exit\n" KNRM);
     signal(sig, SIG_IGN);
 }
 
@@ -218,7 +223,7 @@ int main(int argc, char *argv[]) {
             if (strcasecmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
                 if (!is_join_complete) { //Register on idServer
                     err = handle_join(msgsrv_list, &udp_register_fd, host, id_server_ip, id_server_port);
-                    if (err) {
+                    if (err && 1 != g_exit) {
                         fprintf(stderr, KRED "Unable to join. Error code %d\n" KNRM, err);
                     } else {
                         is_join_complete = true;
@@ -254,7 +259,7 @@ int main(int argc, char *argv[]) {
 
         for_each_element(msgsrv_list, server_treat_communications, (void*[]){(void *)msg_matrix, (void *)&rfds});
 
-        if (print_prompt) {
+        if (print_prompt && 1 != g_exit) {
             fprintf(stdout, KGRN "\nPrompt@%s > " KNRM, get_name(host));
             fflush(stdout);
         }
