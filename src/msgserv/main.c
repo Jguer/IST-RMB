@@ -212,41 +212,43 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
             print_prompt = true;
             read_size = read(0, buffer, STRING_SIZE);
-            if (0 == read_size) {
+            if (0 > read_size) {
                 if (_VERBOSE_TEST) printf("error reading from stdio\n");
                 break;
-            }
+            } else if (0 == read_size || (1 == read_size && '\n' == buffer[0])){
+                fprintf(stderr, KRED"please input something\n" KNRM);
+            } else {       
+                if ('\n' == buffer[read_size - 1]) buffer[read_size - 1] = '\0'; //switches \n to \0
 
-            buffer[read_size-1] = '\0'; //switches \n to \0
-
-            //User options input: show_servers, exit, publish message, show_latest_messages n;
-            if (strcasecmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
-                if (!is_join_complete) { //Register on idServer
-                    err = handle_join(msgsrv_list, &udp_register_fd, host, id_server_ip, id_server_port);
-                    if (err && 1 != g_exit) {
-                        fprintf(stderr, KRED "Unable to join. Error code %d\n" KNRM, err);
-                    } else {
-                        is_join_complete = true;
-                        timerfd_settime (timer_fd, 0, &new_timer, NULL);
+                //User options input: show_servers, exit, publish message, show_latest_messages n;
+                if (strcasecmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
+                    if (!is_join_complete) { //Register on idServer
+                        err = handle_join(msgsrv_list, &udp_register_fd, host, id_server_ip, id_server_port);
+                        if (err && 1 != g_exit) {
+                            fprintf(stderr, KRED "Unable to join. Error code %d\n" KNRM, err);
+                        } else {
+                            is_join_complete = true;
+                            timerfd_settime (timer_fd, 0, &new_timer, NULL);
+                        }
                     }
-                }
-                else {
-                    printf(KGRN "Already joined!\n" KNRM);
-                }
-            } else if (0 == strcasecmp("show_servers", buffer) || 0 == strcmp("1", buffer)) {
-                if (msgsrv_list != NULL && 0 != get_list_size(msgsrv_list)) print_list(msgsrv_list, print_server);
-                else printf("No registered servers\n");
-            } else if (0 == strcasecmp("show_messages", buffer) || 0 == strcmp("2", buffer)) {
-                if (0 == get_size(msg_matrix) && false == get_overflow(msg_matrix)) {
-                    printf("0 messages received\n");
+                    else {
+                        printf(KGRN "Already joined!\n" KNRM);
+                    }
+                } else if (0 == strcasecmp("show_servers", buffer) || 0 == strcmp("1", buffer)) {
+                    if (msgsrv_list != NULL && 0 != get_list_size(msgsrv_list)) print_list(msgsrv_list, print_server);
+                    else printf("No registered servers\n");
+                } else if (0 == strcasecmp("show_messages", buffer) || 0 == strcmp("2", buffer)) {
+                    if (0 == get_size(msg_matrix) && false == get_overflow(msg_matrix)) {
+                        printf("0 messages received\n");
+                    } else {
+                        print_matrix(msg_matrix, print_message);
+                    }
+                } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
+                    g_exit = true;
+                    print_prompt = false;
                 } else {
-                    print_matrix(msg_matrix, print_message);
+                    fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
                 }
-            } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
-                g_exit = true;
-                print_prompt = false;
-            } else {
-                fprintf(stderr, KRED "%s is an unknown operation\n" KNRM, buffer);
             }
         }
 
@@ -260,7 +262,8 @@ int main(int argc, char *argv[]) {
         for_each_element(msgsrv_list, server_treat_communications, (void*[]){(void *)msg_matrix, (void *)&rfds});
 
         if (print_prompt && 1 != g_exit) {
-            fprintf(stdout, KGRN "\nPrompt@%s > " KNRM, get_name(host));
+            if (is_join_complete) fprintf(stdout, KGRN "\nPrompt@%s > " KNRM, get_name(host));
+            else fprintf(stdout, KGRN "Prompt@NotConnected > " KNRM);
             fflush(stdout);
         }
     }
