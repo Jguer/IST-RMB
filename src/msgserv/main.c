@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
 
     fprintf(stdout, KBLU "Server Parameters:" KNRM " %s:%s:%d:%d\n"
             KBLU "Identity Server:" KNRM " %s:%s\n"
-            KGRN "Prompt > " KNRM
+            KGRN "Prompt@NotConnected > " KNRM
             ,name, ip, udp_port, tcp_port, id_server_ip, id_server_port);
     fflush(stdout);
 
@@ -255,7 +255,7 @@ int main(int argc, char *argv[]) {
         for_each_element(msgsrv_list, server_treat_communications, (void*[]){(void *)msg_matrix, (void *)&rfds});
 
         if (print_prompt) {
-            fprintf(stdout, KGRN "\nPrompt > " KNRM);
+            fprintf(stdout, KGRN "\nPrompt@%s > " KNRM, get_name(host));
             fflush(stdout);
         }
     }
