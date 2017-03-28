@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
     char op[STRING_SIZE] = {'\0'}, input_buffer[STRING_SIZE] = {'\0'};
 
     if (sel_server != NULL) { //Prints the prompt
-        fprintf(stdout, KGRN "Prompt > " KNRM);
+        fprintf(stdout, KGRN "Prompt@Client > " KNRM);
         fflush(stdout);
     }
 
@@ -174,7 +174,7 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(binded_fd, &rfds)) {
             if (2 == handle_incoming_messages(binded_fd, msg_num)) {
                 //Info was printed, re-print the prompt
-                fprintf(stdout, KGRN "Prompt > " KNRM);
+                fprintf(stdout, KGRN "Prompt@Client > " KNRM);
                 fflush(stdout);
             }
         }
@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
                 if (0 == strlen(input_buffer)) {
                     //User input invalid
                     fprintf(stderr,KRED "publish something\n" KNRM);
-                    fprintf(stdout, KGRN "Prompt > " KNRM);
+                    fprintf(stdout, KGRN "Prompt@Client > " KNRM);
                     fflush(stdout);
                     continue;
                 }
@@ -232,7 +232,7 @@ int main(int argc, char *argv[]) {
                 if (0 == strlen(input_buffer)) {
                     //User input invalid
                     fprintf(stderr,KRED "give a number of messages to ask\n" KNRM);
-                    fprintf(stdout, KGRN "Prompt > " KNRM);
+                    fprintf(stdout, KGRN "Prompt@Client > " KNRM);
                     fflush(stdout);
                     continue;
                 }
@@ -261,7 +261,7 @@ int main(int argc, char *argv[]) {
             bzero(input_buffer, STRING_SIZE);
 
             //Reprints the prompt
-            fprintf(stdout, KGRN "Prompt > " KNRM);
+            fprintf(stdout, KGRN "Prompt@Client > " KNRM);
             fflush(stdout);
         }
     }
