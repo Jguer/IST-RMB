@@ -21,8 +21,10 @@ int init_program(struct addrinfo *id_server, int_fast32_t *outgoing_fd,
 
 
     *msgservers_lst = fetch_servers(*outgoing_fd, id_server);
-    *sel_server = select_server(*msgservers_lst);
-
+    if (*msgservers_lst != NULL) *sel_server = select_server(*msgservers_lst);
+    else {
+        return 1;
+    }
     //Bind socket to any port on the client ip
     struct sockaddr_in serveraddr;
     memset((void*)&serveraddr,(int)'\0',
@@ -59,28 +61,38 @@ char *get_servers(int fd, struct addrinfo *id_server) {
     char *return_string = NULL;
     char response[RESPONSE_SIZE] = {'\0'};
 
-    n = sendto(fd, REQUEST, strlen(REQUEST) + 1, 0,
+    time_t control_time = time(NULL);
+    while (difftime(time(NULL), control_time) < 10){ //Time > 10 seconds stops
+        n = 0;
+        n = sendto(fd, REQUEST, strlen(REQUEST) + 1, 0,
             id_server->ai_addr, id_server->ai_addrlen);
 
-    if (0 > n) {
-        if ( true == is_verbose() ) fprintf(stderr, KYEL "unable to send\n" KNRM);
-        fprintf(stderr, KYEL "unable to send\n" KNRM);
-        return NULL;
+        if (0 > n) {
+            if ( true == is_verbose() ) fprintf(stderr, KYEL "unable to send\n" KNRM);
+            fprintf(stderr, KYEL "unable to send\n" KNRM);
+            return NULL;
+        }
+
+        sleep(1);
+
+        n = recvfrom(fd, response, RESPONSE_SIZE, MSG_DONTWAIT,
+                id_server->ai_addr,
+                &id_server->ai_addrlen);
+        if (0 > n) {
+            if (EWOULDBLOCK == errno || EAGAIN == errno){
+                sleep(1);
+                continue;
+            }
+            if ( true == is_verbose() ) fprintf(stderr, KYEL "unable to receive\n" KNRM);
+            return NULL;
+        } else {
+            return_string = (char *)malloc((n+1) * sizeof(char));
+            strncpy(return_string, response, strlen(response) + 1);
+            return return_string; //Dirty Pointer
+        }
     }
-
-    n = recvfrom(fd, response, RESPONSE_SIZE, 0,
-            id_server->ai_addr,
-            &id_server->ai_addrlen);
-
-    if (0 > n) {
-        if ( true == is_verbose() ) fprintf(stderr, KYEL "unable to receive\n" KNRM);
-        return NULL;
-    } else {
-        return_string = (char *)malloc((n+1) * sizeof(char));
-        strncpy(return_string, response, strlen(response) + 1);
-    }
-
-    return return_string; //Dirty Pointer
+    fprintf(stderr, KYEL "Identity Server doesn't answer\n" KNRM);
+    return NULL;
 }
 
 list parse_servers(char *id_serv_info) {

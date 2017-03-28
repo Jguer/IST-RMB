@@ -141,9 +141,14 @@ int main(int argc, char *argv[]) {
                 fflush(stdout);
                 free_list(msgservers_lst, free_server); //Get new servers if the list is all run
                 msgservers_lst = fetch_servers(outgoing_fd, id_server);
+                if (msgservers_lst != NULL){
                 //After getting the list repeat the servers check on the new servers.
                 sel_server = NULL;
-                server_not_answering = false;
+                server_not_answering = false;   
+                } else {
+                    exit_code = EXIT_FAILURE;
+                    goto PROGRAM_EXIT;
+                }
             }
             continue;
         }

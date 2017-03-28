@@ -316,7 +316,11 @@ uint_fast8_t parse_servers(int_fast16_t udp_register_fd, list msgsrv_list) {
     u_short step_mem_udp_port;
     u_short step_mem_tcp_port;
 
-    strtok(response, "\n"); //Gets the first info, stoping at newline
+    separated_info = strtok(response, "\n"); //Gets the first info, stoping at newline
+    if (0 != strcmp(separated_info, "SERVERS")){
+        free(response);
+        return EXIT_FAILURE;
+    }
     separated_info = strtok(NULL, "\n");
 
     while (NULL != separated_info) { //Proceeds getting info and treating

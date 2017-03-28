@@ -3,6 +3,7 @@
  * \brief Initialization of the program and identity server communication
  */
 #include <sys/timerfd.h>
+#include <errno.h>
 
 #include "message.h"
 #include "../utils/struct_server.h"
