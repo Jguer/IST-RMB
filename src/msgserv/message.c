@@ -92,7 +92,7 @@ uint_fast8_t handle_get_messages(int fd, struct sockaddr *address, int addrlen, 
 
     if (NULL != to_append) {
         response_buffer = (char *)malloc(sizeof(char) * STRING_SIZE * (num + 1));
-        snprintf(response_buffer, STRING_SIZE * (num + 1), "%s\n%s\n", "MESSAGES", to_append);
+        snprintf(response_buffer, STRING_SIZE * (num + 1), "%s\n%s", "MESSAGES", to_append);
 
         int read_size = sendto(fd, response_buffer, strlen(response_buffer), 0,
                 address, addrlen);
@@ -156,7 +156,7 @@ uint_fast8_t handle_client_comms(int fd, matrix msg_matrix) {
 uint_fast8_t parse_message(matrix msg_matrix, char *info) {
     char msg[STRING_SIZE];
     char lc_buffer[6];
-    uint_fast32_t lc;
+    uint_fast32_t mess_lc;
     int sscanf_state = 0;
 
     sscanf_state = sscanf(info, "%[^;];%140[^\n]",lc_buffer, msg); //Separates info and saves it in variables
@@ -165,12 +165,11 @@ uint_fast8_t parse_message(matrix msg_matrix, char *info) {
         return 1;
     }
 
-    lc = atoi(lc_buffer);
-    if (lc > g_lc) {
-        g_lc = lc;
+    mess_lc = atoi(lc_buffer);
+    if (mess_lc > g_lc) {
+        g_lc = mess_lc;
     }
 
-    strncat(msg, "\n" ,STRING_SIZE - 1);
     add_element(msg_matrix, get_size(msg_matrix), (item)new_message(msg), free_message);
 
     return 0;

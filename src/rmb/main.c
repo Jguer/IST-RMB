@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
     char op[STRING_SIZE] = {'\0'}, input_buffer[STRING_SIZE] = {'\0'};
 
     if (sel_server != NULL) { //Prints the prompt
-        fprintf(stdout, KGRN "Prompt@Client > " KNRM);
+        fprintf(stdout, KGRN "Prompt@Client[to:%s] > " KNRM, get_name((server)sel_server));
         fflush(stdout);
     }
 
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
 
             if (sel_server != NULL) { //When it finds a server not yet banned
                 fprintf(stderr, KGRN "Connected to new server\n" KNRM);
-                fprintf(stdout, KGRN "Prompt > " KNRM);
+                fprintf(stdout, KGRN "Prompt[to:%s] > " KNRM, get_name((server)sel_server));
                 fflush(stdout);
                 server_not_answering = false;
             } else { //Our list is empty. Go and fetch a new list
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(binded_fd, &rfds)) {
             if (2 == handle_incoming_messages(binded_fd, msg_num)) {
                 //Info was printed, re-print the prompt
-                fprintf(stdout, KGRN "Prompt@Client > " KNRM);
+                fprintf(stdout, KGRN "Prompt@Client[to:%s] > " KNRM, get_name((server)sel_server));
                 fflush(stdout);
             }
         }
@@ -213,7 +213,7 @@ int main(int argc, char *argv[]) {
                 if (0 == strlen(input_buffer)) {
                     //User input invalid
                     fprintf(stderr,KRED "publish something\n" KNRM);
-                    fprintf(stdout, KGRN "Prompt@Client > " KNRM);
+                    fprintf(stdout, KGRN "Prompt@Client[to:%s] > " KNRM, get_name((server)sel_server));
                     fflush(stdout);
                     continue;
                 }
@@ -254,7 +254,7 @@ int main(int argc, char *argv[]) {
                 if (0 == strlen(input_buffer)) {
                     //User input invalid
                     fprintf(stderr,KRED "give a number of messages to ask\n" KNRM);
-                    fprintf(stdout, KGRN "Prompt@Client > " KNRM);
+                    fprintf(stdout, KGRN "Prompt@Client[to:%s] > " KNRM, get_name((server)sel_server));
                     fflush(stdout);
                     continue;
                 }
@@ -271,6 +271,8 @@ int main(int argc, char *argv[]) {
             }else if (0 == strcasecmp("show_selected_server", op) || 0 == strcmp("3", op)) {
                 //Added option, prints the server being currently used
                 print_server(sel_server);
+                printf("\n");
+                fflush(stdout);
             }else if (0 == strcasecmp("exit", op) || 0 == strcmp("9", op)) {
                 //Kills the program
                 exit_code = EXIT_SUCCESS;
@@ -283,7 +285,7 @@ int main(int argc, char *argv[]) {
             bzero(input_buffer, STRING_SIZE);
 
             //Reprints the prompt
-            fprintf(stdout, KGRN "Prompt@Client > " KNRM);
+            fprintf(stdout, KGRN "Prompt@Client[to:%s] > " KNRM, get_name((server)sel_server));
             fflush(stdout);
         }
     }

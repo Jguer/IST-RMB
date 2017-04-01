@@ -85,10 +85,10 @@ struct addrinfo *reg_server(int_fast16_t *fd, server host ,char *ip_name, char *
         if (_VERBOSE_TEST) printf(KRED "error creating udp socket for registry\n" KNRM);
         return NULL;
     }
-
+    //Put timeout on socket
     setsockopt(*fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
 
-    if (0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d\n", JOIN_STRING, get_name(host),
+    if (0 > sprintf( REG_MESSAGE, "%s %s;%s;%d;%d", JOIN_STRING, get_name(host),
                 get_ip_address(host), get_udp_port(host), get_tcp_port(host))) return NULL;
 
     nwritten = sendto(*fd, REG_MESSAGE, strlen(REG_MESSAGE), 0,
@@ -196,10 +196,7 @@ int join_to_old_servers(list msgservers_list , server host) {
     }
 
     if (!is_comm_sent) {
-        printf(KYEL "\nNo connectable servers present: " KGRN "Wait mode\n" KNRM );
-        fprintf(stdout, KGRN "\nPrompt > " KNRM);
-        fflush(stdout);
-    }
+        printf(KYEL "\nNo connectable servers present: " KGRN "Wait mode\n" KNRM );    }
 
     return 0; //Success
 }
