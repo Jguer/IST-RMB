@@ -203,10 +203,10 @@ int main(int argc, char *argv[]) {
 
         //Third fd to check: USER_INPUT (Using stdio with is fd (0))
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
-            scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer); // Grab word, then throw away space and finally grab until \n
-
             //User options input: show_servers, exit, publish message, show_latest_messages n;
-            if (0 == strcasecmp("show_servers", op) || 0 == strcmp("0", op)) {
+            if ( 1 > scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer)){ // Grab word, then throw away space and finally grab until \n
+                continue;
+            } else if (0 == strcasecmp("show_servers", op) || 0 == strcmp("0", op)) {
                 //Prints the current reliable and untested servers list
                 print_list(msgservers_lst, print_server);
             } else if (0 == strcasecmp("publish", op) || 0 == strcmp("1", op)) {
@@ -224,7 +224,7 @@ int main(int argc, char *argv[]) {
                     fprintf(stdout, KGRN "Y/N ?" KNRM);
                     fflush(stdout);
                     char y_n_answer[10] = {'\0'};
-                    scanf("%10s",y_n_answer);
+                    if (1 > scanf("%10s",y_n_answer)) continue;
                     if('Y' == y_n_answer[0] || 'y' == y_n_answer[0]){
                         err = publish(binded_fd, sel_server, input_buffer);
                         if (err) {

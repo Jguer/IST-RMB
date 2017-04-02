@@ -139,6 +139,9 @@ int connect_to_old_server(server old_server, bool is_comm_sent) {
             return status;
         }
         setsockopt(processing_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
+        tv.tv_sec = 5;
+        tv.tv_usec= 0;
+        setsockopt(processing_fd, SOL_SOCKET, SO_SNDTIMEO, (const char*)&tv,sizeof(struct timeval));
 
         char portitoa[STRING_SIZE];
         if (0 > sprintf(portitoa, "%hu", get_tcp_port(old_server))) {
@@ -146,6 +149,7 @@ int connect_to_old_server(server old_server, bool is_comm_sent) {
             status = -1; //fatal error
             return status;
         }
+        
         struct addrinfo *res = get_server_address_tcp( get_ip_address(old_server),
             portitoa);
         if (!res) {

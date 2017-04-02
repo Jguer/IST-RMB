@@ -17,6 +17,7 @@ void usage(char* name) {
             "\t-m\t\t[max server storage (default:200)]\n"
             "\t-r\t\t[register interval (default:10)]\n"
             "%s", _VERBOSE_OPT_INFO);
+    fprintf(stdout, "To force exit send ^C[CTRL+C] twice\n");
 }
 
 void put_fd_set(int fd, fd_set *rfds) {
@@ -38,12 +39,12 @@ void ignore_sigpipe()
 
 void handle_intsignal(int sig) {
     if (g_exit == true){
-        fprintf(stderr, KRED "\nuser forced exit\n" KNRM);
+        fprintf(stderr, KRED "\nuser forced exit [SIGINT]\n" KNRM);
+        signal(sig, SIG_IGN);
         exit(EXIT_FAILURE);
     }
     g_exit = true;
     fprintf(stderr, KCYN "\nuser requested exit\n" KNRM);
-    signal(sig, SIG_IGN);
 }
 
 int main(int argc, char *argv[]) {
@@ -120,7 +121,7 @@ int main(int argc, char *argv[]) {
             case '?':
             default:
                 usage(argv[0]);
-                exit_code = EXIT_FAILURE;
+                exit_code = EXIT_SUCCESS;
                 goto PROGRAM_EXIT;
         }
     }
@@ -128,7 +129,7 @@ int main(int argc, char *argv[]) {
     if ((NULL == name) || (NULL == ip) || (0 == udp_port) || (0 == tcp_port)){
         printf("Required arguments not present\n");
         usage(argv[0]);
-        exit_code = EXIT_FAILURE;
+        exit_code = EXIT_SUCCESS;
         goto PROGRAM_EXIT;
     }
 
