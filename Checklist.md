@@ -11,7 +11,7 @@
 - [x] Servers saved in lists. (Banned and fetched)  
 - [x] Print Servers List (Only useful information)  
 - [x] Print Messages received (Minor treatment)  
-- [ ] Memory Leakage  
+- [x] Memory Leakage  
 - [x] Gracefuly Termination: Errors in system calls, Wrongly Formated Protocol Messages(Don't exit just discard)
 
 
@@ -25,7 +25,7 @@
 - [x] Protocol UDP: PUBLISH msg; GET_MESSAGES n; MESSAGES\n(message\n)    
 - [x] Protocol TCP: SGET_MESSAGES\n; SMESSAGES\n(clock;message\n)\n  
 - [x] Servers saved in lists. (Connected)  
-- [ ] Messages saved in matrix. (Initialized space on demand)  
+- [x] Messages saved in matrix. 
 - [x] Print Servers list (Only useful information)  
 - [x] Print Messages array (As is, with LC)  
 - [x] Memory Leakage  

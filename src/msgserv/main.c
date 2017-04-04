@@ -67,10 +67,10 @@ int main(int argc, char *argv[]) {
     bool print_prompt = true;
     fd_set rfds;
 
-    int_fast16_t tcp_listen_fd, udp_global_fd, udp_register_fd, timer_fd, max_fd;
+    int_fast16_t tcp_listen_fd = -1, udp_global_fd = -1, udp_register_fd = -1, timer_fd = -1, max_fd = -1;
     uint_fast8_t exit_code = EXIT_SUCCESS;
 
-    int_fast32_t read_size;
+    int_fast32_t read_size = 0;
     bool daemon_mode = false;
 
     srand(time(NULL));
@@ -269,10 +269,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    close(tcp_listen_fd);
-    close(udp_global_fd);
-    close(udp_register_fd);
-    close(timer_fd);
+    close_fd(tcp_listen_fd);
+    close_fd(udp_global_fd);
+    close_fd(udp_register_fd);
+    close_fd(timer_fd);
     free_server(host);
     free_list(msgsrv_list, free_server);
     free_matrix(msg_matrix, free_message);

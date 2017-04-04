@@ -23,3 +23,9 @@ void flush_input(){
 	int c;
 	while ((c = getchar()) != '\n' && c != EOF);
 }
+
+void close_fd(int fd){
+	if (-1 != fd){
+		close(fd);
+	}
+}

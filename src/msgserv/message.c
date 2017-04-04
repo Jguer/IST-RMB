@@ -48,7 +48,7 @@ void send_to_server(item obj, void *cnt_array[]) {
         nleft = nleft - nwritten;
         if (-1 == nwritten) {
             if (_VERBOSE_TEST) printf("\nerror sending communication TCP\n");
-            close(fd);
+            close_fd(fd);
             set_fd(cur_server, -1);
             set_connected(cur_server, 0);
             return;

@@ -188,6 +188,12 @@ void ask_server_test() {
     _test_server = true;
 }
 
+//Cancels the test
+void cancel_server_test(){
+    _test_server = false;
+    _last_test_server = false;
+}
+
 // Counts if the server still didn't answer
 int exec_server_test() {
     if( _test_server && _last_test_server) {

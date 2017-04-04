@@ -129,6 +129,12 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, KYEL "Searching\n" KNRM);
             sleep(3); //Waits for 3 seconds (To let the id_server info refresh)
 
+            cancel_server_test();
+
+            if (err){
+              server_not_answering = true;
+            }
+
             if (server_not_answering) { //Ban the server if it's not answering the requests
             	if(sel_server != NULL){
                     ban_server(banservers_lst, sel_server);
@@ -150,11 +156,15 @@ int main(int argc, char *argv[]) {
             }
 
             if (sel_server != NULL) { //When it finds a server not yet banned
+                if (err) {
+                    fprintf(stdout, KYEL "Failed...Attempting to send to another server\n" KNRM);
+                }
                 fprintf(stderr, KGRN "Connected to new server\n" KNRM);
                 fprintf(stdout, KGRN "Prompt[to:%s] > " KNRM, get_name((server)sel_server));
                 fflush(stdout);
                 server_not_answering = false;
             } else { //Our list is empty. Go and fetch a new list
+                err = false;
                 fprintf(stderr, KYEL "No servers available..." KNRM);
                 fflush(stdout);
                 free_list(msgservers_lst, free_server); //Get new servers if the list is all run
@@ -291,8 +301,8 @@ int main(int argc, char *argv[]) {
     }
 
 PROGRAM_EXIT: //Cleaning routine
-    close(outgoing_fd);
-    close(binded_fd);
+    close_fd(outgoing_fd);
+    close_fd(binded_fd);
     freeaddrinfo(id_server);
     free_incoming_messages();
     free_list(msgservers_lst, free_server);

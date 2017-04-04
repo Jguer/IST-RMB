@@ -181,7 +181,7 @@ void free_server(item got_item) {
     }
 
     if (this->fd > 0) {
-        close(this->fd);
+        close_fd(this->fd);
     }
     free(this->name);
     free(this->ip_addr);
@@ -190,7 +190,7 @@ void free_server(item got_item) {
 }
 
 void close_communication(server this) {
-    close(this->fd);
+    close_fd(this->fd);
     this->fd = -1;
     this->connected = false;
 }

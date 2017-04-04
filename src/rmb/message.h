@@ -52,6 +52,12 @@ void free_incoming_messages();
 */
 void ask_server_test();
 
+
+/*! \fn void cancel_server_test()
+  \brief cancel_server_test cancels tests
+*/
+void cancel_server_test();
+
 /*! \fn int exec_server_test()
   \brief exec_server_test returns server state: 0 working, 1 not working, 2 still testing
 */

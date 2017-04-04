@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #ifndef DEBUG	//Verbose is not an option
 #define _VERBOSE_TEST false
@@ -40,3 +41,4 @@ void memory_error(char *msg);
 void verbose(bool verbosity);
 bool is_verbose();
 void flush_input();
+void close_fd(int fd);
