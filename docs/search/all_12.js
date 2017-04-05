@@ -2,11 +2,13 @@ var searchData=
 [
   ['select_5fserver',['select_server',['../rmb_2message_8c.html#a41ac45072ba0683ac4f551442daa665e',1,'select_server(list server_list):&#160;message.c'],['../rmb_2message_8h.html#a41ac45072ba0683ac4f551442daa665e',1,'select_server(list server_list):&#160;message.c']]],
   ['send_5finitial_5fcomm',['send_initial_comm',['../msgserv_2identity_8c.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c'],['../msgserv_2identity_8h.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c']]],
+  ['send_5fto_5fserver',['send_to_server',['../msgserv_2message_8c.html#a1e7df41b9d65255c30ca6a8321d736af',1,'message.c']]],
   ['server',['server',['../struct__server_8h.html#ae23e4ebbda4265f22647e041265f119f',1,'struct_server.h']]],
   ['server_5fban_5ftime',['SERVER_BAN_TIME',['../utils_8h.html#a28fe5304f3f3f003a5d97e6395d12c12',1,'utils.h']]],
   ['server_5ftest',['SERVER_TEST',['../rmb_2message_8c.html#a4edb5f64b14dcd1a23704d2c82f3f066',1,'message.c']]],
   ['server_5ftest_5ftime_5fnsec',['SERVER_TEST_TIME_nSEC',['../utils_8h.html#ae410392f5199600ff29f936135535dfe',1,'utils.h']]],
   ['server_5ftest_5ftime_5fsec',['SERVER_TEST_TIME_SEC',['../utils_8h.html#a4ce3901abfb0ff16b20f0393fb700b67',1,'utils.h']]],
+  ['server_5ftreat_5fcommunications',['server_treat_communications',['../msgserv_2message_8c.html#afabed465d87ca13c8c645f6b88d03ea6',1,'server_treat_communications(item obj, void *cnt_array[]):&#160;message.c'],['../msgserv_2message_8h.html#afabed465d87ca13c8c645f6b88d03ea6',1,'server_treat_communications(item obj, void *cnt_array[]):&#160;message.c']]],
   ['set_5fban_5ftime',['set_ban_time',['../ban_8c.html#a778abdf53ea4357cba875955447ae396',1,'ban.c']]],
   ['set_5fconnected',['set_connected',['../struct__server_8c.html#a77b30564822036b0cdaeeaa07c0ad0a8',1,'set_connected(server this, bool connected):&#160;struct_server.c'],['../struct__server_8h.html#a77b30564822036b0cdaeeaa07c0ad0a8',1,'set_connected(server this, bool connected):&#160;struct_server.c']]],
   ['set_5ffd',['set_fd',['../struct__server_8c.html#accc9d1f041f2828fc260cc0ad7f09ce1',1,'set_fd(server this, int fd):&#160;struct_server.c'],['../struct__server_8h.html#accc9d1f041f2828fc260cc0ad7f09ce1',1,'set_fd(server this, int fd):&#160;struct_server.c']]],
@@ -30,5 +32,6 @@ var searchData=
   ['struct_5fserver_2eh',['struct_server.h',['../struct__server_8h.html',1,'']]],
   ['suite',['suite',['../structgreatest__run__info.html#ad9b8a07b5e4441d605c1116e9b1ad3c5',1,'greatest_run_info::suite()'],['../greatest_8h.html#ac259c3f55c7c90396ea276c14641bc01',1,'SUITE():&#160;greatest.h']]],
   ['suite_5fextern',['SUITE_EXTERN',['../greatest_8h.html#acf7f7b26b1c62d1a57f483a5136e4d4e',1,'SUITE_EXTERN():&#160;greatest.h'],['../tests_8c.html#a9da98bf588454abdc8bda0bb8b428ab3',1,'SUITE_EXTERN(msg_struct):&#160;tests.c']]],
-  ['suite_5ffilter',['suite_filter',['../structgreatest__run__info.html#a6969187c00c70e6a96faa70542967234',1,'greatest_run_info']]]
+  ['suite_5ffilter',['suite_filter',['../structgreatest__run__info.html#a6969187c00c70e6a96faa70542967234',1,'greatest_run_info']]],
+  ['server_20application_20technical_20specs',['Server Application Technical Specs',['../Technical_S.html',1,'']]]
 ];

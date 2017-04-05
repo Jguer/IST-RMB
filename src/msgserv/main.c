@@ -220,9 +220,8 @@ int main(int argc, char *argv[]) {
                 fprintf(stderr, KRED"please input something\n" KNRM);
             } else {       
                 if ('\n' == buffer[read_size - 1]) buffer[read_size - 1] = '\0'; //switches \n to \0
-
                 //User options input: show_servers, exit, publish message, show_latest_messages n;
-                if (strcasecmp("join", buffer) == 0 || 0 == strcmp("0", buffer)) {
+                if (strcasecmp("join", buffer) == 0 || 0 == strcmp("1", buffer)) {
                     if (!is_join_complete) { //Register on idServer
                         err = handle_join(msgsrv_list, &udp_register_fd, host, id_server_ip, id_server_port);
                         if (err && 1 != g_exit) {
@@ -235,16 +234,16 @@ int main(int argc, char *argv[]) {
                     else {
                         printf(KGRN "Already joined!\n" KNRM);
                     }
-                } else if (0 == strcasecmp("show_servers", buffer) || 0 == strcmp("1", buffer)) {
+                } else if (0 == strcasecmp("show_servers", buffer) || 0 == strcmp("2", buffer)) {
                     if (msgsrv_list != NULL && 0 != get_list_size(msgsrv_list)) print_list(msgsrv_list, print_server);
                     else printf("No registered servers\n");
-                } else if (0 == strcasecmp("show_messages", buffer) || 0 == strcmp("2", buffer)) {
+                } else if (0 == strcasecmp("show_messages", buffer) || 0 == strcmp("3", buffer)) {
                     if (0 == get_size(msg_matrix) && false == get_overflow(msg_matrix)) {
                         printf("0 messages received\n");
                     } else {
                         print_matrix(msg_matrix, print_message);
                     }
-                } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("3", buffer)) {
+                } else if (0 == strcasecmp("exit", buffer) || 0 == strcmp("4", buffer)) {
                     g_exit = true;
                     print_prompt = false;
                 } else {

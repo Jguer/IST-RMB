@@ -1,5 +1,4 @@
-/*! \mainpage */
-Reliable Message Board
+Reliable Message Board {#mainpage}
 ======================
 Instituto Superior Técnico, Lisboa  
 MEEC
@@ -48,9 +47,9 @@ Show the list of connected servers
 ####exit
 Exits the application
 
-Technical aspects of server application:
+Technical aspects of server application: See \ref Technical_S
 
 Developed by:
 ----------------------
-João Guerreiro 81248  
-João Domingos 81713
+João Miguel Guerreiro 81248\n  
+João Mário Domingos 81713\n

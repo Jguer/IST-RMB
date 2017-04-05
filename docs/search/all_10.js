@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['parse_5fmessages',['parse_messages',['../msgserv_2message_8c.html#af23cec42b58976fdc9e02c4d9b941942',1,'parse_messages(matrix msg_matrix):&#160;message.c'],['../msgserv_2message_8h.html#af23cec42b58976fdc9e02c4d9b941942',1,'parse_messages(matrix msg_matrix):&#160;message.c']]],
+  ['parse_5fmessage',['parse_message',['../msgserv_2message_8c.html#af13fb1d6b0fe90afcf3f1c5026afb2fd',1,'message.c']]],
+  ['parse_5fmessages',['parse_messages',['../msgserv_2message_8h.html#af23cec42b58976fdc9e02c4d9b941942',1,'message.h']]],
   ['parse_5fservers',['parse_servers',['../msgserv_2identity_8c.html#a919042cd98422c96f1e41951f15e1780',1,'parse_servers(int_fast16_t udp_register_fd, list msgsrv_list):&#160;identity.c'],['../rmb_2identity_8c.html#a5639878ddd37ad38a519fccee0448db9',1,'parse_servers(char *id_serv_info):&#160;identity.c']]],
   ['pass',['PASS',['../greatest_8h.html#aba5c54fadff8d880b1945dde87496e31',1,'greatest.h']]],
   ['passed',['passed',['../structgreatest__suite__info.html#a1810ba190aa195caf7bb8dcc23bb1c7d',1,'greatest_suite_info::passed()'],['../structgreatest__run__info.html#a1810ba190aa195caf7bb8dcc23bb1c7d',1,'greatest_run_info::passed()'],['../structgreatest__report__t.html#a1810ba190aa195caf7bb8dcc23bb1c7d',1,'greatest_report_t::passed()']]],

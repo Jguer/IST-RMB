@@ -221,10 +221,10 @@ int main(int argc, char *argv[]) {
             //User options input: show_servers, exit, publish message, show_latest_messages n;
             if ( 1 > scanf("%s%*[ ]%140[^\n]" , op, input_buffer)){ // Grab word, then throw away space and finally grab until \n
                 continue;
-            } else if (0 == strcasecmp("show_servers", op) || 0 == strcmp("0", op)) {
+            } else if (0 == strcasecmp("show_servers", op) || 0 == strcmp("1", op)) {
                 //Prints the current reliable and untested servers list
                 print_list(msgservers_lst, print_server);
-            } else if (0 == strcasecmp("publish", op) || 0 == strcmp("1", op)) {
+            } else if (0 == strcasecmp("publish", op) || 0 == strcmp("2", op)) {
                 if (0 == strlen(input_buffer)) {
                     //User input invalid
                     fprintf(stderr,KRED "publish something\n" KNRM);
@@ -281,7 +281,7 @@ int main(int argc, char *argv[]) {
                     }
                     if (2 == err) err = 0;
                 }
-            } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
+            } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("3", op)) {
                 if (0 == strlen(input_buffer)) {
                     //User input invalid
                     fprintf(stderr,KRED "give a number of messages to ask\n" KNRM);
@@ -300,7 +300,7 @@ int main(int argc, char *argv[]) {
                     //Only positive (understanded as zero is not a positive)
                     printf(KRED "%s is invalid value, must be positive\n" KNRM, input_buffer);
                 }
-            }else if (0 == strcasecmp("show_selected_server", op) || 0 == strcmp("3", op)) {
+            }else if (0 == strcasecmp("show_selected_server", op) || 0 == strcmp("4", op)) {
                 //Added option, prints the server being currently used
                 print_server(sel_server);
                 printf("\n");

@@ -1,6 +1,6 @@
 <map id="src/rmb/message.c" name="src/rmb/message.c">
-<area shape="rect" id="node2" href="$rmb_2message_8h.html" title="Outbound communication with message server. " alt="" coords="207,80,293,107"/>
-<area shape="rect" id="node3" href="$utils_8h.html" title="../utils/utils.h" alt="" coords="121,304,217,331"/>
-<area shape="rect" id="node8" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="308,155,456,181"/>
-<area shape="rect" id="node14" href="$util__list_8h.html" title="util_list.h" alt="" coords="701,229,775,256"/>
+<area shape="rect" id="node2" href="$rmb_2message_8h.html" title="Outbound communication with message server. " alt="" coords="375,80,462,107"/>
+<area shape="rect" id="node3" href="$utils_8h.html" title="../utils/utils.h" alt="" coords="390,304,487,331"/>
+<area shape="rect" id="node9" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="155,155,304,181"/>
+<area shape="rect" id="node14" href="$util__list_8h.html" title="util_list.h" alt="" coords="445,229,520,256"/>
 </map>

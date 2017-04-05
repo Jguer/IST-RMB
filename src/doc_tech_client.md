@@ -1,5 +1,4 @@
-/*! \page Technical_C Client Technical Details*/
-Client Application Technical Specs
+Client Application Technical Specs {#Technical_C}
 ------------------------------------
 When the application is called in the command line it can have two optional arguments:
 > i [ip address] -> IP address of the identity server\n Default: tejo.tecnico.ulisboa.pt\n
@@ -84,17 +83,19 @@ The commands that the user can input are:
 These are not case-sensitive and there are numeric shortcuts.
 Command                       |Shortcut
 :-----------------------------|:-------:
-show\_servers                 | 0
-publish __message__           | 1
-show\_latest\_messages __n__  | 2
-show\_selected\_server        | 3
+show\_servers                 | 1
+publish __message__           | 2
+show\_latest\_messages __n__  | 3
+show\_selected\_server        | 4
 exit                          | 9
 
-To interpret the user request the function `scanf("%s%*[ ]%140[^\t\n]", a, b)` is called.\n
+To interpret the user request the function \code{C} scanf("%s%*[ ]%140[^\n]", a, b)  \endcode is called.\n
 The first word until it finds a white-space is saved in 'a'.\n
 Then we throw away the white-space.\n
-And finally the next 140 characters, if not found tab or new-line, are saved in 'b'.\n
+And finally the next 140 characters, if not found new-line, are saved in 'b'.\n
 For comparing the commands with the user_input strcasecmp() is used to compare without case sensitive characters.
+
+There's protection to escape characters input, who prevent that messages are sent with possibly dangerous to program characters.
 
 If the user inputs a message with more than 140 characters, the remaining is discarded.\n
 The user is asked if he really wants to send the sliced message, if the operation in 'a' is publish.\n

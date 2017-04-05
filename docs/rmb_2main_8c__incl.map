@@ -1,10 +1,10 @@
 <map id="src/rmb/main.c" name="src/rmb/main.c">
-<area shape="rect" id="node5" href="$rmb_2message_8h.html" title="Outbound communication with message server. " alt="" coords="319,155,405,181"/>
-<area shape="rect" id="node18" href="$rmb_2identity_8h.html" title="Initialization of the program and identity server communication. " alt="" coords="247,80,320,107"/>
-<area shape="rect" id="node21" href="$ban_8h.html" title="Basic structure to implement banned servers. " alt="" coords="525,155,579,181"/>
-<area shape="rect" id="node6" href="$utils_8h.html" title="../utils/utils.h" alt="" coords="299,379,396,405"/>
-<area shape="rect" id="node11" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="533,229,681,256"/>
-<area shape="rect" id="node17" href="$util__list_8h.html" title="util_list.h" alt="" coords="984,304,1057,331"/>
-<area shape="rect" id="node19" href="$struct__message_8h.html" title="../utils/struct_message.h" alt="" coords="258,229,424,256"/>
-<area shape="rect" id="node20" href="$util__matrix_8h.html" title="Matrix structure definition. " alt="" coords="229,304,363,331"/>
+<area shape="rect" id="node6" href="$rmb_2message_8h.html" title="Outbound communication with message server. " alt="" coords="413,155,499,181"/>
+<area shape="rect" id="node19" href="$rmb_2identity_8h.html" title="Initialization of the program and identity server communication. " alt="" coords="280,80,355,107"/>
+<area shape="rect" id="node22" href="$ban_8h.html" title="Basic structure to implement banned servers. " alt="" coords="535,155,590,181"/>
+<area shape="rect" id="node7" href="$utils_8h.html" title="../utils/utils.h" alt="" coords="410,379,507,405"/>
+<area shape="rect" id="node13" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="500,229,649,256"/>
+<area shape="rect" id="node18" href="$util__list_8h.html" title="util_list.h" alt="" coords="744,304,819,331"/>
+<area shape="rect" id="node20" href="$struct__message_8h.html" title="../utils/struct_message.h" alt="" coords="234,229,401,256"/>
+<area shape="rect" id="node21" href="$util__matrix_8h.html" title="Matrix structure definition. " alt="" coords="147,304,280,331"/>
 </map>

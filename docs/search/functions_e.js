@@ -2,6 +2,8 @@ var searchData=
 [
   ['select_5fserver',['select_server',['../rmb_2message_8c.html#a41ac45072ba0683ac4f551442daa665e',1,'select_server(list server_list):&#160;message.c'],['../rmb_2message_8h.html#a41ac45072ba0683ac4f551442daa665e',1,'select_server(list server_list):&#160;message.c']]],
   ['send_5finitial_5fcomm',['send_initial_comm',['../msgserv_2identity_8c.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c'],['../msgserv_2identity_8h.html#a4cea198d1d847f8059c98545b2779cb5',1,'send_initial_comm(int processing_fd):&#160;identity.c']]],
+  ['send_5fto_5fserver',['send_to_server',['../msgserv_2message_8c.html#a1e7df41b9d65255c30ca6a8321d736af',1,'message.c']]],
+  ['server_5ftreat_5fcommunications',['server_treat_communications',['../msgserv_2message_8c.html#afabed465d87ca13c8c645f6b88d03ea6',1,'server_treat_communications(item obj, void *cnt_array[]):&#160;message.c'],['../msgserv_2message_8h.html#afabed465d87ca13c8c645f6b88d03ea6',1,'server_treat_communications(item obj, void *cnt_array[]):&#160;message.c']]],
   ['set_5fban_5ftime',['set_ban_time',['../ban_8c.html#a778abdf53ea4357cba875955447ae396',1,'ban.c']]],
   ['set_5fconnected',['set_connected',['../struct__server_8c.html#a77b30564822036b0cdaeeaa07c0ad0a8',1,'set_connected(server this, bool connected):&#160;struct_server.c'],['../struct__server_8h.html#a77b30564822036b0cdaeeaa07c0ad0a8',1,'set_connected(server this, bool connected):&#160;struct_server.c']]],
   ['set_5ffd',['set_fd',['../struct__server_8c.html#accc9d1f041f2828fc260cc0ad7f09ce1',1,'set_fd(server this, int fd):&#160;struct_server.c'],['../struct__server_8h.html#accc9d1f041f2828fc260cc0ad7f09ce1',1,'set_fd(server this, int fd):&#160;struct_server.c']]],

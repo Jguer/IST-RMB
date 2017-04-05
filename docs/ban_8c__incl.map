@@ -1,6 +1,6 @@
 <map id="src/rmb/ban.c" name="src/rmb/ban.c">
-<area shape="rect" id="node2" href="$ban_8h.html" title="Basic structure to implement banned servers. " alt="" coords="307,80,361,107"/>
-<area shape="rect" id="node3" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="260,155,408,181"/>
-<area shape="rect" id="node9" href="$utils_8h.html" title="utils.h" alt="" coords="521,304,577,331"/>
-<area shape="rect" id="node14" href="$util__list_8h.html" title="util_list.h" alt="" coords="549,229,623,256"/>
+<area shape="rect" id="node2" href="$ban_8h.html" title="Basic structure to implement banned servers. " alt="" coords="267,80,321,107"/>
+<area shape="rect" id="node3" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="219,155,369,181"/>
+<area shape="rect" id="node9" href="$utils_8h.html" title="utils.h" alt="" coords="443,304,500,331"/>
+<area shape="rect" id="node14" href="$util__list_8h.html" title="util_list.h" alt="" coords="509,229,583,256"/>
 </map>

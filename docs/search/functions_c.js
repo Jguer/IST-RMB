@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['parse_5fmessages',['parse_messages',['../msgserv_2message_8c.html#af23cec42b58976fdc9e02c4d9b941942',1,'parse_messages(matrix msg_matrix):&#160;message.c'],['../msgserv_2message_8h.html#af23cec42b58976fdc9e02c4d9b941942',1,'parse_messages(matrix msg_matrix):&#160;message.c']]],
+  ['parse_5fmessage',['parse_message',['../msgserv_2message_8c.html#af13fb1d6b0fe90afcf3f1c5026afb2fd',1,'message.c']]],
+  ['parse_5fmessages',['parse_messages',['../msgserv_2message_8h.html#af23cec42b58976fdc9e02c4d9b941942',1,'message.h']]],
   ['parse_5fservers',['parse_servers',['../msgserv_2identity_8c.html#a919042cd98422c96f1e41951f15e1780',1,'parse_servers(int_fast16_t udp_register_fd, list msgsrv_list):&#160;identity.c'],['../rmb_2identity_8c.html#a5639878ddd37ad38a519fccee0448db9',1,'parse_servers(char *id_serv_info):&#160;identity.c']]],
   ['print_5flist',['print_list',['../util__list_8c.html#aa6766e467f990825cdbb77e7f0d234cc',1,'print_list(list got_list, void(*print_item)(item)):&#160;util_list.c'],['../util__list_8h.html#aa6766e467f990825cdbb77e7f0d234cc',1,'print_list(list got_list, void(*print_item)(item)):&#160;util_list.c']]],
   ['print_5fmatrix',['print_matrix',['../util__matrix_8c.html#a74a58f92183972da9875e053c5c19c37',1,'print_matrix(matrix this, void(*print_item)(item)):&#160;util_matrix.c'],['../util__matrix_8h.html#a74a58f92183972da9875e053c5c19c37',1,'print_matrix(matrix this, void(*print_item)(item)):&#160;util_matrix.c']]],

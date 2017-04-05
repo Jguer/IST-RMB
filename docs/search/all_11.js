@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['reliable_20message_20board',['Reliable Message Board',['../index.html',1,'']]],
   ['reduce_5fban',['reduce_ban',['../ban_8c.html#a3eb3586cb16817ea636727f8a43af03f',1,'ban.c']]],
   ['reg_5fserver',['reg_server',['../msgserv_2identity_8c.html#a4c74a73aba87722df22f3c3ae9d73392',1,'reg_server(int_fast16_t *fd, server host, char *ip_name, char *udp_port):&#160;identity.c'],['../msgserv_2identity_8h.html#a4c74a73aba87722df22f3c3ae9d73392',1,'reg_server(int_fast16_t *fd, server host, char *ip_name, char *udp_port):&#160;identity.c']]],
   ['rem_5fawol_5fserver',['rem_awol_server',['../rmb_2message_8c.html#ac30f5346ba98f079011b8adf9808161a',1,'rem_awol_server(list server_list, server awol_server):&#160;message.c'],['../rmb_2message_8h.html#ac30f5346ba98f079011b8adf9808161a',1,'rem_awol_server(list server_list, server awol_server):&#160;message.c']]],

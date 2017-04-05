@@ -1,9 +1,9 @@
 <map id="src/msgserv/main.c" name="src/msgserv/main.c">
-<area shape="rect" id="node4" href="$msgserv_2identity_8h.html" title="identity.h" alt="" coords="379,80,453,107"/>
-<area shape="rect" id="node20" href="$msgserv_2message_8h.html" title="message.h" alt="" coords="517,80,603,107"/>
-<area shape="rect" id="node6" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="297,155,445,181"/>
-<area shape="rect" id="node18" href="$struct__message_8h.html" title="../utils/struct_message.h" alt="" coords="477,155,643,181"/>
-<area shape="rect" id="node12" href="$utils_8h.html" title="utils.h" alt="" coords="656,304,713,331"/>
-<area shape="rect" id="node17" href="$util__list_8h.html" title="util_list.h" alt="" coords="23,229,97,256"/>
-<area shape="rect" id="node19" href="$util__matrix_8h.html" title="Matrix structure definition. " alt="" coords="618,229,751,256"/>
+<area shape="rect" id="node4" href="$msgserv_2identity_8h.html" title="identity.h" alt="" coords="351,80,425,107"/>
+<area shape="rect" id="node21" href="$msgserv_2message_8h.html" title="message.h" alt="" coords="543,80,630,107"/>
+<area shape="rect" id="node7" href="$struct__server_8h.html" title="../utils/struct_server.h" alt="" coords="313,155,463,181"/>
+<area shape="rect" id="node19" href="$struct__message_8h.html" title="../utils/struct_message.h" alt="" coords="503,155,670,181"/>
+<area shape="rect" id="node13" href="$utils_8h.html" title="utils.h" alt="" coords="495,304,553,331"/>
+<area shape="rect" id="node18" href="$util__list_8h.html" title="util_list.h" alt="" coords="341,229,416,256"/>
+<area shape="rect" id="node20" href="$util__matrix_8h.html" title="Matrix structure definition. " alt="" coords="632,229,765,256"/>
 </map>
