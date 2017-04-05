@@ -253,11 +253,14 @@ int main(int argc, char *argv[]) {
                             fprintf(stderr, KRED "Publish error\n" KNRM);
                         }
                         //Make a test to the server (Just tests answering, not content) the zero msg_num configures the test
-                        err = ask_for_messages(binded_fd, sel_server, 0);
-                        if (err) {
-                            fprintf(stderr, KRED "Ask for messages error\n" KNRM);
+                        if(!err){
+                            err = ask_for_messages(binded_fd, sel_server, 0);
+                            if (err) {
+                                fprintf(stderr, KRED "Ask for messages error\n" KNRM);
+                            }
+                            ask_server_test(); //Say that a test was made
                         }
-                        ask_server_test(); //Say that a test was made
+                        if (2 == err) err = 0;
                     }
                 }
                 else{
@@ -269,11 +272,14 @@ int main(int argc, char *argv[]) {
                         fprintf(stderr, KRED "Publish error\n" KNRM);
                     }
                     //Make a test to the server (Just tests answering, not content) the zero msg_num configures the test
-                    err = ask_for_messages(binded_fd, sel_server, 0);
-                    if (err) {
-                        fprintf(stderr, KRED "Ask for messages error\n" KNRM);
+                    if (!err){
+                        err = ask_for_messages(binded_fd, sel_server, 0);
+                        if (err) {
+                            fprintf(stderr, KRED "Ask for messages error\n" KNRM);
+                        }
+                        ask_server_test(); //Say that a test was made
                     }
-                    ask_server_test(); //Say that a test was made
+                    if (2 == err) err = 0;
                 }
             } else if (0 == strcasecmp("show_latest_messages", op) || 0 == strcmp("2", op)) {
                 if (0 == strlen(input_buffer)) {
