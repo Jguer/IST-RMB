@@ -8,6 +8,20 @@ static uint_fast16_t _size_to_alloc = RESPONSE_SIZE;
 static char *_response_buffer = NULL;
 static bool _test_server = false, _last_test_server = false, _testing_with_results = true;
 
+
+int check_message_validity(char * msg){
+    for (uint i = 0; i < strlen(msg); i++)
+    {
+        if ('\0' == msg[i] ||
+            '\n' == msg[i] ||
+            '\t' == msg[i] ) continue;
+        else if (msg[i] > 31 || 0 > msg[i] )//See ascii table
+            continue; //Out of the alfanumeric boundaries
+        else return 0;
+    }
+    return 1; //Valid message
+}
+
 // select_server returns a pointer to a random server in $(server_list).
 server select_server(list server_list) {
     node head = get_head(server_list);
@@ -57,6 +71,10 @@ int publish(int fd, server sel_server, char *msg) {
     struct sockaddr_in server_addr = { 0 , .sin_port = 0};
     socklen_t addr_len;
     char msg_to_send[RESPONSE_SIZE];
+
+    if (0 == check_message_validity(msg)){
+        return 2;
+    }
 
     sprintf(msg_to_send, "%s %s", PUBLISH, msg);
 

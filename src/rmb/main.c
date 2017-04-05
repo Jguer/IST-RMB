@@ -22,8 +22,13 @@ void ignore_sigpipe()
 }
 
 void handle_intsignal(int sig) {
+    if (true == g_exit){
+        fprintf(stderr, KRED "user forced close\n" KNRM);
+        signal(sig, SIG_IGN);
+        exit(EXIT_FAILURE);
+    }
     g_exit = true;
-    signal(sig, SIG_IGN);
+    fprintf(stderr, KBLU "user requested close\n" KNRM);
 }
 
 /*! \fn void usage(char *name);
@@ -214,7 +219,7 @@ int main(int argc, char *argv[]) {
         //Third fd to check: USER_INPUT (Using stdio with is fd (0))
         if (FD_ISSET(STDIN_FILENO, &rfds)) { //Stdio input
             //User options input: show_servers, exit, publish message, show_latest_messages n;
-            if ( 1 > scanf("%s%*[ ]%140[^\t\n]" , op, input_buffer)){ // Grab word, then throw away space and finally grab until \n
+            if ( 1 > scanf("%s%*[ ]%140[^\n]" , op, input_buffer)){ // Grab word, then throw away space and finally grab until \n
                 continue;
             } else if (0 == strcasecmp("show_servers", op) || 0 == strcmp("0", op)) {
                 //Prints the current reliable and untested servers list
@@ -225,6 +230,7 @@ int main(int argc, char *argv[]) {
                     fprintf(stderr,KRED "publish something\n" KNRM);
                     fprintf(stdout, KGRN "Prompt@Client[to:%s] > " KNRM, get_name((server)sel_server));
                     fflush(stdout);
+                    flush_input();
                     continue;
                 }
                 else if (140 <= strlen(input_buffer)){
@@ -234,10 +240,16 @@ int main(int argc, char *argv[]) {
                     fprintf(stdout, KGRN "Y/N ?" KNRM);
                     fflush(stdout);
                     char y_n_answer[10] = {'\0'};
-                    if (1 > scanf("%10s",y_n_answer)) continue;
+                    if (1 > scanf("%9s",y_n_answer)){
+                        flush_input();
+                        continue;
+                    }
                     if('Y' == y_n_answer[0] || 'y' == y_n_answer[0]){
                         err = publish(binded_fd, sel_server, input_buffer);
-                        if (err) {
+                        if (2 == err){
+                            fprintf(stderr, KRED "Please enter valid characters\n" KNRM);
+                        }
+                        else if (err) {
                             fprintf(stderr, KRED "Publish error\n" KNRM);
                         }
                         //Make a test to the server (Just tests answering, not content) the zero msg_num configures the test
@@ -250,7 +262,10 @@ int main(int argc, char *argv[]) {
                 }
                 else{
                     err = publish(binded_fd, sel_server, input_buffer);
-                    if (err) {
+                    if (2 == err){
+                        fprintf(stderr, KRED "Please enter valid characters\n" KNRM);
+                    }
+                    else if (err) {
                         fprintf(stderr, KRED "Publish error\n" KNRM);
                     }
                     //Make a test to the server (Just tests answering, not content) the zero msg_num configures the test
@@ -266,6 +281,7 @@ int main(int argc, char *argv[]) {
                     fprintf(stderr,KRED "give a number of messages to ask\n" KNRM);
                     fprintf(stdout, KGRN "Prompt@Client[to:%s] > " KNRM, get_name((server)sel_server));
                     fflush(stdout);
+                    flush_input();
                     continue;
                 }
                 int msg_num_test = atoi(input_buffer);
@@ -293,6 +309,8 @@ int main(int argc, char *argv[]) {
             //Sets the strings to zero (bzero = memset with the '\0' arg)
             bzero(op, STRING_SIZE);
             bzero(input_buffer, STRING_SIZE);
+
+            flush_input();
 
             //Reprints the prompt
             fprintf(stdout, KGRN "Prompt@Client[to:%s] > " KNRM, get_name((server)sel_server));
